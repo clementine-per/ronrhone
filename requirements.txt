@@ -1,0 +1,4 @@
+requests
+django-import-export==2.4.0
+Django==3.1.4
+django-autocomplete-light

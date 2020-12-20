@@ -1,0 +1,39 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+<h3>Recherche</h3>
+<form>
+    <div class="row mt-3">
+        <label class="col col-form-label col-form-label-sm">Nom de l'animal</label>
+        <div class="col">
+            <input type="text" class="form-control">
+        </div>
+        <label class="col col-form-label col-form-label-sm">Numéro d'identification</label>
+        <div class="col">
+            <input type="text" class="form-control">
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <select class="form-control">
+                <option selected>Type</option>
+                <option>...</option>
+            </select>
+        </div>
+        <div class="col">
+            <select class="form-control">
+                <option selected>Stérilisé</option>
+                <option>...</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Date de naissance entre le">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Et le">
+        </div>
+    </div>
+
+</form>
+{% endblock %}
