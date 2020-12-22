@@ -1,0 +1,123 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Recherche
+            </div>
+		<form action = "{% url 'animals' %}" method="post">
+            <div class="card-body">
+                {%csrf_token %}
+                <div class="row">
+                    <div class="col-sm-2">
+                        {{ form.nom.label_tag }}
+                    </div>
+                    <div class="col-sm-10">
+                        {{ form.nom }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        {{ form.identification.label_tag }}
+                    </div>
+                    <div class="col-sm-10">
+                        {{ form.identification }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+		    		    {{ form.type_animal.label_tag }}
+                    </div>
+                    <div class="col-md-10">
+                        {{ form.type_animal }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+		    		    {{ form.sterilise.label_tag }}
+                    </div>
+                    <div class="col-md-10">
+                        {{ form.sterilise }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_naissance_min.label_tag }} {{ form.date_naissance_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_naissance_max.label_tag }} {{ form.date_naissance_max }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_arrivee_min.label_tag }} {{ form.date_arrivee_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_arrivee_max.label_tag }} {{ form.date_arrivee_max }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_prochaine_visite_min.label_tag }} {{ form.date_prochaine_visite_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_prochaine_visite_max.label_tag }} {{ form.date_prochaine_visite_max }}
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Type</th>
+            <th scope="col">Sexe</th>
+            <th scope="col">Identification</th>
+            <th scope="col">Date de naissance</th>
+            <th scope="col">FA</th>
+            <th scope="col">Date prochaine visite</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-info">
+            <th scope="row">Twix</th>
+            <td>Chien</td>
+            <td>Masculin</td>
+            <td>00000123900</td>
+            <td>20/01/2018</td>
+            <td>Clémentine PERREAUT</td>
+            <td></td>
+        </tr>
+        <tr class="table-info">
+            <th scope="row">Craquotte</th>
+            <td>Chat</td>
+            <td>Féminin</td>
+            <td>00000123956</td>
+            <td>25/01/2019</td>
+            <td></td>
+            <td>02/03/2021</td>
+        </tr>
+        <tr class="table-info">
+            <th scope="row">Garfield</th>
+            <td>Chat</td>
+            <td>Masculin</td>
+            <td>00000144900</td>
+            <td>01/04/202020</td>
+            <td>Clémentine PERREAUT</td>
+            <td>02/03/2021</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

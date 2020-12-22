@@ -15,20 +15,38 @@
     <div id="content">
         <!-- Navbar -->
         <nav class="navbar navbar-light" style="background-color: #349fcd;">
-            <a class="navbar-brand" href="#">Application de gestion ronrhône</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/ronrhone">Application de gestion ronrhône</a>
+            <span class="d-flex">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#accountOptions" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="far fa-user "> Clémentine PERREAUT</i>
+                </button>
+                <button class="navbar-toggler mr-3 ml-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+                </button>
+            </span>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Animaux</a>
+                        <a class="nav-link" href="animals">Animaux</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Familles d'accueil</a>
+                        <a class="nav-link" href=families>Familles d'accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="persons">Personnes</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse" id="accountOptions">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'password_change' %}">Changer de mot de passe</a>
                     </li>
                 </ul>
             </div>

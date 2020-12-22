@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<html>
+<head>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<link rel="stylesheet" href="{% static 'css/login.css' %}">
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<title> Connexion </title>
+</head>
+<body>
+    <div id="login">
+        <h3 class="text-center text-white pt-5">Application de gestion Ron'Rhône</h3>
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="" method="post">
+                            {% csrf_token %}
+                            <h3 class="text-center text-info">Connexion</h3>
+                            <div class="form-group">
+                                <label for="{{ form.username.id_for_label }}" class="text-info">{{ form.username.label_tag }}</label><br>
+                                <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.password.id_for_label }}" class="text-info">{{ form.password.label_tag }}</label><br>
+                                <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" class="form-control">
+                            </div>
+                            <div class="form-group">
+								<button type="submit" class="btn btn-info">Connexion</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
