@@ -1,0 +1,20 @@
+div .role {
+    border-style:solid;
+    padding-left:10px;
+    padding-right:10px;
+}
+div .famille{
+    color:#46d246;
+    background-color:#adebad;
+    border-color: #46d246;
+}
+
+div .benevole{
+    color:#ff9900;
+    background-color:#ffd699;
+    border-color: #ff9900;}
+
+div .adoptant{
+    color:#bf00ff;
+    background-color:#ecb3ff;
+    border-color: #bf00ff;}

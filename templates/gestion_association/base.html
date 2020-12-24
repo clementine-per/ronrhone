@@ -2,11 +2,12 @@
 <html lang="fr">
 {% load static %}
 <head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ronrhone</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ronrhone</title>
 </head>
 <body>
 <!-- Content Wrapper -->
@@ -15,7 +16,7 @@
     <div id="content">
         <!-- Navbar -->
         <nav class="navbar navbar-light" style="background-color: #349fcd;">
-            <a class="navbar-brand" href="/ronrhone">Application de gestion ronrhône</a>
+            <a class="navbar-brand" href="{% url 'accueil' %}">Application de gestion ronrhône</a>
             <span class="d-flex">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#accountOptions" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="far fa-user "> Clémentine PERREAUT</i>
@@ -26,17 +27,17 @@
             </span>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+                    <li class="nav-item {% if selected == 'accueil' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'accueil' %}">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="animals">Animaux</a>
+                    <li class="nav-item {% if selected == 'animals' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'animals' %}">Animaux</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=families>Familles d'accueil</a>
+                    <li class="nav-item {% if selected == 'families' %}active{% endif %}">
+                        <a class="nav-link" href="">Familles d'accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="persons">Personnes</a>
+                    <li class="nav-item {% if selected == 'persons' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'persons' %}">Personnes</a>
                     </li>
                 </ul>
             </div>

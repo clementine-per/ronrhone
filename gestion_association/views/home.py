@@ -3,4 +3,5 @@ from django.shortcuts import render
 
 @login_required
 def index(request):
-    return render(request, "gestion_association/home.html")
+    selected = "accueil"
+    return render(request, "gestion_association/home.html", locals())
