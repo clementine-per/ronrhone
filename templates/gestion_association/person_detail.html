@@ -5,22 +5,87 @@
     <div class="col-sm-12 mt-3">
         <div class="card">
             <div class="card-header">
-                {{person.prenom}} {{person.nom}}
+                Coordonnées
             </div>
-		<form action = "{% url 'persons' %}" method="post">
             <div class="card-body">
-                <p>
-			        <strong> Nom </strong> : {{person.nom}} <br>
-				    <strong> Prénom </strong> : {{person.prenom}} <br>
-				    <strong> Adresse mail </strong> : {{person.email}} <br>
-				    <strong> Adresse </strong> : {{person.adresse}} <br>
-				    <strong> Code Postal </strong> : {{person.code_postal}} <br>
-				    <strong> Ville </strong> : {{person.ville}} <br>
-				    <strong> Téléphone </strong> : {{person.telephone}} <br>
-
-			    </p>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Nom </strong> : {{person.nom}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Prénom </strong> : {{person.prenom}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Adresse mail </strong> : {{person.email}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Téléphone </strong> : {{person.telephone}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Adresse </strong> : {{person.get_adresse_complete}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Profession </strong> : {{person.profession}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date de naissance </strong> : {{person.date_naissance}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Commentaire </strong> : {{person.commentaire}} <br>
+                    </div>
+                </div>
+                <p class="text-right">
+                    <a href= "{% url 'update_person' person.id %}" class="btn btn-info">Modifier</a>
+                </p>
             </div>
-        </form>
+        </div>
+    </div>
+</div>
+
+<div class="row p-4">
+    <div class="col-sm-10 mb-3">
+        <div class="card">
+            <div class="card-header">
+                Rôles
+            </div>
+            <div class="card-body">
+                {% if person.is_famille %}
+                <div class="role famille mb-3" >Famille d'accueil</div>
+                {% endif %}
+                {% if person.is_benevole %}
+                <div class="role benevole mb-3">Bénévole</div>
+                {% endif %}
+                {% if person.is_adoptante %}
+                <div class="role adoptant mb-3">Adoptant</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2 mb-3">
+        <div class="card">
+            <div class="card-header">
+                Actions
+            </div>
+            <div class="card-body">
+                <a href= "#" class="btn btn-outline-info btn-block ">Modifier</a>
+                {% if not person.is_benevole %}
+                <a href= "#" class="btn btn-outline-info btn-block ">Déclarer bénévole</a>
+                {% endif %}
+                {% if not person.is_famille %}
+                <a href= "#" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>
+                {% endif %}
+                {% if not person.is_adoptante %}
+                <a href= "#" class="btn btn-outline-info btn-block ">Déclarer adoptant</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

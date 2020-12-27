@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms.person import PersonForm, PersonSearchForm
 from gestion_association.models.person import Person
@@ -17,17 +17,24 @@ class CreatePerson(LoginRequiredMixin, CreateView):
     template_name = "gestion_association/person_form.html"
 
     def get_success_url(self):
-        return reverse_lazy("person_list")
+        return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
+
+
+class UpdatePerson(LoginRequiredMixin, UpdateView):
+    model = Person
+    form_class = PersonForm
+    template_name = "gestion_association/person_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
 
 @login_required
 def person_list(request):
     selected = "persons"
     person_list = Person.objects.all().filter(inactif=False)
-
     if request.method == "POST":
         form = PersonSearchForm(request.POST)
         if form.is_valid():
-
             nom_form = form.cleaned_data["nom"]
             type_person_form = form.cleaned_data["type_person"]
             if type_person_form is not None:

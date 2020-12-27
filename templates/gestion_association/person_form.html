@@ -11,14 +11,14 @@
     {% csrf_token %}
     {{ form.as_p }}
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-ms-6 mr-3 ml-3">
             {% if object %}
             <a href = "{% url 'detail_person' object.id %}"  class="btn btn-secondary">Annuler</a>
-   		{% else %}
+   		    {% else %}
    			<a href = "{% url 'persons' %}"  class="btn btn-secondary">Annuler</a>
-   		{% endif %}
+   		    {% endif %}
    	</div>
-   	<div class="col-md-6">
+   	<div class="col-ms-6 text-right">
    		<input class="btn btn-info" type="submit" />
    	</div>
    </div>
