@@ -67,6 +67,21 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="pagination">
+        {% if persons.has_previous %}
+        <a href="{% url 'persons'%}?page={{ persons.previous_page_number}}">Précédente</a> -
+        {% endif %}
+
+        <span class="current">
+            Page {{ persons.number }} sur {{ persons.paginator.num_pages }}
+        </span>
+        {% if persons.has_next %}
+        - <a href="{% url 'animals'%}?page={{ animal_list.next_page_number}}">Suivante</a>
+        {% endif %}
+    </div>
+    <div class="text-right">
+        <a href= "{% url 'create_person' %}" class="btn btn-info">Ajouter une personne</a>
+    </div>
 </div>
 
 {% endblock %}

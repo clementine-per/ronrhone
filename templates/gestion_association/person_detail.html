@@ -1,0 +1,29 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                {{person.prenom}} {{person.nom}}
+            </div>
+		<form action = "{% url 'persons' %}" method="post">
+            <div class="card-body">
+                <p>
+			        <strong> Nom </strong> : {{person.nom}} <br>
+				    <strong> Prénom </strong> : {{person.prenom}} <br>
+				    <strong> Adresse mail </strong> : {{person.email}} <br>
+				    <strong> Adresse </strong> : {{person.adresse}} <br>
+				    <strong> Code Postal </strong> : {{person.code_postal}} <br>
+				    <strong> Ville </strong> : {{person.ville}} <br>
+				    <strong> Téléphone </strong> : {{person.telephone}} <br>
+
+			    </p>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
