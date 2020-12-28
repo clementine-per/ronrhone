@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
-from gestion_association.forms.person import PersonForm, PersonSearchForm
+from gestion_association.forms.person import PersonForm, PersonSearchForm, BenevoleForm
 from gestion_association.models.person import Person
 
 
@@ -27,6 +27,21 @@ class UpdatePerson(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
+
+
+class BenevolePerson(LoginRequiredMixin, UpdateView):
+    model = Person
+    form_class = BenevoleForm
+    template_name = "gestion_association/person_benevole_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
+
+    def form_valid(self, form):
+        redirect_url = super(BenevolePerson, self).form_valid(form)
+        self.object.is_benevole = True
+        self.object.save()
+        return redirect_url
 
 @login_required
 def person_list(request):

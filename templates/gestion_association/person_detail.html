@@ -61,7 +61,12 @@
                 <div class="role famille mb-3" >Famille d'accueil</div>
                 {% endif %}
                 {% if person.is_benevole %}
-                <div class="role benevole mb-3">Bénévole</div>
+                <div class="role benevole mb-3">
+                    Bénévole
+                    {% if person.commentaire_benevole %}
+                    : {{person.commentaire_benevole}}
+                    {% endif %}
+                </div>
                 {% endif %}
                 {% if person.is_adoptante %}
                 <div class="role adoptant mb-3">Adoptant</div>
@@ -77,7 +82,7 @@
             <div class="card-body">
                 <a href= "#" class="btn btn-outline-info btn-block ">Modifier</a>
                 {% if not person.is_benevole %}
-                <a href= "#" class="btn btn-outline-info btn-block ">Déclarer bénévole</a>
+                <a href= "{% url 'benevole_person' person.id %}"  class="btn btn-outline-info btn-block ">Déclarer bénévole</a>
                 {% endif %}
                 {% if not person.is_famille %}
                 <a href= "#" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>

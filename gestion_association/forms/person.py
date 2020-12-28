@@ -10,10 +10,18 @@ class PersonSearchForm(Form):
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in TypePersonChoice],
         widget=Select(),
         required=False,
+        label="Rôle personne"
     )
+
 
 class PersonForm(ModelForm):
     class Meta:
         model = Person
         fields = ("nom","prenom","email","adresse","code_postal","ville", "telephone"
                   , "profession","commentaire")
+
+
+class BenevoleForm(ModelForm):
+    class Meta:
+        model = Person
+        fields = ("commentaire_benevole",)
