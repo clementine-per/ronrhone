@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.db import models
 
+from gestion_association.models import OuiNonChoice
 from gestion_association.models.person import Person
 
 
@@ -35,6 +36,38 @@ class StatutAnimal(Enum):
     RENDU = "Rendu à ses propriétaires"
 
 
+class Presence(Enum):
+    BAS = "Bas"
+    NORMAL = "Normal"
+    ELEVE = "Elevé"
+
+
+class TrancheAge(Enum):
+    CHATON = "Chaton"
+    ADULTE = "Adulte"
+    SENIOR = "Sénior"
+
+
+class Preference(models.Model):
+    sociabilisation = models.CharField(max_length=3, default="NON",
+                                       verbose_name="Sociabilisation nécessaire",
+                                       choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    exterieur = models.CharField(max_length=3, default="NON",
+                                       verbose_name="Extérieur nécessaire",
+                                       choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    quarantaine = models.CharField(max_length=3, default="NON",
+                                 verbose_name="Quanrantaine",
+                                 choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    biberonnage = models.CharField(max_length=3, default="NON",
+                                   verbose_name="Biberonnage",
+                                   choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    tranche_age = models.CharField(max_length=10, blank = True,
+                                   verbose_name="Tranche d'âge",
+                                   choices=[(tag.name, tag.value) for tag in TrancheAge])
+    presence = models.CharField(max_length=10, blank=True, default="BAS",
+                                   verbose_name="Niveau de présence requis",
+                                   choices=[(tag.name, tag.value) for tag in Presence])
+
 
 class Animal(models.Model):
     date_mise_a_jour = models.DateField(
@@ -57,10 +90,11 @@ class Animal(models.Model):
         verbose_name="Type d'animal",
         choices=[(tag.name, tag.value) for tag in TypeChoice],
     )
-    sterilise = models.BooleanField(default=False,
-                                     verbose_name="Stérilisé(e)")
+    sterilise = models.CharField(max_length=3,
+                                     verbose_name="Stérilisé(e)",
+                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     identification = models.CharField(max_length=150,
-                                     verbose_name="Numéro d'identification")
+                                     verbose_name="Numéro d'identification", blank=True)
     fiv = models.CharField(
         max_length=30,
         verbose_name="FIV",
@@ -71,8 +105,9 @@ class Animal(models.Model):
         verbose_name="FELV",
         choices=[(tag.name, tag.value) for tag in TestResultChoice],
     )
-    vaccine = models.BooleanField(default=False,
-                                    verbose_name="Vacciné(e)")
+    vaccine = models.CharField(max_length=3,
+                                    verbose_name="Vacciné(e)",
+                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     date_dernier_vaccin = models.DateField(
         verbose_name="Date du dernier rappel de vaccin", null=True, blank=True
     )
@@ -88,8 +123,6 @@ class Animal(models.Model):
     date_parasite = models.DateField(
         verbose_name="Date d'administration de l'anti parasite", null=True, blank=True
     )
-    sociabilisation = models.BooleanField(default=False,
-                                    verbose_name="Sociabilisation nécessaire")
     statut = models.CharField(
         max_length=30,
         choices=[(tag.name, tag.value) for tag in StatutAnimal],
@@ -106,6 +139,16 @@ class Animal(models.Model):
     )
     commentaire = models.CharField(max_length=1000, blank=True)
     commentaire_sante = models.CharField(max_length=1000, blank=True)
+    preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
+    animaux_lies = models.ManyToManyField('self', verbose_name="Animaux liés", blank=True)
+
+    def save(self, *args, **kwargs):
+        # Au premier enregistrement en base, on initialise les préférences
+        if self._state.adding:
+            preference = Preference.objects.create()
+            self.preference = preference
+            preference.save()
+        return super(Animal,self).save(*args, **kwargs)
 
     def __str__(self):
         return self.nom

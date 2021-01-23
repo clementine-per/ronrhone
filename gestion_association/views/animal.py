@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
-from gestion_association.forms.animal import AnimalSearchForm
+from gestion_association.forms.animal import AnimalSearchForm, AnimalCreateForm
 from gestion_association.models.animal import Animal
 
 
@@ -66,3 +69,12 @@ def search_animal(request):
         animal_list = paginator.page(paginator.num_pages())
 
     return render(request, "gestion_association/animal/animal_list.html", locals())
+
+
+class CreateAnimal(LoginRequiredMixin, CreateView):
+    model = Animal
+    form_class = AnimalCreateForm
+    template_name = "gestion_association/animal/animal_create_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})

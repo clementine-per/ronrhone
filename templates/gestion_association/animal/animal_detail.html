@@ -1,0 +1,150 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations générales
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Nom </strong> : {{animal.nom}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Sexe </strong> : {{animal.get_sexe_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Type </strong> : {{animal.get_type_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date de naissance </strong> : {{animal.date_naissance|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Identification </strong> : {{animal.identification}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Circonstances d'arrivée </strong> : {{animal.circonstances}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Date de prise en charge </strong> : {{animal.date_arrivee|default:" - "}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Commentaire </strong> : {{animal.commentaire}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Statut </strong> : {{animal.get_statut_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> FA </strong> :  <br>
+                    </div>
+                </div>
+
+                <p class="text-right">
+                    <a href= "#" class="btn btn-info">Modifier</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations de santé
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Vacciné </strong> : {{animal.get_vaccin_str}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date du dernier vermifuge </strong> : {{animal.date_vermifuge|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Stérilisé </strong> : {{animal.get_sterilisation_str}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date d'administration anti-parasite </strong> : {{animal.date_parasite|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Date du prochain vaccin </strong> : {{animal.date_prochain_vaccin|default:" - "}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Test FELV </strong> : {{animal.get_felv_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Commentaire santé </strong> : {{animal.commentaire_sante}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Test FIV </strong> : {{animal.get_fiv_display}} <br>
+                    </div>
+                </div>
+
+                <p class="text-right">
+                    <a href= "#" class="btn btn-info">Modifier</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations de préférence
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Extérieur nécessaire </strong> : {{animal.preference.get_exterieur_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> A biberonner </strong> : {{animal.preference.get_biberonnage_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> A sociabiliser </strong> : {{animal.preference.get_sociabilisation_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Niveau de présence nécessaire </strong> : {{animal.preference.get_presence_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Quarantaine </strong> : {{animal.preference.get_quarantaine_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Tranche d'âge </strong> : {{animal.preference.get_tranche_age_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Animaux liés </strong> : {% for liaison in animal.animaux_lies.all %} <a href= "{% url 'detail_animal' liaison.id %}">{{liaison.nom}}</a>, {% endfor %} <br>
+                    </div>
+                </div>
+
+                <p class="text-right">
+                    <a href= "#" class="btn btn-info">Modifier</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

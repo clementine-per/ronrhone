@@ -8,15 +8,12 @@ from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelC
 from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget, \
     HeavySelect2MultipleWidget
 
-from gestion_association.models.animal import TypeChoice, StatutAnimal
+from gestion_association.models import OuiNonChoice
+from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal
 
 
 class DateInput(DateInput):
     input_type = "date"
-
-class OuiNonChoice(Enum):
-    OUI = "Oui"
-    NON = "Non"
 
 
 class AnimalSearchForm(Form):
@@ -27,7 +24,9 @@ class AnimalSearchForm(Form):
         widget=Select(),
         required=False,
     )
-    sterilise = BooleanField(
+    sterilise = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
         required=False,
     )
     date_naissance_min = DateField(
@@ -50,12 +49,27 @@ class AnimalSearchForm(Form):
     date_prochaine_visite_max = DateField(
         label=" et le ", required=False, widget=DateInput()
     )
-    sans_fa = BooleanField(
+    sans_fa = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
         required=False,
-        label="Sans famille d'accueil"
     )
     statuts = MultipleChoiceField(
         choices=[(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
         initial=[tag.name for tag in StatutAnimal]
     )
+
+class AnimalCreateForm(ModelForm):
+    class Meta:
+        model = Animal
+        fields = ("nom","sexe","type","date_naissance","identification","circonstances", "date_arrivee"
+                  , "commentaire","statut","sterilise","date_sterilisation","vaccine",
+                  "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")
+    date_arrivee = DateField(widget=DateInput())
+    date_naissance = DateField(required=False,widget=DateInput())
+    date_sterilisation = DateField(required=False,widget=DateInput())
+    date_dernier_vaccin = DateField(required=False,widget=DateInput())
+    date_prochain_vaccin = DateField(required=False,widget=DateInput())
+    date_parasite = DateField(required=False,widget=DateInput())
+
