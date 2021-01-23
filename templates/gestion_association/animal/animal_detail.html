@@ -49,7 +49,7 @@
                 </div>
 
                 <p class="text-right">
-                    <a href= "#" class="btn btn-info">Modifier</a>
+                    <a href= "{% url 'update_information' animal.id %}" class="btn btn-info">Modifier</a>
                 </p>
             </div>
         </div>
@@ -96,7 +96,7 @@
                 </div>
 
                 <p class="text-right">
-                    <a href= "#" class="btn btn-info">Modifier</a>
+                    <a href= "{% url 'update_sante' animal.id %}" class="btn btn-info">Modifier</a>
                 </p>
             </div>
         </div>
@@ -140,7 +140,7 @@
                 </div>
 
                 <p class="text-right">
-                    <a href= "#" class="btn btn-info">Modifier</a>
+                    <a href= "{% url 'update_preference' animal.preference.id %}" class="btn btn-info">Modifier</a>
                 </p>
             </div>
         </div>

@@ -1,6 +1,7 @@
 from enum import Enum
 
 from dal import autocomplete
+from django.conf import settings
 
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelChoiceField, ModelForm, FileInput, \
@@ -9,7 +10,7 @@ from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget,
     HeavySelect2MultipleWidget
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal
+from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, Preference
 
 
 class DateInput(DateInput):
@@ -60,6 +61,7 @@ class AnimalSearchForm(Form):
         initial=[tag.name for tag in StatutAnimal]
     )
 
+
 class AnimalCreateForm(ModelForm):
     class Meta:
         model = Animal
@@ -73,3 +75,18 @@ class AnimalCreateForm(ModelForm):
     date_prochain_vaccin = DateField(required=False,widget=DateInput())
     date_parasite = DateField(required=False,widget=DateInput())
 
+
+class AnimalInfoUpdateForm(ModelForm):
+    class Meta:
+        model = Animal
+        fields = ("nom","sexe","type","date_naissance","identification","circonstances", "date_arrivee"
+                  , "commentaire","statut")
+
+
+
+
+class AnimalSanteUpdateForm(ModelForm):
+    class Meta:
+        model = Animal
+        fields = ("sterilise","date_sterilisation","vaccine",
+                  "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")

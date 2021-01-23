@@ -3,10 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
-from gestion_association.forms.animal import AnimalSearchForm, AnimalCreateForm
-from gestion_association.models.animal import Animal
+from gestion_association.forms.animal import AnimalSearchForm, AnimalCreateForm, AnimalInfoUpdateForm, \
+    AnimalSanteUpdateForm
+from gestion_association.models.animal import Animal, Preference
 
 
 @login_required()
@@ -76,5 +77,29 @@ class CreateAnimal(LoginRequiredMixin, CreateView):
     form_class = AnimalCreateForm
     template_name = "gestion_association/animal/animal_create_form.html"
 
+    def get_success_url(self):
+        return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
+
+
+class UpdatePreference(LoginRequiredMixin, UpdateView):
+    model = Preference
+    template_name = "gestion_association/animal/preference_form.html"
+    fields = '__all__'
+    def get_success_url(self):
+        return reverse_lazy("detail_animal", kwargs={"pk": self.object.animal.id})
+
+
+class UpdateInformation(LoginRequiredMixin, UpdateView):
+    model = Animal
+    template_name = "gestion_association/animal/information_form.html"
+    form_class = AnimalInfoUpdateForm
+    def get_success_url(self):
+        return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
+
+
+class UpdateSante(LoginRequiredMixin, UpdateView):
+    model = Animal
+    template_name = "gestion_association/animal/sante_form.html"
+    form_class = AnimalSanteUpdateForm
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})

@@ -10,6 +10,9 @@ urlpatterns = [
     path("", home.index, name="accueil"),
     path("animals/", animal.CreateAnimal.as_view(), name="create_animal"),
     path("animals/create", animal.search_animal, name="animals"),
+    path("animals/prefrence/update/<int:pk>/", animal.UpdatePreference.as_view(), name="update_preference"),
+    path("animals/information/update/<int:pk>/", animal.UpdateInformation.as_view(), name="update_information"),
+    path("animals/sante/update/<int:pk>/", animal.UpdateSante.as_view(), name="update_sante"),
     path("animals/<int:pk>/", login_required(
         DetailView.as_view(model=Animal, template_name="gestion_association/animal/animal_detail.html")),
          name="detail_animal"),

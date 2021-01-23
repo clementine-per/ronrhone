@@ -1,0 +1,19 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+<h2>Modifier les informations générales de {{object.nom}}</h2>
+<br/>
+<form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <br/>
+    <div class="row">
+        <div class="col-md-6">
+            <a href = "{% url 'detail_animal' object.id %}"  class="btn btn-secondary">Annuler</a>
+        </div>
+        <div class="col-md-6">
+            <input class="btn btn-info" type="submit" />
+        </div>
+    </div>
+</form>
+{% endblock %}
