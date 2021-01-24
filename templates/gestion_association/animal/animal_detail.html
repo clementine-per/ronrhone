@@ -5,6 +5,7 @@
         <div class="card">
             <div class="card-header">
                 Informations générales
+                <a href= "{% url 'update_information' animal.id %}" class="float-right btn btn-info">Modifier</a>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -48,9 +49,9 @@
                     </div>
                 </div>
 
-                <p class="text-right">
-                    <a href= "{% url 'update_information' animal.id %}" class="btn btn-info">Modifier</a>
-                </p>
+                    <a href= "#" class="mt-3 float-left btn btn-info">Déclarer l'adoption</a>
+                    <a href= "#" class="mt-3 float-right btn btn-info">Mettre en famille d'accueil</a>
+
             </div>
         </div>
     </div>
@@ -60,6 +61,7 @@
         <div class="card">
             <div class="card-header">
                 Informations de santé
+                <a href= "{% url 'update_sante' animal.id %}" class="float-right btn btn-info">Modifier</a>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -95,9 +97,6 @@
                     </div>
                 </div>
 
-                <p class="text-right">
-                    <a href= "{% url 'update_sante' animal.id %}" class="btn btn-info">Modifier</a>
-                </p>
             </div>
         </div>
     </div>
@@ -107,6 +106,7 @@
         <div class="card">
             <div class="card-header">
                 Informations de préférence
+                <a href= "{% url 'update_preference' animal.preference.id %}" class="float-right btn btn-info">Modifier</a>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -138,10 +138,6 @@
                         <strong> Animaux liés </strong> : {% for liaison in animal.animaux_lies.all %} <a href= "{% url 'detail_animal' liaison.id %}">{{liaison.nom}}</a>, {% endfor %} <br>
                     </div>
                 </div>
-
-                <p class="text-right">
-                    <a href= "{% url 'update_preference' animal.preference.id %}" class="btn btn-info">Modifier</a>
-                </p>
             </div>
         </div>
     </div>

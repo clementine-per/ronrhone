@@ -5,7 +5,7 @@ from django.conf import settings
 
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelChoiceField, ModelForm, FileInput, \
-    DateInput, BooleanField, MultipleChoiceField
+    DateInput, BooleanField, MultipleChoiceField, Widget, TextInput
 from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget, \
     HeavySelect2MultipleWidget
 
@@ -68,12 +68,6 @@ class AnimalCreateForm(ModelForm):
         fields = ("nom","sexe","type","date_naissance","identification","circonstances", "date_arrivee"
                   , "commentaire","statut","sterilise","date_sterilisation","vaccine",
                   "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")
-    date_arrivee = DateField(widget=DateInput())
-    date_naissance = DateField(required=False,widget=DateInput())
-    date_sterilisation = DateField(required=False,widget=DateInput())
-    date_dernier_vaccin = DateField(required=False,widget=DateInput())
-    date_prochain_vaccin = DateField(required=False,widget=DateInput())
-    date_parasite = DateField(required=False,widget=DateInput())
 
 
 class AnimalInfoUpdateForm(ModelForm):
@@ -81,7 +75,6 @@ class AnimalInfoUpdateForm(ModelForm):
         model = Animal
         fields = ("nom","sexe","type","date_naissance","identification","circonstances", "date_arrivee"
                   , "commentaire","statut")
-
 
 
 

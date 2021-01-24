@@ -1,5 +1,6 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
+
 <h2>Modifier les informations générales de {{object.nom}}</h2>
 <br/>
 <form method="post" action="" enctype="multipart/form-data">
@@ -16,4 +17,13 @@
         </div>
     </div>
 </form>
+{% endblock %}
+{% block script %}
+<script>
+$(function() {
+  $('[name="date_naissance"],[name="date_arrivee"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+  });
+});
+</script>
 {% endblock %}
