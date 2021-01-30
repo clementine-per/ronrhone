@@ -1,0 +1,23 @@
+{% extends "gestion_association/base.html" %}
+
+{% block content %}
+
+<h1>Adoption du {{animal.get_type_display}}  {{animal.nom}}</h1>
+<br>
+<p> La personne adoptant {{animal.nom}} est-elle déjà présente dans la liste des personnes de l'application? </p>
+<br>
+<br>
+<div class="row">
+   	<div class="col-md-4">
+		<a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
+	</div>
+	<div class="col-md-4">
+		<a href = "{% url 'adoption_complete' animal.id %}"  class="btn btn-info">Non</a>
+	</div>
+	<div class="col-md-4">
+		<a href = "{% url 'adoption_allegee' animal.id %}"  class="btn btn-info">Oui</a>
+	</div>
+</div>
+
+
+{% endblock %}

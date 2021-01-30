@@ -46,3 +46,6 @@ class Person(models.Model):
 
     def get_adresse_complete(self):
         return f"{self.adresse} \n {self.code_postal} {self.ville}"
+
+    def __str__(self):
+        return f"{self.prenom} {self.nom}"

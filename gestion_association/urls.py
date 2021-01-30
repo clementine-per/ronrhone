@@ -4,10 +4,11 @@ from django.views.generic import DetailView
 
 from .models.animal import Animal
 from .models.person import Person
-from .views import (home, animal, person)
+from .views import (home, animal, person, adoption)
 
 urlpatterns = [
     path("", home.index, name="accueil"),
+    # Animaux
     path("animals/", animal.CreateAnimal.as_view(), name="create_animal"),
     path("animals/create", animal.search_animal, name="animals"),
     path("animals/prefrence/update/<int:pk>/", animal.UpdatePreference.as_view(), name="update_preference"),
@@ -16,8 +17,21 @@ urlpatterns = [
     path("animals/<int:pk>/", login_required(
         DetailView.as_view(model=Animal, template_name="gestion_association/animal/animal_detail.html")),
          name="detail_animal"),
+    # Personnes
     path("persons/create", person.CreatePerson.as_view(), name="create_person"),
     path("persons/update/<int:pk>/", person.UpdatePerson.as_view(), name="update_person"),
     path("persons/update/benevole/<int:pk>/", person.BenevolePerson.as_view(), name="benevole_person"),
     path("persons/", person.person_list, name="persons"),
-    path("persons/<int:pk>/", login_required(DetailView.as_view(model=Person)), name="detail_person"),]
+    path("persons/<int:pk>/", login_required(DetailView.as_view(model=Person)), name="detail_person"),
+    # Adoptions
+    path("adoption/<int:pk>/", adoption.index, name="adoption"),
+    path(
+        "adoption_complete/<int:pk>/",
+        adoption.adoption_complete,
+        name="adoption_complete",
+    ),
+    path(
+        "adoption_allegee/<int:pk>/",
+        adoption.adoption_allegee,
+        name="adoption_allegee",
+    ),]

@@ -1,0 +1,26 @@
+{% extends "gestion_association/base.html" %}
+
+{% block content %}
+
+<h1> Adoption de {{animal.nom}} </h1>
+<br>
+<h3> Informations de l'adoptant </h3>
+
+<form method="post" action="">
+   {% csrf_token %}
+   {{ person_form.as_p }}
+   <br>
+	<h3> Informations sur l'adoption </h3>
+	{{ adoption_form.as_p }}
+   <div class="row">
+   	<div class="col-md-6">
+   		<a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
+   	</div>
+   	<div class="col-md-6">
+   		<input class="btn btn-info" type="submit" />
+   	</div>
+   </div>
+</form>
+
+
+{% endblock %}
