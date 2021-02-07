@@ -3,8 +3,9 @@ from django.urls import path
 from django.views.generic import DetailView
 
 from .models.animal import Animal
+from .models.famille import Famille
 from .models.person import Person
-from .views import (home, animal, person, adoption)
+from .views import (home, animal, person, adoption, famille)
 
 urlpatterns = [
     path("", home.index, name="accueil"),
@@ -34,4 +35,11 @@ urlpatterns = [
         "adoption_allegee/<int:pk>/",
         adoption.adoption_allegee,
         name="adoption_allegee",
-    ),]
+    ),
+    #Familles
+    path("familles/create", famille.CreateFamille.as_view(), name="create_famille"),
+    path("familles/", famille.famille_list, name="familles"),
+    path("familles/<int:pk>/", login_required(
+        DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),
+         name="detail_famille"),
+    ]

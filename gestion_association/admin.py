@@ -4,6 +4,7 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
 from gestion_association.models.animal import Animal, Adoption, Preference
+from gestion_association.models.famille import Famille
 from gestion_association.models.person import Person
 
 
@@ -23,4 +24,8 @@ class AdoptionAdmin(ImportExportModelAdmin):
 
 @admin.register(Preference)
 class PreferenceAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(Famille)
+class FamilleAdmin(ImportExportModelAdmin):
     pass

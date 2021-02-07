@@ -3,6 +3,7 @@ from enum import Enum
 from django.db import models
 
 from gestion_association.models import OuiNonChoice
+from gestion_association.models.famille import Famille
 from gestion_association.models.person import Person
 
 
@@ -61,9 +62,6 @@ class Preference(models.Model):
     biberonnage = models.CharField(max_length=3, default="NON",
                                    verbose_name="Biberonnage",
                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    tranche_age = models.CharField(max_length=10, blank = True,
-                                   verbose_name="Tranche d'âge",
-                                   choices=[(tag.name, tag.value) for tag in TrancheAge])
     presence = models.CharField(max_length=10, blank=True, default="BAS",
                                    verbose_name="Niveau de présence requis",
                                    choices=[(tag.name, tag.value) for tag in Presence])
@@ -141,6 +139,10 @@ class Animal(models.Model):
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
     animaux_lies = models.ManyToManyField('self', verbose_name="Animaux liés", blank=True)
+    tranche_age = models.CharField(max_length=10, blank=True,
+                                   verbose_name="Tranche d'âge",
+                                   choices=[(tag.name, tag.value) for tag in TrancheAge])
+    famille = models.ForeignKey(Famille, on_delete=models.PROTECT, null=True)
 
     def save(self, *args, **kwargs):
         # Au premier enregistrement en base, on initialise les préférences

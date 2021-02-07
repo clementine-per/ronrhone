@@ -1,0 +1,73 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+<div class="row p-4">
+    <div class="col-sm-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                Personne
+            </div>
+            <div class="card-body">
+                <strong> Nom </strong> : <a href = "{% url 'detail_person' famille.personne.id %}">{{famille.personne.nom}}</a> <br>
+                <strong> Prénom </strong> : {{famille.personne.prenom}} <br>
+                <strong> Adresse </strong> : {{famille.personne.get_adresse_complete}} <br>
+                <strong> Téléphone </strong> : {{famille.personne.telephone}} <br>
+                <strong> Mail </strong> : {{famille.personne.email}} <br>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                Informations générales
+            </div>
+            <div class="card-body">
+                <strong> Statut </strong> :
+                <span class="{{famille.get_statut_display}}">{{famille.get_statut_display}}</span><br>
+                <strong> Niveau </strong> : {{famille.get_niveau_display}} <br>
+                <strong> Animaux acceuillis au total </strong> : {{famille.nb_animaux_historique}} <br>
+                <strong> Commentaire </strong> : {{famille.commentaire}} <br>
+                <strong> Prochaine(s) indisponibilité(s) </strong> : {{famille.get_indisponibilites_str}} <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations d'accueils
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Extérieur </strong> : {{famille.preference.get_exterieur_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Biberonnage </strong> : {{famille.preference.get_biberonnage_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Sociabilistaion </strong> : {{famille.preference.get_sociabilisation_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Niveau de présence </strong> : {{famille.preference.get_presence_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Quarantaine </strong> : {{famille.preference.get_quarantaine_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Longue durée </strong> : {{famille.get_longue_duree_display}} <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

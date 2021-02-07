@@ -1,0 +1,116 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Recherche
+            </div>
+		<form action = "{% url 'animals' %}" method="post">
+            <div class="card-body">
+                {%csrf_token %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.nom_personne.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.nom_personne }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.statut.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.statut }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.places_dispos.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.places_dispos }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.quarantaine.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.quarantaine }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.exterieur.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.exterieur }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_presence_min.label_tag }} {{ form.date_presence_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_presence_max.label_tag }} {{ form.date_presence_max }}
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">Statut</th>
+            <th scope="col" style="width:15%;">Personne</th>
+            <th scope="col" >Nombre de places</th>
+            <th scope="col">Quarantaine</th>
+            <th scope="col">Exterieur</th>
+            <th scope="col">Sociabilisation</th>
+            <th scope="col">Animaux acceuillis</th>
+            <th scope="col" style="width:15%;">Taille du logement</th>
+            <th scope="col">Consulter</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for famille in famille_list %}
+        <tr class="table-info">
+            <td class="{{famille.get_statut_display}}">{{famille.get_statut_display}}</td>
+            <td><a href = "{% url 'detail_person' famille.personne.id %}">{{famille.personne}}</a></td>
+            <td>{{famille.get_nb_places_str}}</td>
+            <td>{{famille.preference.get_quarantaine_display}}</td>
+            <td>{{famille.preference.get_exterieur_display}}</td>
+            <td>{{famille.preference.get_sociabilisation_display}}</td>
+            <td>{% for animal in famille.animal_set.all %}{{animal.nom}}<br>{% endfor %}</td>
+            <td>{{famille.taille_logement|default:" - "}}</td>
+            <td><a href = "{% url 'detail_famille' famille.id %}">Consulter</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        {% if famille_list.has_previous %}
+        <a href="{% url 'familles'%}?page={{ famille_list.previous_page_number}}">Précédente</a> -
+        {% endif %}
+
+        <span class="current">
+            Page {{ famille_list.number }} sur {{ famille_list.paginator.num_pages }}
+        </span>
+
+        {% if famille_list.has_next %}
+        - <a href="{% url 'familles'%}?page={{ famille_list.next_page_number}}">Suivante</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
