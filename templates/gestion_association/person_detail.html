@@ -85,7 +85,7 @@
                 <a href= "{% url 'benevole_person' person.id %}"  class="btn btn-outline-info btn-block ">Déclarer bénévole</a>
                 {% endif %}
                 {% if not person.is_famille %}
-                <a href= "#" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>
+                <a href= "{% url 'create_famille' person.id %}" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>
                 {% endif %}
                 {% if not person.is_adoptante %}
                 <a href= "#" class="btn btn-outline-info btn-block ">Déclarer adoptant</a>

@@ -76,7 +76,7 @@
             Page {{ persons.number }} sur {{ persons.paginator.num_pages }}
         </span>
         {% if persons.has_next %}
-        - <a href="{% url 'animals'%}?page={{ animal_list.next_page_number}}">Suivante</a>
+        - <a href="{% url 'persons'%}?page={{ persons.next_page_number}}">Suivante</a>
         {% endif %}
     </div>
     <div class="text-right">

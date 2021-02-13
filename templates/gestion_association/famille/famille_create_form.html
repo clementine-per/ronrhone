@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "gestion_association/base.html" %}
 
-</body>
-</html>
+{% block content %}
+
+
+<h1> Créer une famille d'accueil </h1>
+
+<strong> Personne de la FA </strong> : {{personne}} <br>
+
+<form method="post" action="">
+    {% csrf_token %}
+    {{ famille_form.as_p }}
+    {{ preference_form.as_p }}
+    <div class="row">
+        <div class="col-md-6">
+            <a href = "{% url 'detail_person' personne.id %}"  class="btn btn-secondary">Annuler</a>
+        </div>
+        <div class="col-md-6">
+            <input class="btn btn-info" type="submit" />
+        </div>
+    </div>
+</form>
+
+
+{% endblock %}

@@ -31,8 +31,7 @@ class FamilleSearchForm(Form):
     )
 
 
-
 class FamilleCreateForm(ModelForm):
     class Meta:
         model = Famille
-        fields = ("personne","commentaire","taille_logement","nb_places", "longue_duree")
+        fields = ("commentaire","taille_logement","nb_places", "longue_duree")

@@ -37,7 +37,7 @@ urlpatterns = [
         name="adoption_allegee",
     ),
     #Familles
-    path("familles/create", famille.CreateFamille.as_view(), name="create_famille"),
+    path("familles/create/<int:pk>/", famille.create_famille, name="create_famille"),
     path("familles/", famille.famille_list, name="familles"),
     path("familles/<int:pk>/", login_required(
         DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),

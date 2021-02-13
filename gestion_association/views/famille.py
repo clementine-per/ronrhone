@@ -1,21 +1,36 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
+from gestion_association.forms import PreferenceForm
 from gestion_association.forms.famille import FamilleCreateForm, FamilleSearchForm
 from gestion_association.models.famille import Famille
+from gestion_association.models.person import Person
 
 
-class CreateFamille(LoginRequiredMixin, CreateView):
-    model = Famille
-    form_class = FamilleCreateForm
-    template_name = "gestion_association/famille/famille_form.html"
-
-    def get_success_url(self):
-        return reverse_lazy("detail_famille", kwargs={"pk": self.object.id})
+def create_famille(request, pk):
+    personne = Person.objects.get(id=pk)
+    if request.method == "POST":
+        famille_form = FamilleCreateForm(data=request.POST)
+        preference_form = PreferenceForm(data=request.POST)
+        if (famille_form.is_valid() and preference_form.is_valid()):
+            # Rattachement manuel de la personne et des préférences
+            preference = preference_form.save()
+            famille = famille_form.save(commit=False)
+            famille.preference = preference
+            famille.personne = personne
+            famille.save()
+            # La personne devient FA
+            personne.is_famille = True
+            personne.save()
+            return redirect("detail_famille", pk=famille.id)
+    else:
+        famille_form = FamilleCreateForm()
+        preference_form = PreferenceForm()
+    return render(request, "gestion_association/famille/famille_create_form.html", locals())
 
 @login_required
 def famille_list(request):
