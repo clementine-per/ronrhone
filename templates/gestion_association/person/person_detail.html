@@ -34,11 +34,6 @@
                         <strong> Profession </strong> : {{person.profession}} <br>
                     </div>
                     <div class="col-sm-6">
-                        <strong> Date de naissance </strong> : {{person.date_naissance}} <br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
                         <strong> Commentaire </strong> : {{person.commentaire}} <br>
                     </div>
                 </div>
@@ -66,10 +61,17 @@
                     {% if person.commentaire_benevole %}
                     : {{person.commentaire_benevole}}
                     {% endif %}
+                    <a href= "{% url 'cancel_benevole' person.id %}" class="close">
+                        <i class="fas fa-times" style="color:#ff9900;"></i>
+                    </a>
+
                 </div>
                 {% endif %}
                 {% if person.is_adoptante %}
                 <div class="role adoptant mb-3">Adoptant</div>
+                {% endif %}
+                {% if not person.has_role %}
+                <div>Aucun rôle défini pour cette personne</div>
                 {% endif %}
             </div>
         </div>
@@ -80,8 +82,9 @@
                 Actions
             </div>
             <div class="card-body">
-                <a href= "#" class="btn btn-outline-info btn-block ">Modifier</a>
-                {% if not person.is_benevole %}
+                {% if person.is_benevole %}
+                <a href= "{% url 'benevole_person' person.id %}"  class="btn btn-outline-info btn-block ">Modifier rôle bénévole</a>
+                {% else %}
                 <a href= "{% url 'benevole_person' person.id %}"  class="btn btn-outline-info btn-block ">Déclarer bénévole</a>
                 {% endif %}
                 {% if not person.is_famille %}

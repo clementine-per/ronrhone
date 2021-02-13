@@ -163,7 +163,7 @@ class Animal(models.Model):
                 + self.date_dernier_vaccin.strftime("%d/%m/%Y")
                 + " )"
             )
-        elif self.vaccine:
+        elif self.vaccine == OuiNonChoice.OUI.name:
             return "Oui"
         else:
             return "Non"
@@ -176,7 +176,7 @@ class Animal(models.Model):
                 + self.date_sterilisation.strftime("%d/%m/%Y")
                 + " )"
             )
-        elif self.sterilise:
+        elif self.sterilise == OuiNonChoice.OUI.name:
             return "Oui"
         else:
             return "Non"

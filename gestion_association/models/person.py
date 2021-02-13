@@ -49,3 +49,6 @@ class Person(models.Model):
 
     def __str__(self):
         return f"{self.prenom} {self.nom}"
+
+    def has_role(self):
+        return self.is_famille or self.is_benevole or self.is_adoptante

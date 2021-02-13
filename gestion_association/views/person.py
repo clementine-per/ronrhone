@@ -3,7 +3,7 @@ import sys
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
@@ -14,7 +14,7 @@ from gestion_association.models.person import Person
 class CreatePerson(LoginRequiredMixin, CreateView):
     model = Person
     form_class = PersonForm
-    template_name = "gestion_association/person_form.html"
+    template_name = "gestion_association/person/person_form.html"
 
     def get_success_url(self):
         return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
@@ -23,7 +23,7 @@ class CreatePerson(LoginRequiredMixin, CreateView):
 class UpdatePerson(LoginRequiredMixin, UpdateView):
     model = Person
     form_class = PersonForm
-    template_name = "gestion_association/person_form.html"
+    template_name = "gestion_association/person/person_form.html"
 
     def get_success_url(self):
         return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
@@ -32,7 +32,7 @@ class UpdatePerson(LoginRequiredMixin, UpdateView):
 class BenevolePerson(LoginRequiredMixin, UpdateView):
     model = Person
     form_class = BenevoleForm
-    template_name = "gestion_association/person_benevole_form.html"
+    template_name = "gestion_association/person/person_benevole_form.html"
 
     def get_success_url(self):
         return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
@@ -73,4 +73,12 @@ def person_list(request):
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière
         persons = paginator.page(paginator.num_pages())
-    return render(request, "gestion_association/person_list.html", locals())
+    return render(request, "gestion_association/person/person_list.html", locals())
+
+@login_required
+def person_benevole_cancel(request, pk):
+    personne = Person.objects.get(id=pk)
+    personne.is_benevole = False
+    personne.commentaire_benevole = ''
+    personne.save()
+    return redirect("detail_person", pk=pk)
