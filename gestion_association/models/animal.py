@@ -1,6 +1,8 @@
+from datetime import timedelta
 from enum import Enum
 
 from django.db import models
+from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.famille import Famille
@@ -51,10 +53,10 @@ class TrancheAge(Enum):
 
 class Preference(models.Model):
     sociabilisation = models.CharField(max_length=3, default="NON",
-                                       verbose_name="Sociabilisation nécessaire",
+                                       verbose_name="Sociabilisation",
                                        choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     exterieur = models.CharField(max_length=3, default="NON",
-                                       verbose_name="Extérieur nécessaire",
+                                       verbose_name="Extérieur",
                                        choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     quarantaine = models.CharField(max_length=3, default="NON",
                                  verbose_name="Quanrantaine",
@@ -63,7 +65,7 @@ class Preference(models.Model):
                                    verbose_name="Biberonnage",
                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     presence = models.CharField(max_length=10, blank=True, default="BAS",
-                                   verbose_name="Niveau de présence requis",
+                                   verbose_name="Niveau de présence",
                                    choices=[(tag.name, tag.value) for tag in Presence])
 
 
@@ -150,6 +152,19 @@ class Animal(models.Model):
             preference = Preference.objects.create()
             self.preference = preference
             preference.save()
+            # Déterminer la tranche d'age à partir de la date de naissance
+            if (self.date_naissance):
+                today = timezone.now().date()
+                six_months = today - timedelta(days=6*30)
+                senior = today - timedelta(days=30*12*10)
+                date_naissance = self.date_naissance
+                if date_naissance > six_months:
+                    self.tranche_age = TrancheAge.CHATON.name
+                elif date_naissance > senior:
+                    self.tranche_age = TrancheAge.ADULTE.name
+                else:
+                    self.tranche_age = TrancheAge.SENIOR.name
+
         return super(Animal,self).save(*args, **kwargs)
 
     def __str__(self):
@@ -214,3 +229,15 @@ class Adoption(models.Model):
         blank=True,
     )
     date_visite = models.DateField(verbose_name="Date de la visite de contrôle", null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        # Calcul du statut de l'animal
+        if (self.visite_controle):
+            self.animal.statut = StatutAnimal.ADOPTE_DEFINITIF.name
+        else:
+            if self.date >= timezone.now().date():
+                self.animal.statut = StatutAnimal.ADOPTION.name
+            else:
+                self.animal.statut = StatutAnimal.ADOPTE.name
+        self.animal.save()
+        return super(Adoption,self).save(*args, **kwargs)

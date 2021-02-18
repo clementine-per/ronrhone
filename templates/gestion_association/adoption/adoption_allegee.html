@@ -10,14 +10,24 @@
 	{{ adoption_form.media }}
    {{ adoption_form.as_p }}
    <div class="row">
-   	<div class="col-md-6">
+   	<div class="col">
    		<a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
    	</div>
-   	<div class="col-md-6">
+   	<div class="col">
    		<input class="btn btn-info" type="submit" />
    	</div>
    </div>
 </form>
 
 
+{% endblock %}
+
+{% block script %}
+<script>
+$(function() {
+  $('[name="date"],[name="date_visite"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+  });
+});
+</script>
 {% endblock %}

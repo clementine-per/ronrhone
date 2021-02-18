@@ -1,12 +1,16 @@
+import sys
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
+from gestion_association.forms import PreferenceForm
 from gestion_association.forms.animal import AnimalSearchForm, AnimalCreateForm, AnimalInfoUpdateForm, \
-    AnimalSanteUpdateForm
+    AnimalSanteUpdateForm, AnimalLinkedForm
+from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, Preference
 
 
@@ -39,7 +43,10 @@ def search_animal(request):
                 animals = animals.filter(identification__icontains=identification_form)
             if sterilise_form:
                 animals = animals.filter(sterilise=sterilise_form)
-
+            if sans_fa_form and sans_fa_form == OuiNonChoice.OUI.name:
+                animals = animals.filter(famille__isnull=True)
+            if sans_fa_form and sans_fa_form == OuiNonChoice.NON.name:
+                animals = animals.filter(famille__isnull=False)
             if statuts_form:
                 animals = animals.filter(statut__in=statuts_form)
             if date_naissance_min:
@@ -80,13 +87,20 @@ class CreateAnimal(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
-
-class UpdatePreference(LoginRequiredMixin, UpdateView):
-    model = Preference
-    template_name = "gestion_association/animal/preference_form.html"
-    fields = '__all__'
-    def get_success_url(self):
-        return reverse_lazy("detail_animal", kwargs={"pk": self.object.animal.id})
+@login_required()
+def update_preference(request, pk):
+    animal = Animal.objects.get(id=pk)
+    if request.method == "POST":
+        preference_form = PreferenceForm(data=request.POST, instance=animal.preference)
+        animal_linked_form = AnimalLinkedForm(data=request.POST, instance=animal)
+        if preference_form.is_valid() and animal_linked_form.is_valid():
+            preference_form.save()
+            animal_linked_form.save()
+            return redirect("detail_animal", pk=pk)
+    else:
+        preference_form = PreferenceForm(instance=animal.preference)
+        animal_linked_form = AnimalLinkedForm(instance=animal)
+    return render(request,"gestion_association/animal/preference_form.html", locals())
 
 
 class UpdateInformation(LoginRequiredMixin, UpdateView):

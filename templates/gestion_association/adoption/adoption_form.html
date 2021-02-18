@@ -1,7 +1,6 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
-
-<h2>Modifier les informations générales de {{object.nom}}</h2>
+<h2>Modifier l'adoption de {{object.animal.nom}}</h2>
 <br/>
 <form method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
@@ -10,7 +9,7 @@
     <br/>
     <div class="row">
         <div class="col">
-            <a href = "{% url 'detail_animal' object.id %}"  class="btn btn-secondary">Annuler</a>
+            <a href = "{% url 'detail_animal' object.animal.id %}"  class="btn btn-secondary">Annuler</a>
         </div>
         <div class="col">
             <input class="btn btn-info" type="submit" />
@@ -21,7 +20,7 @@
 {% block script %}
 <script>
 $(function() {
-  $('[name="date_naissance"],[name="date_arrivee"]').datepicker({
+  $('[name="date"],[name="date_visite"]').datepicker({
       dateFormat: 'dd/mm/yy'
   });
 });

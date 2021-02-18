@@ -10,9 +10,9 @@ from .views import (home, animal, person, adoption, famille)
 urlpatterns = [
     path("", home.index, name="accueil"),
     # Animaux
-    path("animals/", animal.CreateAnimal.as_view(), name="create_animal"),
-    path("animals/create", animal.search_animal, name="animals"),
-    path("animals/prefrence/update/<int:pk>/", animal.UpdatePreference.as_view(), name="update_preference"),
+    path("animals/", animal.search_animal, name="animals"),
+    path("animals/create", animal.CreateAnimal.as_view(), name="create_animal"),
+    path("animals/preference/update/<int:pk>/", animal.update_preference, name="update_preference"),
     path("animals/information/update/<int:pk>/", animal.UpdateInformation.as_view(), name="update_information"),
     path("animals/sante/update/<int:pk>/", animal.UpdateSante.as_view(), name="update_sante"),
     path("animals/<int:pk>/", login_required(
@@ -39,10 +39,21 @@ urlpatterns = [
         adoption.adoption_allegee,
         name="adoption_allegee",
     ),
+    path(
+        "adoption_from_user/<int:pk>/",
+        adoption.adoption_from_user,
+        name="adoption_from_user",
+    ),
+    path(
+        "adoption/update/<int:pk>/",
+        adoption.UpdateAdoption.as_view(),
+        name="update_adoption"
+    ),
     #Familles
     path("familles/create/<int:pk>/", famille.create_famille, name="create_famille"),
     path("familles/", famille.famille_list, name="familles"),
     path("familles/<int:pk>/", login_required(
         DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),
          name="detail_famille"),
+    path("familles/select", famille.famille_select, name="famille_select"),
     ]

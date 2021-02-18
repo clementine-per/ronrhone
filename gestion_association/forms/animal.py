@@ -1,21 +1,23 @@
-from enum import Enum
-
-from dal import autocomplete
-from django.conf import settings
+import json
+from string import capwords
 
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelChoiceField, ModelForm, FileInput, \
     DateInput, BooleanField, MultipleChoiceField, Widget, TextInput
-from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget, \
-    HeavySelect2MultipleWidget
+from django.forms import CheckboxInput, SelectMultiple, ModelMultipleChoiceField
+from django.utils.encoding import force_text
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
+
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, Preference
+from gestion_association.models.famille import Famille
+from gestion_association.widgets import TableSelectMultiple
 
 
 class DateInput(DateInput):
     input_type = "date"
-
 
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
@@ -69,6 +71,18 @@ class AnimalCreateForm(ModelForm):
                   , "commentaire","statut","sterilise","date_sterilisation","vaccine",
                   "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")
 
+class AnimalLinkedForm(ModelForm):
+    class Meta:
+        model = Animal
+        fields = ("animaux_lies",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["animaux_lies"].queryset = Animal.objects.filter(statut__in=[StatutAnimal.A_ADOPTER.name,
+                                                                     StatutAnimal.QUARANTAINE.name,
+                                                                     StatutAnimal.SEVRAGE.name, StatutAnimal.SOCIA.name,
+                                                                     StatutAnimal.SOIN.name])
+
 
 class AnimalInfoUpdateForm(ModelForm):
     class Meta:
@@ -83,3 +97,16 @@ class AnimalSanteUpdateForm(ModelForm):
         model = Animal
         fields = ("sterilise","date_sterilisation","vaccine",
                   "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")
+
+
+class SelectFamilleForm(ModelForm):
+    class Meta:
+        model = Animal
+        fields = ("famille",)
+
+    famille = ModelMultipleChoiceField( queryset = Famille.objects.all(), required=False,
+                                             widget=TableSelectMultiple(
+        item_attrs=['date_mise_a_jour', 'personne', 'statut'],
+       enable_datatables=True,
+       bootstrap_style=True,
+       datatable_options={'language': {'url': '/foobar.js'}},))

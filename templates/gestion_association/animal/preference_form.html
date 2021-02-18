@@ -1,17 +1,19 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
-<h2>Modification des préférences de {{object.animal.nom}} </h2>
+<h2>Modification des préférences de {{animal.nom}} </h2>
 <br/>
 <form method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.media }}
-    {{ form.as_p }}
+    {{ preference_form.media }}
+    {{ preference_form.as_p }}
+    {{ animal_linked_form.media }}
+    {{ animal_linked_form.as_p }}
     <br/>
     <div class="row">
-        <div class="col-md-6">
-            <a href = "{% url 'detail_animal' object.animal.id %}"  class="btn btn-secondary">Annuler</a>
+        <div class="col">
+            <a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
         </div>
-        <div class="col-md-6">
+        <div class="col">
             <input class="btn btn-info" type="submit" />
         </div>
     </div>

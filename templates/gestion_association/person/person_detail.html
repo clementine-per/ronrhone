@@ -6,6 +6,9 @@
         <div class="card">
             <div class="card-header">
                 Coordonnées
+                <a href= "{% url 'update_person' person.id %}" class="close">
+                        <i class="fas fa-pen"></i>
+                </a>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -37,9 +40,6 @@
                         <strong> Commentaire </strong> : {{person.commentaire}} <br>
                     </div>
                 </div>
-                <p class="text-right">
-                    <a href= "{% url 'update_person' person.id %}" class="btn btn-info">Modifier</a>
-                </p>
             </div>
         </div>
     </div>
@@ -53,7 +53,12 @@
             </div>
             <div class="card-body">
                 {% if person.is_famille %}
-                <div class="role famille mb-3" >Famille d'accueil</div>
+                <div class="role famille mb-3" >
+                    Famille d'accueil : {{person.famille.get_statut_display}}
+                    <a href= "{% url 'detail_famille' person.famille.id %}" class="close">
+                        <i class="fas fa-eye" style="color:#46d246;"></i>
+                    </a>
+                </div>
                 {% endif %}
                 {% if person.is_benevole %}
                 <div class="role benevole mb-3">
@@ -68,7 +73,11 @@
                 </div>
                 {% endif %}
                 {% if person.is_adoptante %}
-                <div class="role adoptant mb-3">Adoptant</div>
+                <div class="role adoptant mb-3">Adoptant :
+                    {% for animal in person.animal_set.all %}
+                    <a href= "{% url 'detail_animal' animal.id %}"><br/>{{animal.nom}}</a>
+                    {% endfor %}
+                </div>
                 {% endif %}
                 {% if not person.has_role %}
                 <div>Aucun rôle défini pour cette personne</div>
@@ -90,9 +99,7 @@
                 {% if not person.is_famille %}
                 <a href= "{% url 'create_famille' person.id %}" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>
                 {% endif %}
-                {% if not person.is_adoptante %}
-                <a href= "#" class="btn btn-outline-info btn-block ">Déclarer adoptant</a>
-                {% endif %}
+                <a href= "{% url 'adoption_from_user' person.id %}" class="btn btn-outline-info btn-block ">Déclarer une adoption</a>
             </div>
         </div>
     </div>

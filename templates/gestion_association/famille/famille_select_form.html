@@ -3,17 +3,14 @@
 {% block content %}
 
 
-<h1> Créer une famille d'accueil </h1>
-
-<strong> Personne de la FA </strong> : {{personne}} <br>
+<h1> Trouver une famille d'accueil </h1>
 
 <form method="post" action="">
     {% csrf_token %}
-    {{ famille_form.as_p }}
-    {{ preference_form.as_p }}
+    {{ form.as_p }}
     <div class="row">
         <div class="col">
-            <a href = "{% url 'detail_person' personne.id %}"  class="btn btn-secondary">Annuler</a>
+            <a href = "#"  class="btn btn-secondary">Annuler</a>
         </div>
         <div class="col">
             <input class="btn btn-info" type="submit" />
@@ -22,4 +19,8 @@
 </form>
 
 
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 {% endblock %}

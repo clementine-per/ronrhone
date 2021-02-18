@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from gestion_association.forms import PreferenceForm
+from gestion_association.forms.animal import SelectFamilleForm
 from gestion_association.forms.famille import FamilleCreateForm, FamilleSearchForm
 from gestion_association.models.famille import Famille
 from gestion_association.models.person import Person
@@ -61,3 +62,8 @@ def famille_list(request):
         # Si on dépasse la limite de pages, on prend la dernière
         famille_list = paginator.page(paginator.num_pages())
     return render(request, "gestion_association/famille/famille_list.html", locals())
+
+@login_required
+def famille_select(request):
+    form = SelectFamilleForm()
+    return render(request, "gestion_association/famille/famille_select_form.html", locals())

@@ -18,3 +18,9 @@ div .adoptant{
     color:#bf00ff;
     background-color:#f3e6ff;
     border-color: #bf00ff;}
+
+.form-check-input {
+    position: relative;
+    margin-top: .3rem;
+    margin-left: 0;
+}

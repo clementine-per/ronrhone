@@ -22,12 +22,12 @@ class Famille(models.Model):
     date_mise_a_jour = models.DateField(
         verbose_name="Date de mise à jour", auto_now=True
     )
-    personne = models.ForeignKey(
+    personne = models.OneToOneField(
         Person,
         verbose_name="Personne",
         on_delete=models.PROTECT,
     )
-    statut = models.CharField(max_length=20, blank=True,
+    statut = models.CharField(max_length=20,
                                 verbose_name="Statut",
                                 choices=[(tag.name, tag.value) for tag in StatutFamille])
     niveau = models.CharField(max_length=20, blank=True,
