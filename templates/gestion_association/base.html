@@ -19,6 +19,9 @@
         <!-- Navbar -->
         <nav class="navbar navbar-light" style="background-color: #349fcd;">
             <a class="navbar-brand" href="{% url 'accueil' %}">Application de gestion ronrhône</a>
+            {% if title %}
+            {{title}}
+            {% endif %}
             <span class="d-flex">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#accountOptions" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="far fa-user "> Clémentine PERREAUT</i>

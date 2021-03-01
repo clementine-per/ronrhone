@@ -14,11 +14,13 @@ from gestion_association.models.person import Person
 @login_required
 def index(request, pk):
     animal = Animal.objects.get(id=pk)
+    title = "Adoption de " + animal.nom
     return render(request, "gestion_association/adoption/choix_adoption.html", locals())
 
 @login_required
 def adoption_complete(request, pk):
     animal = Animal.objects.get(id=pk)
+    title = "Adoption de " + animal.nom
     if request.method == "POST":
         person_form = PersonForm(data=request.POST)
         adoption_form = AdoptionCreateFormNoAdoptant(data=request.POST)
@@ -55,6 +57,7 @@ def adoption_complete(request, pk):
 @login_required
 def adoption_allegee(request, pk):
     animal = Animal.objects.get(id=pk)
+    title = "Adoption de " + animal.nom
     if request.method == "POST":
         adoption_form = AdoptionCreateForm(data=request.POST)
         if adoption_form.is_valid():
@@ -82,6 +85,7 @@ def adoption_allegee(request, pk):
 @login_required
 def adoption_from_user(request, pk):
     person = Person.objects.get(id=pk)
+    title = "Adoption par " + person.prenom + " " + person.nom
     if request.method == "POST":
         adoption_form = AdoptionFromUserForm(data=request.POST)
         if adoption_form.is_valid():

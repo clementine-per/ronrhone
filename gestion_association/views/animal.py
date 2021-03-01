@@ -18,6 +18,7 @@ from gestion_association.models.animal import Animal, Preference
 def search_animal(request):
     animals = Animal.objects.all()
     selected = "animals"
+    title = "Liste des animaux"
 
     if request.method == 'POST':
         form = AnimalSearchForm(request.POST)
@@ -64,6 +65,9 @@ def search_animal(request):
 
     else:
         form = AnimalSearchForm()
+        # Le champ statut est initialisé, il faut appliquer le filtre dessus
+        statuts_form = form["statuts"].value()
+        animals = animals.filter(statut__in=statuts_form)
 
     # Pagination : 20 éléments par page
     paginator = Paginator(animals.order_by('-date_mise_a_jour'), 20)

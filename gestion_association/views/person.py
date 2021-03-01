@@ -45,6 +45,7 @@ class BenevolePerson(LoginRequiredMixin, UpdateView):
 
 @login_required
 def person_list(request):
+    title = "Liste des personnes"
     selected = "persons"
     person_list = Person.objects.all().filter(inactif=False)
     if request.method == "POST":

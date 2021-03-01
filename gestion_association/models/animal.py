@@ -39,6 +39,11 @@ class StatutAnimal(Enum):
     RENDU = "Rendu à ses propriétaires"
 
 
+statuts_association = [StatutAnimal.A_ADOPTER.name, StatutAnimal.ADOPTION.name, StatutAnimal.SOCIA.name,
+                       StatutAnimal.ADOPTE.name, StatutAnimal.QUARANTAINE.name, StatutAnimal.SOIN.name,
+                       StatutAnimal.SEVRAGE.name]
+
+
 class Presence(Enum):
     BAS = "Bas"
     NORMAL = "Normal"
@@ -59,7 +64,7 @@ class Preference(models.Model):
                                        verbose_name="Extérieur",
                                        choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     quarantaine = models.CharField(max_length=3, default="NON",
-                                 verbose_name="Quanrantaine",
+                                 verbose_name="Quarantaine",
                                  choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     biberonnage = models.CharField(max_length=3, default="NON",
                                    verbose_name="Biberonnage",
@@ -95,6 +100,8 @@ class Animal(models.Model):
                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     identification = models.CharField(max_length=150,
                                      verbose_name="Numéro d'identification", blank=True)
+    lien_icad = models.URLField(max_length=150,
+                                      verbose_name="Lien ICAD", blank=True)
     fiv = models.CharField(
         max_length=30,
         verbose_name="FIV",
@@ -199,6 +206,9 @@ class Animal(models.Model):
 
 class Adoption(models.Model):
     date = models.DateField(verbose_name="Date de l'adoption")
+    acompte = models.CharField(max_length=3,
+                                    verbose_name="Acompte versé",
+                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     montant = models.DecimalField(
         verbose_name="Montant à payer", max_digits=7, decimal_places=2,
         null=True,
@@ -216,19 +226,25 @@ class Adoption(models.Model):
         null=True, verbose_name="Nombre de jours entre mise à l'adoption et adoption effective"
     )
     animal = models.OneToOneField(Animal, on_delete=models.PROTECT)
-    pre_visite = models.BooleanField(default=False,
-                                          verbose_name="Visite pré-adoption")
-    visite_controle = models.BooleanField(default=False,
-                                     verbose_name="Visite de contrôle (2 mois)")
+    pre_visite = models.CharField(max_length=3,
+                                    verbose_name="Visite pré-adoption",
+                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    visite_controle = models.CharField(max_length=3,
+                                    verbose_name="Visite de contrôle (2 mois)",
+                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     personne_visite = models.ForeignKey(
         Person,
-        verbose_name="Personne ayant effectué la visite de contrôle",
+        verbose_name="Personne ayant effectué les visites",
         on_delete=models.PROTECT,
         related_name="visites_adotion",
         null=True,
         blank=True,
     )
     date_visite = models.DateField(verbose_name="Date de la visite de contrôle", null=True, blank=True)
+    commentaire = models.CharField(max_length=1000, blank=True)
+    annule = models.BooleanField(default=False,
+                                 verbose_name="Adoption annulée")
+
 
     def save(self, *args, **kwargs):
         # Calcul du statut de l'animal

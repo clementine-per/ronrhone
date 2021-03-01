@@ -13,6 +13,7 @@ from gestion_association.models.person import Person
 
 
 def create_famille(request, pk):
+    title = "Créer une famille"
     personne = Person.objects.get(id=pk)
     if request.method == "POST":
         famille_form = FamilleCreateForm(data=request.POST)
@@ -35,6 +36,7 @@ def create_famille(request, pk):
 
 @login_required
 def famille_list(request):
+    title = "Liste des familles"
     selected = "familles"
     famille_list = Famille.objects.all()
     if request.method == "POST":

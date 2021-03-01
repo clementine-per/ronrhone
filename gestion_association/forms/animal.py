@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, Preference
+from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, Preference, statuts_association
 from gestion_association.models.famille import Famille
 from gestion_association.widgets import TableSelectMultiple
 
@@ -62,6 +62,10 @@ class AnimalSearchForm(Form):
         required=False,
         initial=[tag.name for tag in StatutAnimal]
     )
+
+    def __init__(self, *args, **kwargs):
+        super(AnimalSearchForm, self).__init__(*args, **kwargs)
+        self.initial['statuts'] = statuts_association
 
 
 class AnimalCreateForm(ModelForm):
