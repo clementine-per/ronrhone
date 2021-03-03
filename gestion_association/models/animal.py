@@ -174,6 +174,16 @@ class Animal(models.Model):
 
         return super(Animal,self).save(*args, **kwargs)
 
+    def get_latest_adoption(self):
+        if self.adoption_set:
+            return self.adoption_set.all().order_by('-id').first()
+        return None
+
+    def get_other_adoptions(self):
+        if len(self.adoption_set.all()) > 1:
+            return self.adoption_set.all().exclude(id=self.get_latest_adoption().id)
+        return None
+
     def __str__(self):
         return self.nom
 
@@ -225,7 +235,7 @@ class Adoption(models.Model):
     nb_jours = models.IntegerField(
         null=True, verbose_name="Nombre de jours entre mise à l'adoption et adoption effective"
     )
-    animal = models.OneToOneField(Animal, on_delete=models.PROTECT)
+    animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
     pre_visite = models.CharField(max_length=3,
                                     verbose_name="Visite pré-adoption",
                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
@@ -244,6 +254,9 @@ class Adoption(models.Model):
     commentaire = models.CharField(max_length=1000, blank=True)
     annule = models.BooleanField(default=False,
                                  verbose_name="Adoption annulée")
+    acompte_verse = models.CharField(max_length=3,
+                               verbose_name="Acompte versé", default="NON",
+                               choices=[(tag.name, tag.value) for tag in OuiNonChoice])
 
 
     def save(self, *args, **kwargs):

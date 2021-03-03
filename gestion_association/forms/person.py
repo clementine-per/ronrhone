@@ -17,7 +17,7 @@ class PersonSearchForm(Form):
 class PersonForm(ModelForm):
     class Meta:
         model = Person
-        fields = ("nom","prenom","email","adresse","code_postal","ville", "telephone"
+        fields = ("prenom","nom","email","adresse","code_postal","ville", "telephone"
                   , "profession","commentaire")
 
 

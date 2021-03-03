@@ -12,14 +12,14 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
 class AdoptionCreateForm(ModelForm):
     class Meta:
         model = Adoption
-        fields = ("date","adoptant","montant","montant_restant",
+        fields = ("date","acompte_verse","adoptant","montant","montant_restant",
                   "pre_visite","visite_controle","personne_visite","date_visite")
 
 
 class AdoptionFromUserForm(ModelForm):
     class Meta:
         model = Adoption
-        fields = ("date", "animal", "montant", "montant_restant",
+        fields = ("date","acompte_verse", "animal", "montant", "montant_restant",
                   "pre_visite", "visite_controle", "personne_visite", "date_visite")
 
     def __init__(self, *args, **kwargs):
@@ -30,5 +30,5 @@ class AdoptionFromUserForm(ModelForm):
 class AdoptionUpdateForm(ModelForm):
     class Meta:
         model = Adoption
-        fields = ("date","montant","montant_restant",
+        fields = ("date","acompte_verse","montant","montant_restant",
                   "pre_visite","visite_controle","personne_visite","date_visite")

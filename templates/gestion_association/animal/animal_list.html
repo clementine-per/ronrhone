@@ -104,6 +104,7 @@
             <th scope="col">FA</th>
             <th scope="col" style="width:15%;">Date prochaine visite</th>
             <th scope="col">Date dernier vermifuge</th>
+            <th scope="col">ICAD</th>
         </tr>
         </thead>
         <tbody>
@@ -118,6 +119,7 @@
             <td>{{animal.famille.personne}}</td>
             <td>{{animal.date_prochain_vaccin|default:" - "}}</td>
             <td>{{animal.date_vermifuge|default:" - "}}</td>
+            <td>{% if animal.lien_icad %}<a href= "{{animal.lien_icad}}"><i class="fas fa-link"></i></a>{% endif %}</td>
         </tr>
         {% endfor %}
         </tbody>
