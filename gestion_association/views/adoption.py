@@ -7,7 +7,8 @@ from django.views.generic import UpdateView
 from gestion_association.forms.adoption import AdoptionCreateFormNoAdoptant, AdoptionCreateForm, AdoptionFromUserForm, \
     AdoptionUpdateForm
 from gestion_association.forms.person import PersonForm
-from gestion_association.models.animal import Animal, StatutAnimal, Adoption
+from gestion_association.models.adoption import Adoption
+from gestion_association.models.animal import Animal, StatutAnimal
 from gestion_association.models.person import Person
 
 

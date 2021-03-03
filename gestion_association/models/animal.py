@@ -51,7 +51,7 @@ class Presence(Enum):
 
 
 class TrancheAge(Enum):
-    CHATON = "Chaton"
+    ENFANT = "Enfant"
     ADULTE = "Adulte"
     SENIOR = "Sénior"
 
@@ -112,9 +112,14 @@ class Animal(models.Model):
         verbose_name="FELV",
         choices=[(tag.name, tag.value) for tag in TestResultChoice],
     )
-    vaccine = models.CharField(max_length=3,
-                                    verbose_name="Vacciné(e)",
+    primo_vaccine = models.CharField(max_length=3,
+                                    verbose_name="Primo Vacciné(e)",
+                                     default="NON",
                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    vaccin_ok = models.CharField(max_length=3,
+                                     verbose_name="Vaccins à jour",
+                                    default="NON",
+                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     date_dernier_vaccin = models.DateField(
         verbose_name="Date du dernier rappel de vaccin", null=True, blank=True
     )
@@ -162,11 +167,11 @@ class Animal(models.Model):
             # Déterminer la tranche d'age à partir de la date de naissance
             if (self.date_naissance):
                 today = timezone.now().date()
-                six_months = today - timedelta(days=6*30)
+                twelve_months = today - timedelta(days=12*30)
                 senior = today - timedelta(days=30*12*10)
                 date_naissance = self.date_naissance
-                if date_naissance > six_months:
-                    self.tranche_age = TrancheAge.CHATON.name
+                if date_naissance > twelve_months:
+                    self.tranche_age = TrancheAge.ENFANT.name
                 elif date_naissance > senior:
                     self.tranche_age = TrancheAge.ADULTE.name
                 else:
@@ -195,7 +200,7 @@ class Animal(models.Model):
                 + self.date_dernier_vaccin.strftime("%d/%m/%Y")
                 + " )"
             )
-        elif self.vaccine == OuiNonChoice.OUI.name:
+        elif self.primo_vaccine == OuiNonChoice.OUI.name or self.vaccin_ok == OuiNonChoice.OUI.name:
             return "Oui"
         else:
             return "Non"
@@ -212,61 +217,3 @@ class Animal(models.Model):
             return "Oui"
         else:
             return "Non"
-
-
-class Adoption(models.Model):
-    date = models.DateField(verbose_name="Date de l'adoption")
-    acompte = models.CharField(max_length=3,
-                                    verbose_name="Acompte versé",
-                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    montant = models.DecimalField(
-        verbose_name="Montant à payer", max_digits=7, decimal_places=2,
-        null=True,
-        blank=True,
-    )
-    montant_restant = models.DecimalField(
-        verbose_name="Montant restant à payer",
-        max_digits=7,
-        decimal_places=2,
-        null=True,
-        blank=True,
-    )
-    adoptant = models.ForeignKey(Person, on_delete=models.PROTECT)
-    nb_jours = models.IntegerField(
-        null=True, verbose_name="Nombre de jours entre mise à l'adoption et adoption effective"
-    )
-    animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
-    pre_visite = models.CharField(max_length=3,
-                                    verbose_name="Visite pré-adoption",
-                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    visite_controle = models.CharField(max_length=3,
-                                    verbose_name="Visite de contrôle (2 mois)",
-                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    personne_visite = models.ForeignKey(
-        Person,
-        verbose_name="Personne ayant effectué les visites",
-        on_delete=models.PROTECT,
-        related_name="visites_adotion",
-        null=True,
-        blank=True,
-    )
-    date_visite = models.DateField(verbose_name="Date de la visite de contrôle", null=True, blank=True)
-    commentaire = models.CharField(max_length=1000, blank=True)
-    annule = models.BooleanField(default=False,
-                                 verbose_name="Adoption annulée")
-    acompte_verse = models.CharField(max_length=3,
-                               verbose_name="Acompte versé", default="NON",
-                               choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-
-
-    def save(self, *args, **kwargs):
-        # Calcul du statut de l'animal
-        if (self.visite_controle):
-            self.animal.statut = StatutAnimal.ADOPTE_DEFINITIF.name
-        else:
-            if self.date >= timezone.now().date():
-                self.animal.statut = StatutAnimal.ADOPTION.name
-            else:
-                self.animal.statut = StatutAnimal.ADOPTE.name
-        self.animal.save()
-        return super(Adoption,self).save(*args, **kwargs)

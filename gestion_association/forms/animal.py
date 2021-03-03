@@ -72,7 +72,7 @@ class AnimalCreateForm(ModelForm):
     class Meta:
         model = Animal
         fields = ("nom","sexe","type","date_naissance","identification","circonstances", "date_arrivee"
-                  , "commentaire","statut","sterilise","date_sterilisation","vaccine",
+                  , "commentaire","statut","sterilise","date_sterilisation","primo_vaccine", "vaccin_ok",
                   "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite", "lien_icad")
 
 class AnimalLinkedForm(ModelForm):
@@ -99,7 +99,7 @@ class AnimalInfoUpdateForm(ModelForm):
 class AnimalSanteUpdateForm(ModelForm):
     class Meta:
         model = Animal
-        fields = ("sterilise","date_sterilisation","vaccine",
+        fields = ("sterilise","date_sterilisation","primo_vaccine", "vaccin_ok",
                   "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")
 
 

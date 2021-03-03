@@ -139,15 +139,29 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Vacciné </strong> : {{animal.get_vaccin_str}} <br>
+                        <strong> Primo vacciné </strong> : {{animal.get_primo_vaccine_display}} <br>
                     </div>
                     <div class="col-sm-6">
+                        <strong> Vaccins à jour </strong> : {{animal.get_vaccin_ok_display}} <br>
                         <strong> Date du dernier vermifuge </strong> : {{animal.date_vermifuge|default:" - "}} <br>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
+                        <strong> Date dernier vaccin </strong> : {{animal.date_dernier_vaccin}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date prochain vaccin </strong> : {{animal.date_prochain_vaccin}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <strong> Stérilisé </strong> : {{animal.get_sterilisation_str}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Date du dernier vermifuge </strong> : {{animal.date_vermifuge|default:" - "}} <br>
                     </div>
                     <div class="col-sm-6">
                         <strong> Date d'administration anti-parasite </strong> : {{animal.date_parasite|default:" - "}} <br>

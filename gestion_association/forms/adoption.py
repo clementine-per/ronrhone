@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 
-from gestion_association.models.animal import Adoption, Animal, StatutAnimal
+from gestion_association.models.adoption import Adoption
+from gestion_association.models.animal import Animal, StatutAnimal
 
 
 class AdoptionCreateFormNoAdoptant(ModelForm):

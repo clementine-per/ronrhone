@@ -3,7 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from import_export.admin import ImportExportModelAdmin
 
-from gestion_association.models.animal import Animal, Adoption, Preference
+from gestion_association.models.adoption import TarifAdoption, Adoption
+from gestion_association.models.animal import Animal, Preference
 from gestion_association.models.famille import Famille
 from gestion_association.models.person import Person
 
@@ -28,4 +29,8 @@ class PreferenceAdmin(ImportExportModelAdmin):
 
 @admin.register(Famille)
 class FamilleAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(TarifAdoption)
+class TarifAdoptionAdmin(ImportExportModelAdmin):
     pass
