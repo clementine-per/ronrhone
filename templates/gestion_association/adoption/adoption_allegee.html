@@ -1,33 +1,27 @@
 {% extends "gestion_association/base.html" %}
-
+{% load static %}
 {% block content %}
 
 <h1> Adoption de {{animal.nom}} </h1>
 <br>
 
-<form method="post" action="">
-   {% csrf_token %}
-	{{ adoption_form.media }}
-   {{ adoption_form.as_p }}
-   <div class="row">
-   	<div class="col">
-   		<a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
-   	</div>
-   	<div class="col">
-   		<input class="btn btn-info" type="submit" />
-   	</div>
-   </div>
+<form method="post" id="adoptionForm" data-calcul-montant-url="{% url 'calcul_montant_restant'%}"
+	  data-calcul-montant-sterilisation-url="{% url 'calcul_montant_sterilisation' animal.id %}" novalidate>
+	{% csrf_token %}
+	{% include 'gestion_association/adoption/adoption_base_form.html' %}
+	<div class="row">
+		<div class="col">
+			<a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
+		</div>
+		<div class="col">
+			<input class="btn btn-info" type="submit" />
+		</div>
+	</div>
 </form>
 
 
 {% endblock %}
 
 {% block script %}
-<script>
-$(function() {
-  $('[name="date"],[name="date_visite"]').datepicker({
-      dateFormat: 'dd/mm/yy'
-  });
-});
-</script>
+<script src="{% static 'js/adoption.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+
+<h3 class="m-3">Tarifs des adoptions</h3>
+<br>
+<table class="myTable">
+    <tr class="header">
+        <th>Type d'animal</th>
+        <th>Sexe de l'animal</th>
+        <th>Stérilisé?</th>
+        <th>Tranche d'âge</th>
+        <th>Vaccins à jour</th>
+        <th>Montant</th>
+    </tr>
+    {% for tarif in tarifs_adoption %}
+    <tr>
+      <td>{{tarif.get_type_animal_display}}</td>
+      <td>{{tarif.get_sexe_display}}</td>
+      <td>{{tarif.get_sterilise_display}}</td>
+      <td>{{tarif.get_tranche_age_display}}</td>
+        <td>{{tarif.get_vaccin_ok_display}}</td>
+      <td>{{tarif.montant}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

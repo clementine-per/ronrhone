@@ -8,9 +8,6 @@ from gestion_association.models.person import Person
 
 class Adoption(models.Model):
     date = models.DateField(verbose_name="Date de l'adoption")
-    acompte = models.CharField(max_length=3,
-                                    verbose_name="Acompte versé",
-                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     montant = models.DecimalField(
         verbose_name="Montant à payer", max_digits=7, decimal_places=2,
         null=True,
@@ -64,6 +61,18 @@ class Adoption(models.Model):
         return super(Adoption,self).save(*args, **kwargs)
 
 
+class BonSterilisation(models.Model):
+    adoption = models.OneToOneField(Adoption, on_delete=models.PROTECT)
+    date_max = models.DateField(verbose_name="Date d'expiration")
+    envoye = models.CharField(max_length=3,
+                                     verbose_name="Bon envoyé", default="NON",
+                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    utilise = models.CharField(max_length=3,
+                                     verbose_name="Bon utilise", default="NON",
+                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    date_utilisation = models.DateField(verbose_name="Date d'utilisation", null=True, blank=True)
+
+
 class TarifAdoption(models.Model):
     type_animal = models.CharField(
         max_length=30,
@@ -92,3 +101,23 @@ class TarifAdoption(models.Model):
 
     def __str__(self):
         return "Tarif adoption pour " + self.type_animal
+
+
+class TarifBonSterilisation(models.Model):
+    type_animal = models.CharField(
+        max_length=30,
+        verbose_name="Type d'animal",
+        choices=[(tag.name, tag.value) for tag in TypeChoice],
+    )
+    sexe = models.CharField(
+        max_length=30,
+        verbose_name="Sexe",
+        choices=[(tag, tag.value) for tag in SexeChoice],)
+
+    montant=models.DecimalField(
+        verbose_name="Montant", max_digits=7, decimal_places=2
+    )
+
+    def __str__(self):
+        return "Tarif bon de stérilisation pour " + self.type_animal
+

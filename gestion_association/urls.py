@@ -49,6 +49,16 @@ urlpatterns = [
         adoption.UpdateAdoption.as_view(),
         name="update_adoption"
     ),
+    path(
+        "ajax/calcul_montant_restant/",
+        adoption.calcul_montant_restant,
+        name="calcul_montant_restant",
+    ),
+    path(
+        "ajax/calcul_montant_sterilisation/<int:pk>/",
+        adoption.calcul_montant_sterilisation,
+        name="calcul_montant_sterilisation",
+    ),
     #Familles
     path("familles/create/<int:pk>/", famille.create_famille, name="create_famille"),
     path("familles/", famille.famille_list, name="familles"),
@@ -56,4 +66,6 @@ urlpatterns = [
         DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),
          name="detail_famille"),
     path("familles/select", famille.famille_select, name="famille_select"),
+    # Paramétrages
+    path("parametrage", home.parametrage, name="parametrage"),
     ]

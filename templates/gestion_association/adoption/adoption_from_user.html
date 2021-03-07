@@ -1,5 +1,5 @@
 {% extends "gestion_association/base.html" %}
-
+{% load static %}
 {% block content %}
 
 <h1> Adoption par {{person.prenom}} {{person.nom}} </h1>
@@ -8,7 +8,7 @@
 <form method="post" action="">
    {% csrf_token %}
 	{{ adoption_form.media }}
-   {{ adoption_form.as_p }}
+   {% include 'gestion_association/adoption/adoption_base_form.html' %}
    <div class="row">
    	<div class="col">
    		<a href = "{% url 'detail_person' person.id %}"  class="btn btn-secondary">Annuler</a>
@@ -23,11 +23,5 @@
 {% endblock %}
 
 {% block script %}
-<script>
-$(function() {
-  $('[name="date"],[name="date_visite"]').datepicker({
-      dateFormat: 'dd/mm/yy'
-  });
-});
-</script>
+<script src="{% static 'js/adoption.js' %}"></script>
 {% endblock %}

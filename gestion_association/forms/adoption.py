@@ -1,13 +1,14 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ChoiceField, Form
 
-from gestion_association.models.adoption import Adoption
+from gestion_association.models import OuiNonChoice
+from gestion_association.models.adoption import Adoption, BonSterilisation
 from gestion_association.models.animal import Animal, StatutAnimal
 
 
 class AdoptionCreateFormNoAdoptant(ModelForm):
     class Meta:
         model = Adoption
-        fields = ("date","montant","montant_restant","pre_visite","visite_controle","personne_visite","date_visite")
+        fields = ("date","acompte_verse","montant","montant_restant","pre_visite","visite_controle","personne_visite","date_visite")
 
 
 class AdoptionCreateForm(ModelForm):
@@ -33,3 +34,14 @@ class AdoptionUpdateForm(ModelForm):
         model = Adoption
         fields = ("date","acompte_verse","montant","montant_restant",
                   "pre_visite","visite_controle","personne_visite","date_visite")
+
+
+class ShowBonForm(Form):
+    # Champ indiquant si on doit afficher le formulaire de bon de stérilisation
+    show = ChoiceField(choices=[(tag.name, tag.value) for tag in OuiNonChoice], label="Bon de stérilisation")
+
+
+class BonSterilisationForm(ModelForm):
+    class Meta:
+        model = BonSterilisation
+        fields = ("date_max","envoye","utilise","date_utilisation")

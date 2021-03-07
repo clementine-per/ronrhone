@@ -217,3 +217,6 @@ class Animal(models.Model):
             return "Oui"
         else:
             return "Non"
+
+    def is_sterilise(self):
+        return self.sterilise == "OUI"

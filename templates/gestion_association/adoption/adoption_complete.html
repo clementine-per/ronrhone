@@ -1,4 +1,5 @@
 {% extends "gestion_association/base.html" %}
+{% load static %}
 
 {% block content %}
 
@@ -6,12 +7,13 @@
 <br>
 <h3> Informations de l'adoptant </h3>
 
-<form method="post" action="">
+<form method="post" id="adoptionForm" data-calcul-montant-url="{% url 'calcul_montant_restant'%}"
+	  data-calcul-montant-sterilisation-url="{% url 'calcul_montant_sterilisation' animal.id %}" novalidate>
    {% csrf_token %}
    {{ person_form.as_p }}
    <br>
 	<h3> Informations sur l'adoption </h3>
-	{{ adoption_form.as_p }}
+	{% include 'gestion_association/adoption/adoption_base_form.html' %}
    <div class="row">
    	<div class="col">
    		<a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
@@ -26,11 +28,5 @@
 {% endblock %}
 
 {% block script %}
-<script>
-$(function() {
-  $('[name="date"],[name="date_visite"]').datepicker({
-      dateFormat: 'dd/mm/yy'
-  });
-});
-</script>
+<script src="{% static 'js/adoption.js' %}"></script>
 {% endblock %}
