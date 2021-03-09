@@ -65,7 +65,7 @@ class BonSterilisation(models.Model):
                                      verbose_name="Bon envoyé", default="NON",
                                      choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     utilise = models.CharField(max_length=3,
-                                     verbose_name="Bon utilise", default="NON",
+                                     verbose_name="Bon utilisé", default="NON",
                                      choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     date_utilisation = models.DateField(verbose_name="Date d'utilisation", null=True, blank=True)
 

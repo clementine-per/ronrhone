@@ -1,5 +1,5 @@
 $(function() {
-  $('[name="date"],[name="date_visite"]').datepicker({
+  $('[name="date"],[name="date_visite"],[name="date_max"],[name="date_utilisation"]').datepicker({
       dateFormat: 'dd/mm/yy'
   });
 });
