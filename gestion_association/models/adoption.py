@@ -50,13 +50,10 @@ class Adoption(models.Model):
 
     def save(self, *args, **kwargs):
         # Calcul du statut de l'animal
-        if (self.visite_controle):
-            self.animal.statut = StatutAnimal.ADOPTE_DEFINITIF.name
+        if self.date >= timezone.now().date():
+            self.animal.statut = StatutAnimal.ADOPTION.name
         else:
-            if self.date >= timezone.now().date():
-                self.animal.statut = StatutAnimal.ADOPTION.name
-            else:
-                self.animal.statut = StatutAnimal.ADOPTE.name
+            self.animal.statut = StatutAnimal.ADOPTE.name
         self.animal.save()
         return super(Adoption,self).save(*args, **kwargs)
 
@@ -72,6 +69,16 @@ class BonSterilisation(models.Model):
                                      choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     date_utilisation = models.DateField(verbose_name="Date d'utilisation", null=True, blank=True)
 
+    def __str__(self):
+        result = "Bon de stérilisation "
+        if self.envoye == "NON":
+            return result + "demandé mais non envoyé."
+        if self.utilise=="NON":
+            return result + "a utiliser avant le " + self.date_max.strftime("%d/%m/%Y")
+        if self.date_utilisation:
+            return result + "utilisé le " + self.date_utilisation.strftime("%d/%m/%Y")
+        return result + "utilisé."
+
 
 class TarifAdoption(models.Model):
     type_animal = models.CharField(
@@ -82,7 +89,7 @@ class TarifAdoption(models.Model):
     sexe = models.CharField(
         max_length=30,
         verbose_name="Sexe",
-        choices=[(tag, tag.value) for tag in SexeChoice],
+        choices=[(tag.name, tag.value) for tag in SexeChoice],
     )
     sterilise = models.CharField(
         max_length=3, blank=True,
@@ -112,7 +119,7 @@ class TarifBonSterilisation(models.Model):
     sexe = models.CharField(
         max_length=30,
         verbose_name="Sexe",
-        choices=[(tag, tag.value) for tag in SexeChoice],)
+        choices=[(tag.name, tag.value) for tag in SexeChoice],)
 
     montant=models.DecimalField(
         verbose_name="Montant", max_digits=7, decimal_places=2

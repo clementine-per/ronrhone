@@ -4,25 +4,54 @@
 
 <h3 class="m-3">Tarifs des adoptions</h3>
 <br>
-<table class="myTable">
-    <tr class="header">
-        <th>Type d'animal</th>
-        <th>Sexe de l'animal</th>
-        <th>Stérilisé?</th>
-        <th>Tranche d'âge</th>
-        <th>Vaccins à jour</th>
-        <th>Montant</th>
-    </tr>
-    {% for tarif in tarifs_adoption %}
-    <tr>
-      <td>{{tarif.get_type_animal_display}}</td>
-      <td>{{tarif.get_sexe_display}}</td>
-      <td>{{tarif.get_sterilise_display}}</td>
-      <td>{{tarif.get_tranche_age_display}}</td>
-        <td>{{tarif.get_vaccin_ok_display}}</td>
-      <td>{{tarif.montant}}</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+            <tr class="header">
+                <th>Type d'animal</th>
+                <th>Sexe de l'animal</th>
+                <th>Stérilisé?</th>
+                <th>Tranche d'âge</th>
+                <th>Vaccins à jour</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tarif in tarifs_adoption %}
+            <tr class="table-info">
+                <td>{{tarif.get_type_animal_display}}</td>
+                <td>{{tarif.get_sexe_display}}</td>
+                <td>{{tarif.get_sterilise_display}}</td>
+                <td>{{tarif.get_tranche_age_display}}</td>
+                <td>{{tarif.get_vaccin_ok_display}}</td>
+                <td>{{tarif.montant}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3 class="m-3">Tarifs des bons de stérilisation</h3>
+<br>
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+            <tr class="header">
+                <th>Type d'animal</th>
+                <th>Sexe de l'animal</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tarif in tarifs_sterilisation %}
+            <tr class="table-info">
+                <td>{{tarif.get_type_animal_display}}</td>
+                <td>{{tarif.get_sexe_display}}</td>
+                <td>{{tarif.montant}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

@@ -15,11 +15,7 @@ class Person(models.Model):
     )
     prenom = models.CharField(max_length=30)
     nom = models.CharField(max_length=150)
-    email = models.EmailField(max_length=150,
-        unique=True,
-        error_messages={
-            'unique': ("A user with that username already exists."),
-        },)
+    email = models.EmailField(max_length=150)
     adresse = models.CharField(max_length=500)
     code_postal_regex = RegexValidator(
         regex="^[0-9]*$", message="Veuillez entrer un code postal valide."

@@ -1,0 +1,28 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+<h2>Modifier les infos du bon de stérilisation sur l'adoption de {{object.adoption.animal.nom}}</h2>
+<br/>
+<form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <br/>
+    <div class="row">
+        <div class="col">
+            <a href = "{% url 'detail_animal' object.adoption.animal.id %}"  class="btn btn-secondary">Annuler</a>
+        </div>
+        <div class="col">
+            <input class="btn btn-info" type="submit" />
+        </div>
+    </div>
+</form>
+{% endblock %}
+{% block script %}
+<script>
+$(function() {
+  $('[name="date_max"],[name="date_utilisation"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+  });
+});
+</script>
+{% endblock %}

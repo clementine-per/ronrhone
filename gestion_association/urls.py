@@ -50,6 +50,11 @@ urlpatterns = [
         name="update_adoption"
     ),
     path(
+        "adoption/bon/update/<int:pk>/",
+        adoption.UpdateBonSterilisation.as_view(),
+        name="update_bon"
+    ),
+    path(
         "ajax/calcul_montant_restant/",
         adoption.calcul_montant_restant,
         name="calcul_montant_restant",

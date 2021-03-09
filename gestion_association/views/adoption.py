@@ -12,7 +12,7 @@ from django.views.generic import UpdateView
 from gestion_association.forms.adoption import AdoptionCreateFormNoAdoptant, AdoptionCreateForm, AdoptionFromUserForm, \
     AdoptionUpdateForm, ShowBonForm, BonSterilisationForm
 from gestion_association.forms.person import PersonForm
-from gestion_association.models.adoption import Adoption, TarifAdoption, TarifBonSterilisation
+from gestion_association.models.adoption import Adoption, TarifAdoption, TarifBonSterilisation, BonSterilisation
 from gestion_association.models.animal import Animal, StatutAnimal
 from gestion_association.models.person import Person
 
@@ -30,26 +30,17 @@ def adoption_complete(request, pk):
     if request.method == "POST":
         person_form = PersonForm(data=request.POST)
         adoption_form = AdoptionCreateFormNoAdoptant(data=request.POST)
+        bon_form = BonSterilisationForm(data=request.POST)
+        show_bon_form = ShowBonForm(data=request.POST)
         if (
             person_form.is_valid()
             and adoption_form.is_valid()
         ):
-            # Enregistrement de la personne
+            # Récupération des éléments
             person = person_form.save()
-            person.is_adoptante = True
-            person.save()
-
-            # On rattache la personne à l'adoption
             adoption = adoption_form.save(commit=False)
-            adoption.adoptant = person
-            adoption.animal = animal
-            adoption.save()
-
-            # l'animal passe au statut à en cours d'adoption
-            animal.statut = StatutAnimal.ADOPTION
-            animal.adoptant = person
-
-            adoption.save()
+            
+            save_adoption(adoption, animal, person, show_bon_form, bon_form)
 
             return redirect("detail_animal", pk=animal.id)
 
@@ -72,19 +63,12 @@ def adoption_allegee(request, pk):
     title = "Adoption de " + animal.nom
     if request.method == "POST":
         adoption_form = AdoptionCreateForm(data=request.POST)
+        show_bon_form = ShowBonForm(data=request.POST)
+        bon_form = BonSterilisationForm(data=request.POST)
         if adoption_form.is_valid():
             
-            new_adoption = adoption_form.save(commit=False)
-
-            # l'animal passe au statut à en cours d'adoption
-            animal.statut = StatutAnimal.ADOPTION.name
-            new_adoption.animal = animal
-            person = new_adoption.adoptant
-            animal.adoptant = person
-            person.is_adoptante =True
-            person.save()
-            new_adoption.save()
-            animal.save()
+            adoption = adoption_form.save(commit=False)
+            save_adoption(adoption, animal, adoption.adoptant, show_bon_form, bon_form)
 
             return redirect("detail_animal", pk=animal.id)
 
@@ -106,20 +90,13 @@ def adoption_from_user(request, pk):
     title = "Adoption par " + person.prenom + " " + person.nom
     if request.method == "POST":
         adoption_form = AdoptionFromUserForm(data=request.POST)
+        show_bon_form = ShowBonForm(data=request.POST)
+        bon_form = BonSterilisationForm(data=request.POST)
         if adoption_form.is_valid():
-            new_adoption = adoption_form.save(commit=False)
+            adoption = adoption_form.save(commit=False)
+            save_adoption(adoption, adoption.animal, person, show_bon_form, bon_form)
 
-            # l'animal passe au statut à en cours d'adoption
-            animal = new_adoption.animal
-            animal.statut = StatutAnimal.ADOPTION.name
-            animal.adoptant = person
-            person.is_adoptante = True
-            person.save()
-            new_adoption.adoptant = person
-            new_adoption.save()
-            animal.save()
-
-            return redirect("detail_animal", pk=animal.id)
+            return redirect("detail_animal", pk=adoption.animal.id)
 
     else:
         adoption_form = AdoptionFromUserForm()
@@ -138,14 +115,28 @@ class UpdateAdoption(LoginRequiredMixin, UpdateView):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.animal.id})
 
 
+class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
+    model = BonSterilisation
+    form_class = BonSterilisationForm
+    template_name = "gestion_association/adoption/bon_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_animal", kwargs={"pk": self.object.adoption.animal.id})
+
+
 def get_montant_adoption(animal):
     # Méthode récupérant le montant de l'adoption à l'initialisation du formulaire
     try:
         preselection_tarifs = TarifAdoption.objects.filter(
             type_animal=animal.type, sexe=animal.sexe,  tranche_age=animal.tranche_age
         )
-        preselection_tarifs = preselection_tarifs.filter(Q(sterilise=animal.sterilise)|Q(sterilise__isnull=True))
-        preselection_tarifs = preselection_tarifs.filter(Q(vaccin_ok=animal.vaccin_ok) | Q(vaccin_ok__isnull=True))
+        preselection_tarifs = preselection_tarifs.filter(Q(sterilise=animal.sterilise)|Q(sterilise=''))
+        print ("Apres sterilisation")
+        print (preselection_tarifs)
+        preselection_tarifs = preselection_tarifs.filter(Q(vaccin_ok=animal.vaccin_ok) | Q(vaccin_ok=''))
+        print("Apres vaccin")
+        print(preselection_tarifs)
+        sys.stdout.flush()
         tarif_applicable = preselection_tarifs.first()
         return tarif_applicable.montant
     except TarifAdoption.DoesNotExist:
@@ -159,7 +150,6 @@ def calcul_montant_restant(request):
     montant_actuel_str = request.POST["montant"]
     montant_restant_str = request.POST["montant_restant"]
     acompte_verse_input = request.POST["acompte_verse"]
-    bon_input = request.POST["show"]
     if(montant_restant_str):
         montant_restant = Decimal(montant_restant_str)
     if(montant_actuel_str):
@@ -191,3 +181,23 @@ def calcul_montant_sterilisation(request, pk):
         montant_adoption = Decimal(montant_actuel_str) - montant_bon
         montant_restant = montant_restant - montant_bon
     return JsonResponse({"montant": montant_adoption.max(Decimal(0)), "montant_restant": montant_restant.max(Decimal(0))})
+
+def save_adoption(adoption, animal, person, show_form,bon_form):
+    # La personne devient adoptante
+    person.is_adoptante =True
+    person.save()
+    # On rattache la personne à l'adoption
+    adoption.adoptant = person
+    adoption.animal = animal
+    adoption.save()
+    # l'animal passe au statut à en cours d'adoption
+    animal.statut = StatutAnimal.ADOPTION
+    animal.adoptant = person
+    # Gestion du bon de stérilisation uniquement si necessaire
+    if animal.sterilise == "NON":
+        show_form.is_valid()
+        show_bon = show_form.cleaned_data['show']
+        if (show_bon == "OUI" and bon_form.is_valid()):
+            bon = bon_form.save(commit=False)
+            bon.adoption = adoption
+            bon.save()
