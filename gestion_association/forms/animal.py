@@ -2,13 +2,8 @@ import json
 from string import capwords
 
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelChoiceField, ModelForm, FileInput, \
-    DateInput, BooleanField, MultipleChoiceField, Widget, TextInput
-from django.forms import CheckboxInput, SelectMultiple, ModelMultipleChoiceField
-from django.utils.encoding import force_text
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
-
+from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelForm, DateInput, MultipleChoiceField, \
+    ModelMultipleChoiceField
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, Preference, statuts_association

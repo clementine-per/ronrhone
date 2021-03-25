@@ -71,6 +71,13 @@ urlpatterns = [
         DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),
          name="detail_famille"),
     path("familles/select", famille.famille_select, name="famille_select"),
+    path("familles/update_accueil/<int:pk>/", famille.update_accueil_famille, name="update_accueil_famille"),
+    path(
+        "familles/update_main/<int:pk>/",
+        famille.UpdateMainFamille.as_view(),
+        name="update_main_famille"
+    ),
+    path("familles/create/indisponibilite/<int:pk>/", famille.create_indisponibilite, name="create_indisponibilite"),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
     ]

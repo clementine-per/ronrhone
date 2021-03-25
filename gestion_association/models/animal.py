@@ -4,7 +4,7 @@ from enum import Enum
 from django.db import models
 from django.utils import timezone
 
-from gestion_association.models import OuiNonChoice
+from gestion_association.models import OuiNonChoice, TypeChoice
 from gestion_association.models.famille import Famille
 from gestion_association.models.person import Person
 
@@ -18,11 +18,6 @@ class TestResultChoice(Enum):
 class SexeChoice(Enum):
     F = "Femelle"
     M = "Mâle"
-
-
-class TypeChoice(Enum):
-    CHAT = "Chat"
-    CHIEN =  "Chien"
 
 
 class StatutAnimal(Enum):

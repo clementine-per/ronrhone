@@ -7,7 +7,7 @@
             <div class="card-header">
                 Recherche
             </div>
-		<form action = "{% url 'animals' %}" method="post">
+		<form action = "{% url 'familles' %}" method="post">
             <div class="card-body">
                 {%csrf_token %}
                 <div class="row">
@@ -92,8 +92,8 @@
             <td>{{famille.preference.get_exterieur_display}}</td>
             <td>{{famille.preference.get_sociabilisation_display}}</td>
             <td>{% for animal in famille.animal_set.all %}{{animal.nom}}<br>{% endfor %}</td>
-            <td>{{famille.taille_logement|default:" - "}}</td>
-            <td><a href = "{% url 'detail_famille' famille.id %}">Consulter</a></td>
+            <td>{{famille.taille_logement|default:" - "}} </td>
+            <td class="text-center"><a href = "{% url 'detail_famille' famille.id %}"><i class="fa fa-house-user"></i></a></td>
         </tr>
         {% endfor %}
         </tbody>

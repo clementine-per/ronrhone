@@ -1,0 +1,32 @@
+{% extends "gestion_association/base.html" %}
+
+{% block content %}
+
+
+<h1> Indisponibilité de la famille d'accueil de {{famille.personne}} </h1>
+
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="row">
+        <div class="col">
+            <a href = "{% url 'detail_famille' famille.id %}"  class="btn btn-secondary">Annuler</a>
+        </div>
+        <div class="col">
+            <input class="btn btn-info" type="submit" />
+        </div>
+    </div>
+</form>
+
+
+{% endblock %}
+
+{% block script %}
+<script>
+$(function() {
+  $('[name="date_debut"],[name="date_fin"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+  });
+});
+</script>
+{% endblock %}

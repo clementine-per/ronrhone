@@ -3,7 +3,7 @@ from enum import Enum
 
 from django.db import models
 
-from gestion_association.models import OuiNonChoice
+from gestion_association.models import OuiNonChoice, TypeChoice
 from gestion_association.models.person import Person
 
 
@@ -29,9 +29,11 @@ class Famille(models.Model):
     )
     statut = models.CharField(max_length=20,
                                 verbose_name="Statut",
+                                default="DISPONIBLE",
                                 choices=[(tag.name, tag.value) for tag in StatutFamille])
     niveau = models.CharField(max_length=20, blank=True,
                               verbose_name="Niveau",
+                              default="DEBUTANT",
                               choices=[(tag.name, tag.value) for tag in Niveau])
     nb_animaux_historique = models.IntegerField(
         null=True, verbose_name="Nombre d'animaux au total"
@@ -44,6 +46,12 @@ class Famille(models.Model):
                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
     nb_places = models.IntegerField(verbose_name="Nombre de places")
     preference = models.OneToOneField('Preference', on_delete=models.PROTECT, blank=True, null=True)
+    type_animal = models.CharField(
+        max_length=30,
+        verbose_name="Type d'animal accueilli",
+        default="CHAT",
+        choices=[(tag.name, tag.value) for tag in TypeChoice],
+    )
 
     def get_nb_places_str(self):
         count = self.nb_places
@@ -53,18 +61,15 @@ class Famille(models.Model):
 
     def get_indisponibilites_str(self):
         result = ""
-        print(self.indisponibilite_set.all())
-        sys.stdout.flush()
-        if (self.indisponibilite_set.all()):
-            for indispo in self.indisponibilite_set:
-                result += "Du "
-                result += indispo.date_debut
-                result += " au "
-                result += indispo.date_fin
+        if (self.indisponibilite_set.order_by('date_debut').all()):
+            for indispo in self.indisponibilite_set.all():
                 result += "<br>"
+                result += "Du "
+                result += indispo.date_debut.strftime("%d/%m/%Y")
+                result += " au "
+                result += indispo.date_fin.strftime("%d/%m/%Y")
+                result += "  <i class=\"fas fa-pen\"></i>  <i class=\"fas fa-trash\"></i>"
         return result
-
-
 
 
 class Indisponibilite(models.Model):

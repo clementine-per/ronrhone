@@ -5,7 +5,7 @@ from import_export.admin import ImportExportModelAdmin
 
 from gestion_association.models.adoption import TarifAdoption, Adoption, TarifBonSterilisation, BonSterilisation
 from gestion_association.models.animal import Animal, Preference
-from gestion_association.models.famille import Famille
+from gestion_association.models.famille import Famille, Indisponibilite
 from gestion_association.models.person import Person
 
 
@@ -46,4 +46,8 @@ class TarifBonSterilisationAdmin(ImportExportModelAdmin):
 
 @admin.register(BonSterilisation)
 class BonSterilisationAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(Indisponibilite)
+class IndisponibiliteAdmin(ImportExportModelAdmin):
     pass

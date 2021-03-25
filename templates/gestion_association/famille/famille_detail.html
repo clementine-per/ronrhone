@@ -16,18 +16,28 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 mb-3">
+    <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
                 Informations générales
+                <a href= "{% url 'update_main_famille' famille.id %}" class="close">
+                        <i class="fas fa-pen"></i>
+                </a>
             </div>
             <div class="card-body">
                 <strong> Statut </strong> :
                 <span class="{{famille.get_statut_display}}">{{famille.get_statut_display}}</span><br>
                 <strong> Niveau </strong> : {{famille.get_niveau_display}} <br>
-                <strong> Animaux acceuillis au total </strong> : {{famille.nb_animaux_historique}} <br>
+                <strong> Type d'animaux accueillis </strong> : {{famille.type_animal_display}} <br>
                 <strong> Commentaire </strong> : {{famille.commentaire}} <br>
-                <strong> Prochaine(s) indisponibilité(s) </strong> : {{famille.get_indisponibilites_str}} <br>
+                <hr />
+                <strong> Animaux acceuillis au total </strong> : {{famille.nb_animaux_historique |default:" 0 "}} <br>
+                <hr />
+                <strong> Prochaine(s) indisponibilité(s) </strong> :
+                <a href= "{% url 'create_indisponibilite' famille.id %}" class="close">
+                        <i class="fas fa-plus"></i>
+                </a>
+                {% autoescape off %}{{famille.get_indisponibilites_str}}{% endautoescape %}  <br>
             </div>
         </div>
     </div>
@@ -37,9 +47,20 @@
     <div class="col-sm-12 mt-3">
         <div class="card">
             <div class="card-header">
-                Informations d'accueils
+                Informations d'accueil
+                <a href= "{% url 'update_accueil_famille' famille.id %}" class="close">
+                        <i class="fas fa-pen"></i>
+                </a>
             </div>
             <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <strong> Nombre de places totales </strong> : {{famille.nb_places}} <br>
+                    </div>
+                    <div class="col">
+                        <strong> Taille du logement </strong> : {{famille.taille_logement}} m² <br>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <strong> Extérieur </strong> : {{famille.preference.get_exterieur_display}} <br>

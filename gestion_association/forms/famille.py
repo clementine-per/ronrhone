@@ -2,7 +2,11 @@ from django.db.models import BLANK_CHOICE_DASH
 from django.forms import ModelForm, Form, CharField, ChoiceField, Select, IntegerField, DateField, DateInput
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.famille import Famille, StatutFamille
+from gestion_association.models.famille import Famille, StatutFamille, Indisponibilite
+
+
+class DateInput(DateInput):
+    input_type = "date"
 
 
 class FamilleSearchForm(Form):
@@ -34,4 +38,22 @@ class FamilleSearchForm(Form):
 class FamilleCreateForm(ModelForm):
     class Meta:
         model = Famille
-        fields = ("commentaire","taille_logement","nb_places", "longue_duree")
+        fields = ("type_animal","commentaire","taille_logement","nb_places", "longue_duree", "statut","niveau")
+
+
+class FamilleMainUpdateForm(ModelForm):
+    class Meta:
+        model = Famille
+        fields = ("type_animal", "statut","niveau", "commentaire")
+
+
+class FamilleAccueilUpdateForm(ModelForm):
+    class Meta:
+        model = Famille
+        fields = ( "taille_logement","nb_places", "longue_duree")
+
+
+class IndisponibiliteForm(ModelForm):
+    class Meta:
+        model = Indisponibilite
+        fields = ( "date_debut","date_fin")
