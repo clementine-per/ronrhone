@@ -78,6 +78,8 @@ urlpatterns = [
         name="update_main_famille"
     ),
     path("familles/create/indisponibilite/<int:pk>/", famille.create_indisponibilite, name="create_indisponibilite"),
+    path("familles/update/indisponibilite/<int:pk>/", famille.UpdateIndisponibilite.as_view(), name="update_indisponibilite"),
+    path("familles/delete/indisponibilite/<int:pk>/", famille.delete_indisponibilite, name="delete_indisponibilite"),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
     ]

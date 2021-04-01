@@ -63,12 +63,8 @@ class Famille(models.Model):
         result = ""
         if (self.indisponibilite_set.order_by('date_debut').all()):
             for indispo in self.indisponibilite_set.all():
+                result += str(indispo)
                 result += "<br>"
-                result += "Du "
-                result += indispo.date_debut.strftime("%d/%m/%Y")
-                result += " au "
-                result += indispo.date_fin.strftime("%d/%m/%Y")
-                result += "  <i class=\"fas fa-pen\"></i>  <i class=\"fas fa-trash\"></i>"
         return result
 
 
@@ -76,3 +72,10 @@ class Indisponibilite(models.Model):
     date_debut = models.DateField(verbose_name="Date de départ")
     date_fin = models.DateField(verbose_name="Date de retour")
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT)
+
+    def __str__(self):
+        result = "Du "
+        result += self.date_debut.strftime("%d/%m/%Y")
+        result += " au "
+        result += self.date_fin.strftime("%d/%m/%Y")
+        return result

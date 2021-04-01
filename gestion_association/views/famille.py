@@ -9,10 +9,10 @@ from gestion_association.forms import PreferenceForm
 from gestion_association.forms.animal import SelectFamilleForm
 from gestion_association.forms.famille import FamilleCreateForm, FamilleSearchForm, FamilleMainUpdateForm, \
     FamilleAccueilUpdateForm, IndisponibiliteForm
-from gestion_association.models.famille import Famille
+from gestion_association.models.famille import Famille, Indisponibilite
 from gestion_association.models.person import Person
 
-
+@login_required()
 def create_famille(request, pk):
     title = "Créer une famille"
     personne = Person.objects.get(id=pk)
@@ -81,7 +81,7 @@ def famille_select(request):
 class FamilleUpdateMainForm(object):
     pass
 
-
+@login_required()
 def update_accueil_famille(request, pk):
     title = "Modifier une famille"
     famille = Famille.objects.get(id=pk)
@@ -97,6 +97,7 @@ def update_accueil_famille(request, pk):
         preference_form = PreferenceForm(instance=famille.preference)
     return render(request, "gestion_association/famille/famille_accueil_form.html", locals())
 
+
 class UpdateMainFamille(LoginRequiredMixin, UpdateView):
     model = Famille
     form_class = FamilleMainUpdateForm
@@ -105,7 +106,7 @@ class UpdateMainFamille(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("detail_famille", kwargs={"pk": self.object.id})
 
-
+@login_required()
 def create_indisponibilite(request, pk):
     title = "Ajout d'une indisponibilité"
     famille = Famille.objects.get(id=pk)
@@ -120,3 +121,20 @@ def create_indisponibilite(request, pk):
     else:
         form = IndisponibiliteForm()
     return render(request, "gestion_association/famille/indisponibilite_form.html", locals())
+
+@login_required()
+def delete_indisponibilite(request, pk):
+    indispo = Indisponibilite.objects.get(id=pk)
+    famille = indispo.famille
+    indispo.delete()
+    return redirect("detail_famille", pk=famille.id)
+
+
+class UpdateIndisponibilite(LoginRequiredMixin, UpdateView):
+    model = Indisponibilite
+    form_class = IndisponibiliteForm
+    template_name = "gestion_association/famille/indisponibilite_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_famille", kwargs={"pk": self.object.famille.id})
+

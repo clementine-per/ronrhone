@@ -10,7 +10,11 @@
     {{ form.as_p }}
     <div class="row">
         <div class="col">
+            {% if famille %}
             <a href = "{% url 'detail_famille' famille.id %}"  class="btn btn-secondary">Annuler</a>
+            {% else %}
+            <a href = "{% url 'detail_famille' object.famille.id %}"  class="btn btn-secondary">Annuler</a>
+            {% endif %}
         </div>
         <div class="col">
             <input class="btn btn-info" type="submit" />
