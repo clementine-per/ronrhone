@@ -36,12 +36,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "import_export",
+    "corsheaders",
     "gestion_association",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -124,3 +126,5 @@ STATIC_URL = "/static/"
 TEMPLATES_DIR = os.path.join(BASE_DIR, "/templates/")
 
 LANGUAGE_CODE = "fr"
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
