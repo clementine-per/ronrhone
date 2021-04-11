@@ -96,7 +96,7 @@ class Famille(models.Model):
         result += self.get_type_animal_display()
         result += " de niveau "
         result += self.get_niveau_display()
-        result += "<br>"
+        result += "\n"
         if self.taille_logement:
             result += "Logement de "
             result += str(self.taille_logement)
@@ -105,26 +105,27 @@ class Famille(models.Model):
             result += " avec extérieur"
         else:
             result += " sans extérieur"
-        result += "<br>"
+        result += "\n"
         if self.longue_duree and self.longue_duree == "OUI":
             result += "OK longues durées"
-            result += "<br>"
+            result += "\n"
         if self.preference.sociabilisation and self.preference.sociabilisation == "OUI":
             result += "OK sociabilisation"
-            result += "<br>"
+            result += "\n"
         if self.preference.quarantaine and self.preference.quarantaine == "OUI":
             result += "OK quarantaine"
-            result += "<br>"
+            result += "\n"
         if self.preference.biberonnage and self.preference.biberonnage == "OUI":
             result += "OK biberonnage"
-            result += "<br>"
+            result += "\n"
         result += "Niveau de présence : "
         result += self.preference.get_presence_display()
-        result += "<br>"
+        result += "\n"
         return result
 
     def to_json(self):
         return {
+            "id": self.pk,
             "places_disponible": self.get_nb_places_str(),
             "personne": str(self.personne),
             "disponibilites": self.get_disponibilite_str(),

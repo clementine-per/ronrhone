@@ -29,7 +29,14 @@
       const family_form_selector_element = document.getElementById("family-form-selector");
       const family_form_selector_app = Elm.FamilySelector.init({
         node: family_form_selector_element,
-        flags: {}
+        flags: {
+          animals : [
+            {% for animal in animals %}
+            {"id": {{ animal.pk }}, "label": "{{ animal.nom }}"}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ],
+          url: "{% url 'familles_candidates_for_animal' animal.pk %}"
+        }
       });
     });
 </script>

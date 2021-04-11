@@ -32,7 +32,9 @@ main =
 
 
 type alias Flags =
-    { animals : List Animal }
+    { animals : List Animal
+    , url : String
+    }
 
 
 type alias Model =
@@ -41,6 +43,7 @@ type alias Model =
     , animals : List Animal
     , selectedAnimals : List Animal
     , families : List Family
+    , url : String
     }
 
 
@@ -55,6 +58,7 @@ init flags =
       , animals = flags.animals
       , selectedAnimals = []
       , families = []
+      , url = flags.url
       }
     , Cmd.map SetDatePicker datePickerCmd
     )
@@ -82,7 +86,7 @@ update msg model =
                     ( newModel, Cmd.none )
 
                 ( Just date_debut, selectedAnimals ) ->
-                    ( newModel, FamilyCandidates.fetchFamilies date_debut selectedAnimals FamiliesFetched )
+                    ( newModel, FamilyCandidates.fetchFamilies model.url date_debut selectedAnimals FamiliesFetched )
     in
     case msg of
         SetDatePicker subMsg ->
@@ -148,7 +152,7 @@ view model =
     div [ class "p-2" ]
         [ viewDatePicker model
         , viewAnimals model.animals model.selectedAnimals
-        , viewFamilyTable
+        , viewFamilyTable model.families
         ]
 
 
@@ -201,8 +205,17 @@ viewAnimal selectedAnimals animal =
         ]
 
 
-viewFamilyTable : Html Msg
-viewFamilyTable =
+viewFamilyTable : List Family -> Html Msg
+viewFamilyTable families =
+    let
+        firstId =
+            case families of
+                first :: _ ->
+                    first.id
+
+                _ ->
+                    0
+    in
     table [ class "display table table-sm table-bordered", id "famille" ]
         [ thead []
             [ tr []
@@ -220,63 +233,32 @@ viewFamilyTable =
                     [ text "Commentaire" ]
                 ]
             ]
-        , tbody []
-            [ tr []
-                [ td []
-                    [ input [ class "tableselectmultiple selectable-checkbox form-check-input", id "id_famille_0", name "famille", type_ "radio", value "1" ]
-                        []
-                    ]
-                , td []
-                    [ text "0/2" ]
-                , td []
-                    [ text "Clémentine Perreaut" ]
-                , td []
-                    [ text "Disponible" ]
-                , td []
-                    [ text "Famille pour Chat de niveau Confirmé"
-                    , br []
-                        []
-                    , text "Logement de 89 m2 sans extérieur"
-                    , br []
-                        []
-                    , text "OK longues durées"
-                    , br []
-                        []
-                    , text "Niveau de présence : Bas"
-                    , br []
-                        []
-                    ]
-                , td []
-                    []
+        , if List.length families == 0 then
+            tbody [] [ tr [] [ td [ colspan 6, class "text-center" ] [ text "Aucune famille disponible" ] ] ]
+
+          else
+            List.map (viewFamily firstId) families |> tbody []
+        ]
+
+
+viewFamily : Int -> Family -> Html Msg
+viewFamily firstId family =
+    tr []
+        [ td []
+            [ input
+                [ class "tableselectmultiple selectable-checkbox form-check-input"
+                , id <| "id_famille_" ++ String.fromInt family.id
+                , name "famille"
+                , type_ "radio"
+                , required True
+                , checked <| firstId == family.id
+                , value <| String.fromInt family.id
                 ]
-            , tr []
-                [ td
-                    []
-                    [ input [ class "tableselectmultiple selectable-checkbox form-check-input", id "id_famille_0", name "famille", type_ "radio", value "1" ]
-                        []
-                    ]
-                , td []
-                    [ text "0/2" ]
-                , td []
-                    [ text "Clémentine Perreaut" ]
-                , td []
-                    [ text "Disponible" ]
-                , td []
-                    [ text "Famille pour Chat de niveau Confirmé"
-                    , br []
-                        []
-                    , text "Logement de 89 m2 sans extérieur"
-                    , br []
-                        []
-                    , text "OK longues durées"
-                    , br []
-                        []
-                    , text "Niveau de présence : Bas"
-                    , br []
-                        []
-                    ]
-                , td []
-                    []
-                ]
+                []
             ]
+        , td [] [ text family.places_disponible ]
+        , td [] [ text family.personne ]
+        , td [] [ text family.disponibilites ]
+        , td [] [ pre [] [ text family.caracteristiques ] ]
+        , td [] [ text family.commentaire ]
         ]

@@ -18,11 +18,14 @@
     const family_form_selector_element = document.getElementById("family-form-selector");
     const family_form_selector_app = Elm.FamilySelector.init({
       node: family_form_selector_element,
-      flags: { animals: [
-        {id: 2, label: "Panpan"},
-        {id: 1, label:"Verveine"},
-        {id: 3, label: "Tulipe"}
-      ]}
+      flags: {
+        animals: [
+          {id: 2, label: "Panpan"},
+          {id: 1, label:"Verveine"},
+          {id: 3, label: "Tulipe"}
+        ],
+        url: "http://localhost:8000/ronrhone/familles/candidates/animal/2/"
+      }
     });
 </script>
 </body>

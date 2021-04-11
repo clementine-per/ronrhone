@@ -1,5 +1,4 @@
 import json
-import sys
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -98,14 +97,12 @@ def famille_select_for_animal(request, pk):
     data = request.POST.get("famille")
 
     form = SelectFamilleForm(request.POST)
-    form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(
-        id=pk
-    )
+    animals_queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
+    form.fields["animaux"].queryset = animals_queryset
     form.fields["famille"].queryset = Famille.objects.exclude(statut="INACTIVE")
+    animals = animals_queryset.all()
 
     if request.method == "POST":
-        print(request.POST["famille"])
-        sys.stdout.flush()
         if form.is_valid():
             form.save()
             return redirect("detail_animal", pk=animal.id)
@@ -195,7 +192,6 @@ class FamilleCandidateAPIView(View):
             return json_error_400("body", "Invalid JSON request.")
 
         animaux_selectionnes = [a for a in animaux_candidats if a.pk in data.get("animaux", [])]
-
         date_debut = data.get("date_debut")
 
         if date_debut:
@@ -223,5 +219,5 @@ class FamilleCandidateAPIView(View):
             ]
         }
         response = HttpResponse(json.dumps(context), content_type="application/json")
-        response.status_code = 400
+        response.status_code = 200
         return response
