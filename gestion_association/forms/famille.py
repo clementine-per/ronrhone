@@ -91,3 +91,10 @@ class SelectFamilleForm(ModelForm):
         widget=CheckboxSelectMultiple, queryset=Animal.objects.none()
     )
     famille = ModelChoiceField(queryset=Famille.objects.all(), required=False)
+
+    def save(self, commit=True):
+        super().save(commit)
+        for animal in self.instance.animaux.all():
+            animal.famille = self.instance.famille
+            animal.save()
+        return self.instance
