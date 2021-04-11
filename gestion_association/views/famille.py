@@ -15,6 +15,7 @@ from gestion_association.models.animal import Animal
 from gestion_association.models.famille import Famille, Indisponibilite
 from gestion_association.models.person import Person
 
+
 @login_required()
 def create_famille(request, pk):
     title = "Créer une famille"
@@ -37,6 +38,7 @@ def create_famille(request, pk):
         famille_form = FamilleCreateForm()
         preference_form = PreferenceForm()
     return render(request, "gestion_association/famille/famille_create_form.html", locals())
+
 
 @login_required
 def famille_list(request):
@@ -75,22 +77,26 @@ def famille_list(request):
         famille_list = paginator.page(paginator.num_pages())
     return render(request, "gestion_association/famille/famille_list.html", locals())
 
+
 @login_required
 def famille_select_for_animal(request, pk):
 
     animal = Animal.objects.get(id=pk)
     title = "Trouver une famille pour " + animal.nom
 
+    data = request.POST.get("famille")
+
+    form = SelectFamilleForm(request.POST)
+    form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
+    form.fields["famille"].queryset = Famille.objects.exclude(statut='INACTIVE')
+
     if request.method == "POST":
         print(request.POST["famille"])
         sys.stdout.flush()
-        form = SelectFamilleForm(request.POST)
         if form.is_valid():
             form.save()
-    else:
-        form = SelectFamilleForm()
-        form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
-        form.fields["famille"].queryset = Famille.objects.exclude(statut='INACTIVE')
+            return redirect("detail_animal", pk=animal.id)
+            
     return render(request, "gestion_association/famille/famille_select_form.html", locals())
 
 

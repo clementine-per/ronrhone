@@ -131,7 +131,7 @@ class Indisponibilite(models.Model):
 
 class Accueil(models.Model):
     date_debut = models.DateField(verbose_name="Date de début")
-    date_fin = models.DateField(verbose_name="Date de fin", blank=True)
+    date_fin = models.DateField(verbose_name="Date de fin", blank=True, null=True)
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT)
     animaux = models.ManyToManyField('Animal', verbose_name="Animal(aux)")
     commentaire = models.CharField(max_length=1000, blank=True)
