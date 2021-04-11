@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gestion_association', '0002_accueil'),
+        ("gestion_association", "0002_accueil"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='accueil',
-            name='date_fin',
-            field=models.DateField(blank=True, null=True, verbose_name='Date de fin'),
+            model_name="accueil",
+            name="date_fin",
+            field=models.DateField(blank=True, null=True, verbose_name="Date de fin"),
         ),
     ]
