@@ -1,17 +1,20 @@
-import sys
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms import PreferenceForm
-from gestion_association.forms.animal import AnimalSearchForm, AnimalCreateForm, AnimalInfoUpdateForm, \
-    AnimalSanteUpdateForm, AnimalLinkedForm
+from gestion_association.forms.animal import (
+    AnimalCreateForm,
+    AnimalInfoUpdateForm,
+    AnimalLinkedForm,
+    AnimalSanteUpdateForm,
+    AnimalSearchForm,
+)
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import Animal, Preference
+from gestion_association.models.animal import Animal
 
 
 @login_required()
@@ -20,7 +23,7 @@ def search_animal(request):
     selected = "animals"
     title = "Liste des animaux"
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AnimalSearchForm(request.POST)
         if form.is_valid():
             nom_form = form.cleaned_data["nom"]
@@ -70,7 +73,7 @@ def search_animal(request):
         animals = animals.filter(statut__in=statuts_form)
 
     # Pagination : 20 éléments par page
-    paginator = Paginator(animals.order_by('-date_mise_a_jour'), 20)
+    paginator = Paginator(animals.order_by("-date_mise_a_jour"), 20)
     try:
         page = request.GET.get("page")
         if not page:
@@ -91,6 +94,7 @@ class CreateAnimal(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
+
 @login_required()
 def update_preference(request, pk):
     animal = Animal.objects.get(id=pk)
@@ -104,13 +108,14 @@ def update_preference(request, pk):
     else:
         preference_form = PreferenceForm(instance=animal.preference)
         animal_linked_form = AnimalLinkedForm(instance=animal)
-    return render(request,"gestion_association/animal/preference_form.html", locals())
+    return render(request, "gestion_association/animal/preference_form.html", locals())
 
 
 class UpdateInformation(LoginRequiredMixin, UpdateView):
     model = Animal
     template_name = "gestion_association/animal/information_form.html"
     form_class = AnimalInfoUpdateForm
+
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
@@ -119,5 +124,6 @@ class UpdateSante(LoginRequiredMixin, UpdateView):
     model = Animal
     template_name = "gestion_association/animal/sante_form.html"
     form_class = AnimalSanteUpdateForm
+
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})

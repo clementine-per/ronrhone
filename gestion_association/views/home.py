@@ -10,6 +10,7 @@ def index(request):
     title = "Tableau de bord"
     return render(request, "gestion_association/home.html", locals())
 
+
 @login_required
 def parametrage(request):
     selected = "parametrage"

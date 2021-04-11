@@ -1,19 +1,25 @@
 import sys
-from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import UpdateView
 
 from gestion_association.forms import PreferenceForm
-from gestion_association.forms.famille import FamilleCreateForm, FamilleSearchForm, FamilleMainUpdateForm, \
-    FamilleAccueilUpdateForm, IndisponibiliteForm, SelectFamilleForm
+from gestion_association.forms.famille import (
+    FamilleAccueilUpdateForm,
+    FamilleCreateForm,
+    FamilleMainUpdateForm,
+    FamilleSearchForm,
+    IndisponibiliteForm,
+    SelectFamilleForm,
+)
 from gestion_association.models.animal import Animal
 from gestion_association.models.famille import Famille, Indisponibilite
 from gestion_association.models.person import Person
+
 
 @login_required()
 def create_famille(request, pk):
@@ -22,7 +28,7 @@ def create_famille(request, pk):
     if request.method == "POST":
         famille_form = FamilleCreateForm(data=request.POST)
         preference_form = PreferenceForm(data=request.POST)
-        if (famille_form.is_valid() and preference_form.is_valid()):
+        if famille_form.is_valid() and preference_form.is_valid():
             # Rattachement manuel de la personne et des préférences
             preference = preference_form.save()
             famille = famille_form.save(commit=False)
@@ -37,6 +43,7 @@ def create_famille(request, pk):
         famille_form = FamilleCreateForm()
         preference_form = PreferenceForm()
     return render(request, "gestion_association/famille/famille_create_form.html", locals())
+
 
 @login_required
 def famille_list(request):
@@ -64,7 +71,7 @@ def famille_list(request):
     else:
         form = FamilleSearchForm()
     # Pagination : 10 éléments par page
-    paginator = Paginator(famille_list.order_by('-date_mise_a_jour'), 10)
+    paginator = Paginator(famille_list.order_by("-date_mise_a_jour"), 10)
     try:
         page = request.GET.get("page")
         if not page:
@@ -75,27 +82,34 @@ def famille_list(request):
         famille_list = paginator.page(paginator.num_pages())
     return render(request, "gestion_association/famille/famille_list.html", locals())
 
+
 @login_required
 def famille_select_for_animal(request, pk):
 
     animal = Animal.objects.get(id=pk)
     title = "Trouver une famille pour " + animal.nom
 
+    data = request.POST.get("famille")
+
+    form = SelectFamilleForm(request.POST)
+    form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(
+        id=pk
+    )
+    form.fields["famille"].queryset = Famille.objects.exclude(statut="INACTIVE")
+
     if request.method == "POST":
         print(request.POST["famille"])
         sys.stdout.flush()
-        form = SelectFamilleForm(request.POST)
         if form.is_valid():
             form.save()
-    else:
-        form = SelectFamilleForm()
-        form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
-        form.fields["famille"].queryset = Famille.objects.exclude(statut='INACTIVE')
+            return redirect("detail_animal", pk=animal.id)
+
     return render(request, "gestion_association/famille/famille_select_form.html", locals())
 
 
 class FamilleUpdateMainForm(object):
     pass
+
 
 @login_required()
 def update_accueil_famille(request, pk):
@@ -104,7 +118,7 @@ def update_accueil_famille(request, pk):
     if request.method == "POST":
         famille_form = FamilleAccueilUpdateForm(data=request.POST, instance=famille)
         preference_form = PreferenceForm(data=request.POST, instance=famille.preference)
-        if (famille_form.is_valid() and preference_form.is_valid()):
+        if famille_form.is_valid() and preference_form.is_valid():
             preference = preference_form.save()
             famille = famille_form.save()
             return redirect("detail_famille", pk=famille.id)
@@ -122,13 +136,14 @@ class UpdateMainFamille(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("detail_famille", kwargs={"pk": self.object.id})
 
+
 @login_required()
 def create_indisponibilite(request, pk):
     title = "Ajout d'une indisponibilité"
     famille = Famille.objects.get(id=pk)
     if request.method == "POST":
         form = IndisponibiliteForm(data=request.POST)
-        if (form.is_valid()):
+        if form.is_valid():
             # Rattachement manuel de la famille
             indisponibilite = form.save(commit=False)
             indisponibilite.famille = famille
@@ -137,6 +152,7 @@ def create_indisponibilite(request, pk):
     else:
         form = IndisponibiliteForm()
     return render(request, "gestion_association/famille/indisponibilite_form.html", locals())
+
 
 @login_required()
 def delete_indisponibilite(request, pk):
@@ -153,4 +169,3 @@ class UpdateIndisponibilite(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("detail_famille", kwargs={"pk": self.object.famille.id})
-

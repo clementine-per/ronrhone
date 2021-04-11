@@ -1,13 +1,11 @@
-import sys
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
-from gestion_association.forms.person import PersonForm, PersonSearchForm, BenevoleForm
+from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm
 from gestion_association.models.person import Person
 
 
@@ -43,6 +41,7 @@ class BenevolePerson(LoginRequiredMixin, UpdateView):
         self.object.save()
         return redirect_url
 
+
 @login_required
 def person_list(request):
     title = "Liste des personnes"
@@ -54,18 +53,18 @@ def person_list(request):
             nom_form = form.cleaned_data["nom"]
             type_person_form = form.cleaned_data["type_person"]
             if type_person_form is not None:
-                if type_person_form == 'ADOPTANTE':
+                if type_person_form == "ADOPTANTE":
                     person_list = person_list.filter(is_adoptante=True)
-                if type_person_form == 'FA':
+                if type_person_form == "FA":
                     person_list = person_list.filter(is_famille=True)
-                if type_person_form == 'BENEVOLE':
+                if type_person_form == "BENEVOLE":
                     person_list = person_list.filter(is_benevole=True)
             if nom_form is not None:
                 person_list = person_list.filter(nom__icontains=nom_form)
     else:
         form = PersonSearchForm()
     # Pagination : 10 éléments par page
-    paginator = Paginator(person_list.order_by('-date_mise_a_jour'), 10)
+    paginator = Paginator(person_list.order_by("-date_mise_a_jour"), 10)
     try:
         page = request.GET.get("page")
         if not page:
@@ -76,10 +75,11 @@ def person_list(request):
         persons = paginator.page(paginator.num_pages())
     return render(request, "gestion_association/person/person_list.html", locals())
 
+
 @login_required
 def person_benevole_cancel(request, pk):
     personne = Person.objects.get(id=pk)
     personne.is_benevole = False
-    personne.commentaire_benevole = ''
+    personne.commentaire_benevole = ""
     personne.save()
     return redirect("detail_person", pk=pk)

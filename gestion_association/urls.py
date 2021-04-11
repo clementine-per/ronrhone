@@ -5,28 +5,62 @@ from django.views.generic import DetailView
 from .models.animal import Animal
 from .models.famille import Famille
 from .models.person import Person
-from .views import (home, animal, person, adoption, famille)
+from .views import adoption, animal, famille, home, person
 
 urlpatterns = [
     path("", home.index, name="accueil"),
     # Animaux
     path("animals/", animal.search_animal, name="animals"),
     path("animals/create", animal.CreateAnimal.as_view(), name="create_animal"),
-    path("animals/preference/update/<int:pk>/", animal.update_preference, name="update_preference"),
-    path("animals/information/update/<int:pk>/", animal.UpdateInformation.as_view(), name="update_information"),
-    path("animals/sante/update/<int:pk>/", animal.UpdateSante.as_view(), name="update_sante"),
-    path("animals/<int:pk>/", login_required(
-        DetailView.as_view(model=Animal, template_name="gestion_association/animal/animal_detail.html")),
-         name="detail_animal"),
+    path(
+        "animals/preference/update/<int:pk>/",
+        animal.update_preference,
+        name="update_preference",
+    ),
+    path(
+        "animals/information/update/<int:pk>/",
+        animal.UpdateInformation.as_view(),
+        name="update_information",
+    ),
+    path(
+        "animals/sante/update/<int:pk>/",
+        animal.UpdateSante.as_view(),
+        name="update_sante",
+    ),
+    path(
+        "animals/<int:pk>/",
+        login_required(
+            DetailView.as_view(
+                model=Animal,
+                template_name="gestion_association/animal/animal_detail.html",
+            )
+        ),
+        name="detail_animal",
+    ),
     # Personnes
     path("persons/create", person.CreatePerson.as_view(), name="create_person"),
     path("persons/update/<int:pk>/", person.UpdatePerson.as_view(), name="update_person"),
-    path("persons/update/benevole/<int:pk>/", person.BenevolePerson.as_view(), name="benevole_person"),
-    path("persons/cancel/benevole/<int:pk>/", person.person_benevole_cancel, name="cancel_benevole"),
+    path(
+        "persons/update/benevole/<int:pk>/",
+        person.BenevolePerson.as_view(),
+        name="benevole_person",
+    ),
+    path(
+        "persons/cancel/benevole/<int:pk>/",
+        person.person_benevole_cancel,
+        name="cancel_benevole",
+    ),
     path("persons/", person.person_list, name="persons"),
-    path("persons/<int:pk>/", login_required(
-        DetailView.as_view(model=Person, template_name="gestion_association/person/person_detail.html")),
-         name="detail_person"),
+    path(
+        "persons/<int:pk>/",
+        login_required(
+            DetailView.as_view(
+                model=Person,
+                template_name="gestion_association/person/person_detail.html",
+            )
+        ),
+        name="detail_person",
+    ),
     # Adoptions
     path("adoption/<int:pk>/", adoption.index, name="adoption"),
     path(
@@ -47,12 +81,12 @@ urlpatterns = [
     path(
         "adoption/update/<int:pk>/",
         adoption.UpdateAdoption.as_view(),
-        name="update_adoption"
+        name="update_adoption",
     ),
     path(
         "adoption/bon/update/<int:pk>/",
         adoption.UpdateBonSterilisation.as_view(),
-        name="update_bon"
+        name="update_bon",
     ),
     path(
         "ajax/calcul_montant_restant/",
@@ -64,22 +98,49 @@ urlpatterns = [
         adoption.calcul_montant_sterilisation,
         name="calcul_montant_sterilisation",
     ),
-    #Familles
+    # Familles
     path("familles/create/<int:pk>/", famille.create_famille, name="create_famille"),
     path("familles/", famille.famille_list, name="familles"),
-    path("familles/<int:pk>/", login_required(
-        DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),
-         name="detail_famille"),
-    path("familles/select/animal/<int:pk>/", famille.famille_select_for_animal, name="famille_select_for_animal"),
-    path("familles/update_accueil/<int:pk>/", famille.update_accueil_famille, name="update_accueil_famille"),
+    path(
+        "familles/<int:pk>/",
+        login_required(
+            DetailView.as_view(
+                model=Famille,
+                template_name="gestion_association/famille/famille_detail.html",
+            )
+        ),
+        name="detail_famille",
+    ),
+    path(
+        "familles/select/animal/<int:pk>/",
+        famille.famille_select_for_animal,
+        name="famille_select_for_animal",
+    ),
+    path(
+        "familles/update_accueil/<int:pk>/",
+        famille.update_accueil_famille,
+        name="update_accueil_famille",
+    ),
     path(
         "familles/update_main/<int:pk>/",
         famille.UpdateMainFamille.as_view(),
-        name="update_main_famille"
+        name="update_main_famille",
     ),
-    path("familles/create/indisponibilite/<int:pk>/", famille.create_indisponibilite, name="create_indisponibilite"),
-    path("familles/update/indisponibilite/<int:pk>/", famille.UpdateIndisponibilite.as_view(), name="update_indisponibilite"),
-    path("familles/delete/indisponibilite/<int:pk>/", famille.delete_indisponibilite, name="delete_indisponibilite"),
+    path(
+        "familles/create/indisponibilite/<int:pk>/",
+        famille.create_indisponibilite,
+        name="create_indisponibilite",
+    ),
+    path(
+        "familles/update/indisponibilite/<int:pk>/",
+        famille.UpdateIndisponibilite.as_view(),
+        name="update_indisponibilite",
+    ),
+    path(
+        "familles/delete/indisponibilite/<int:pk>/",
+        famille.delete_indisponibilite,
+        name="delete_indisponibilite",
+    ),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
-    ]
+]

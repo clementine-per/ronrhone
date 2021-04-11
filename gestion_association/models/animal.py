@@ -23,7 +23,7 @@ class SexeChoice(Enum):
 class StatutAnimal(Enum):
     A_ADOPTER = "A l'adoption"
     ADOPTION = "En cours d'adoption"
-    SOCIA =  "Sociabilisation"
+    SOCIA = "Sociabilisation"
     ADOPTE = "Adopté"
     ADOPTE_DEFINITIF = "Adopté définitivement"
     QUARANTAINE = "Quarantaine"
@@ -34,9 +34,15 @@ class StatutAnimal(Enum):
     RENDU = "Rendu à ses propriétaires"
 
 
-statuts_association = [StatutAnimal.A_ADOPTER.name, StatutAnimal.ADOPTION.name, StatutAnimal.SOCIA.name,
-                       StatutAnimal.ADOPTE.name, StatutAnimal.QUARANTAINE.name, StatutAnimal.SOIN.name,
-                       StatutAnimal.SEVRAGE.name]
+statuts_association = [
+    StatutAnimal.A_ADOPTER.name,
+    StatutAnimal.ADOPTION.name,
+    StatutAnimal.SOCIA.name,
+    StatutAnimal.ADOPTE.name,
+    StatutAnimal.QUARANTAINE.name,
+    StatutAnimal.SOIN.name,
+    StatutAnimal.SEVRAGE.name,
+]
 
 
 class Presence(Enum):
@@ -52,35 +58,45 @@ class TrancheAge(Enum):
 
 
 class Preference(models.Model):
-    sociabilisation = models.CharField(max_length=3, default="NON",
-                                       verbose_name="Sociabilisation",
-                                       choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    exterieur = models.CharField(max_length=3, default="NON",
-                                       verbose_name="Extérieur",
-                                       choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    quarantaine = models.CharField(max_length=3, default="NON",
-                                 verbose_name="Quarantaine",
-                                 choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    biberonnage = models.CharField(max_length=3, default="NON",
-                                   verbose_name="Biberonnage",
-                                   choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    presence = models.CharField(max_length=10, blank=True, default="BAS",
-                                   verbose_name="Niveau de présence",
-                                   choices=[(tag.name, tag.value) for tag in Presence])
+    sociabilisation = models.CharField(
+        max_length=3,
+        default="NON",
+        verbose_name="Sociabilisation",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
+    exterieur = models.CharField(
+        max_length=3,
+        default="NON",
+        verbose_name="Extérieur",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
+    quarantaine = models.CharField(
+        max_length=3,
+        default="NON",
+        verbose_name="Quarantaine",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
+    biberonnage = models.CharField(
+        max_length=3,
+        default="NON",
+        verbose_name="Biberonnage",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
+    presence = models.CharField(
+        max_length=10,
+        blank=True,
+        default="BAS",
+        verbose_name="Niveau de présence",
+        choices=[(tag.name, tag.value) for tag in Presence],
+    )
 
 
 class Animal(models.Model):
-    date_mise_a_jour = models.DateField(
-        verbose_name="Date de mise à jour", auto_now=True
-    )
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
     nom = models.CharField(max_length=150)
     circonstances = models.CharField(max_length=150)
-    date_naissance = models.DateField(
-        verbose_name="Date de naissance", null=True, blank=True
-    )
-    date_arrivee = models.DateField(
-        verbose_name="Date de prise en charge", null=True, blank=True
-    )
+    date_naissance = models.DateField(verbose_name="Date de naissance", null=True, blank=True)
+    date_arrivee = models.DateField(verbose_name="Date de prise en charge", null=True, blank=True)
     sexe = models.CharField(
         max_length=30,
         choices=[(tag.name, tag.value) for tag in SexeChoice],
@@ -90,13 +106,15 @@ class Animal(models.Model):
         verbose_name="Type d'animal",
         choices=[(tag.name, tag.value) for tag in TypeChoice],
     )
-    sterilise = models.CharField(max_length=3,
-                                     verbose_name="Stérilisé(e)",
-                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    identification = models.CharField(max_length=150,
-                                     verbose_name="Numéro d'identification", blank=True)
-    lien_icad = models.URLField(max_length=150,
-                                      verbose_name="Lien ICAD", blank=True)
+    sterilise = models.CharField(
+        max_length=3,
+        verbose_name="Stérilisé(e)",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
+    identification = models.CharField(
+        max_length=150, verbose_name="Numéro d'identification", blank=True
+    )
+    lien_icad = models.URLField(max_length=150, verbose_name="Lien ICAD", blank=True)
     fiv = models.CharField(
         max_length=30,
         verbose_name="FIV",
@@ -107,14 +125,18 @@ class Animal(models.Model):
         verbose_name="FELV",
         choices=[(tag.name, tag.value) for tag in TestResultChoice],
     )
-    primo_vaccine = models.CharField(max_length=3,
-                                    verbose_name="Primo Vacciné(e)",
-                                     default="NON",
-                                    choices=[(tag.name, tag.value) for tag in OuiNonChoice])
-    vaccin_ok = models.CharField(max_length=3,
-                                     verbose_name="Vaccins à jour",
-                                    default="NON",
-                                     choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+    primo_vaccine = models.CharField(
+        max_length=3,
+        verbose_name="Primo Vacciné(e)",
+        default="NON",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
+    vaccin_ok = models.CharField(
+        max_length=3,
+        verbose_name="Vaccins à jour",
+        default="NON",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
     date_dernier_vaccin = models.DateField(
         verbose_name="Date du dernier rappel de vaccin", null=True, blank=True
     )
@@ -147,10 +169,13 @@ class Animal(models.Model):
     commentaire = models.CharField(max_length=1000, blank=True)
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
-    animaux_lies = models.ManyToManyField('self', verbose_name="Animaux liés", blank=True)
-    tranche_age = models.CharField(max_length=10, blank=True,
-                                   verbose_name="Tranche d'âge",
-                                   choices=[(tag.name, tag.value) for tag in TrancheAge])
+    animaux_lies = models.ManyToManyField("self", verbose_name="Animaux liés", blank=True)
+    tranche_age = models.CharField(
+        max_length=10,
+        blank=True,
+        verbose_name="Tranche d'âge",
+        choices=[(tag.name, tag.value) for tag in TrancheAge],
+    )
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT, null=True)
 
     def save(self, *args, **kwargs):
@@ -160,10 +185,10 @@ class Animal(models.Model):
             self.preference = preference
             preference.save()
             # Déterminer la tranche d'age à partir de la date de naissance
-            if (self.date_naissance):
+            if self.date_naissance:
                 today = timezone.now().date()
-                twelve_months = today - timedelta(days=12*30)
-                senior = today - timedelta(days=30*12*10)
+                twelve_months = today - timedelta(days=12 * 30)
+                senior = today - timedelta(days=30 * 12 * 10)
                 date_naissance = self.date_naissance
                 if date_naissance > twelve_months:
                     self.tranche_age = TrancheAge.ENFANT.name
@@ -172,11 +197,11 @@ class Animal(models.Model):
                 else:
                     self.tranche_age = TrancheAge.SENIOR.name
 
-        return super(Animal,self).save(*args, **kwargs)
+        return super(Animal, self).save(*args, **kwargs)
 
     def get_latest_adoption(self):
         if self.adoption_set:
-            return self.adoption_set.all().order_by('-id').first()
+            return self.adoption_set.all().order_by("-id").first()
         return None
 
     def get_other_adoptions(self):
@@ -195,19 +220,16 @@ class Animal(models.Model):
                 + self.date_dernier_vaccin.strftime("%d/%m/%Y")
                 + " )"
             )
-        elif self.primo_vaccine == OuiNonChoice.OUI.name or self.vaccin_ok == OuiNonChoice.OUI.name:
+        elif (
+            self.primo_vaccine == OuiNonChoice.OUI.name or self.vaccin_ok == OuiNonChoice.OUI.name
+        ):
             return "Oui"
         else:
             return "Non"
 
     def get_sterilisation_str(self):
         if self.date_sterilisation:
-            return (
-                "Oui"
-                + " (en date du "
-                + self.date_sterilisation.strftime("%d/%m/%Y")
-                + " )"
-            )
+            return "Oui" + " (en date du " + self.date_sterilisation.strftime("%d/%m/%Y") + " )"
         elif self.sterilise == OuiNonChoice.OUI.name:
             return "Oui"
         else:

@@ -1,5 +1,5 @@
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import Form, CharField, ModelForm, ChoiceField, Select
+from django.forms import CharField, ChoiceField, Form, ModelForm, Select
 
 from gestion_association.models.person import Person, TypePersonChoice
 
@@ -10,15 +10,24 @@ class PersonSearchForm(Form):
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in TypePersonChoice],
         widget=Select(),
         required=False,
-        label="Rôle personne"
+        label="Rôle personne",
     )
 
 
 class PersonForm(ModelForm):
     class Meta:
         model = Person
-        fields = ("prenom","nom","email","adresse","code_postal","ville", "telephone"
-                  , "profession","commentaire")
+        fields = (
+            "prenom",
+            "nom",
+            "email",
+            "adresse",
+            "code_postal",
+            "ville",
+            "telephone",
+            "profession",
+            "commentaire",
+        )
 
 
 class BenevoleForm(ModelForm):

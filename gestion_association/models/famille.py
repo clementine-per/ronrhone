@@ -1,4 +1,3 @@
-import sys
 from enum import Enum
 
 from django.db import models
@@ -14,6 +13,7 @@ class StatutFamille(Enum):
     INDISPONIBLE = "Temporairement indisponible"
     INACTIVE = "Inactive"
 
+
 class Niveau(Enum):
     DEBUTANT = "Débutant"
     INTERMEDIAIRE = "Intermédiaire"
@@ -21,33 +21,42 @@ class Niveau(Enum):
 
 
 class Famille(models.Model):
-    date_mise_a_jour = models.DateField(
-        verbose_name="Date de mise à jour", auto_now=True
-    )
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
     personne = models.OneToOneField(
         Person,
         verbose_name="Personne",
         on_delete=models.PROTECT,
     )
-    statut = models.CharField(max_length=20,
-                                verbose_name="Statut",
-                                default="DISPONIBLE",
-                                choices=[(tag.name, tag.value) for tag in StatutFamille])
-    niveau = models.CharField(max_length=20, blank=True,
-                              verbose_name="Niveau",
-                              default="DEBUTANT",
-                              choices=[(tag.name, tag.value) for tag in Niveau])
+    statut = models.CharField(
+        max_length=20,
+        verbose_name="Statut",
+        default="DISPONIBLE",
+        choices=[(tag.name, tag.value) for tag in StatutFamille],
+    )
+    niveau = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Niveau",
+        default="DEBUTANT",
+        choices=[(tag.name, tag.value) for tag in Niveau],
+    )
     nb_animaux_historique = models.IntegerField(
         null=True, verbose_name="Nombre d'animaux au total"
     )
     commentaire = models.CharField(max_length=1000, blank=True)
     taille_logement = models.IntegerField(
-        null=True, verbose_name="Taille du logement (en mètres carrés)")
-    longue_duree = models.CharField(max_length=3, default="OUI",
-                                   verbose_name="Accepte les acceuils de longue durée",
-                                   choices=[(tag.name, tag.value) for tag in OuiNonChoice])
+        null=True, verbose_name="Taille du logement (en mètres carrés)"
+    )
+    longue_duree = models.CharField(
+        max_length=3,
+        default="OUI",
+        verbose_name="Accepte les acceuils de longue durée",
+        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+    )
     nb_places = models.IntegerField(verbose_name="Nombre de places")
-    preference = models.OneToOneField('Preference', on_delete=models.PROTECT, blank=True, null=True)
+    preference = models.OneToOneField(
+        "Preference", on_delete=models.PROTECT, blank=True, null=True
+    )
     type_animal = models.CharField(
         max_length=30,
         verbose_name="Type d'animal accueilli",
@@ -57,13 +66,13 @@ class Famille(models.Model):
 
     def get_nb_places_str(self):
         count = self.nb_places
-        if (self.animal_set):
-            count -= self.animal_set.count();
+        if self.animal_set:
+            count -= self.animal_set.count()
         return str(count) + "/" + str(self.nb_places)
 
     def get_indisponibilites_str(self):
         result = ""
-        if (self.indisponibilite_set.order_by('date_debut').all()):
+        if self.indisponibilite_set.order_by("date_debut").all():
             for indispo in self.indisponibilite_set.all():
                 result += str(indispo)
                 result += "<br>"
@@ -73,7 +82,7 @@ class Famille(models.Model):
         today = timezone.now().date()
         result = self.get_statut_display()
         prochaines_indispos = self.indisponibilite_set.filter(date_fin__gte=today).all()
-        if(prochaines_indispos):
+        if prochaines_indispos:
             result += "<br>"
             result += "Prochaines indisponibilités : "
             for indispo in prochaines_indispos:
@@ -88,32 +97,31 @@ class Famille(models.Model):
         result += " de niveau "
         result += self.get_niveau_display()
         result += "<br>"
-        if self.taille_logement :
+        if self.taille_logement:
             result += "Logement de "
             result += str(self.taille_logement)
             result += " m2"
-        if self.preference.exterieur and self.preference.exterieur == 'OUI':
+        if self.preference.exterieur and self.preference.exterieur == "OUI":
             result += " avec extérieur"
-        else :
+        else:
             result += " sans extérieur"
         result += "<br>"
-        if self.longue_duree and self.longue_duree == 'OUI':
+        if self.longue_duree and self.longue_duree == "OUI":
             result += "OK longues durées"
             result += "<br>"
-        if self.preference.sociabilisation and self.preference.sociabilisation == 'OUI':
+        if self.preference.sociabilisation and self.preference.sociabilisation == "OUI":
             result += "OK sociabilisation"
             result += "<br>"
-        if self.preference.quarantaine and self.preference.quarantaine == 'OUI':
+        if self.preference.quarantaine and self.preference.quarantaine == "OUI":
             result += "OK quarantaine"
             result += "<br>"
-        if self.preference.biberonnage and self.preference.biberonnage == 'OUI':
+        if self.preference.biberonnage and self.preference.biberonnage == "OUI":
             result += "OK biberonnage"
             result += "<br>"
         result += "Niveau de présence : "
         result += self.preference.get_presence_display()
         result += "<br>"
         return result
-
 
 
 class Indisponibilite(models.Model):
@@ -131,7 +139,7 @@ class Indisponibilite(models.Model):
 
 class Accueil(models.Model):
     date_debut = models.DateField(verbose_name="Date de début")
-    date_fin = models.DateField(verbose_name="Date de fin", blank=True)
+    date_fin = models.DateField(verbose_name="Date de fin", blank=True, null=True)
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT)
-    animaux = models.ManyToManyField('Animal', verbose_name="Animal(aux)")
+    animaux = models.ManyToManyField("Animal", verbose_name="Animal(aux)")
     commentaire = models.CharField(max_length=1000, blank=True)
