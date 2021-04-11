@@ -189,10 +189,14 @@ class FamilleCandidateAPIView(View):
     def post(self, request, pk, *args, **kwargs):
         animal = Animal.objects.get(id=pk)
         animaux_candidats = [animal, *animal.animaux_lies.get_queryset().all()]
-        animaux_selectionnes = [
-            a for a in animaux_candidats if str(a.pk) in self.request.POST.getlist("animaux", [])
-        ]
-        date_debut = self.request.POST.get("date_debut")
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return json_error_400("body", "Invalid JSON request.")
+
+        animaux_selectionnes = [a for a in animaux_candidats if a.pk in data.get("animaux", [])]
+
+        date_debut = data.get("date_debut")
 
         if date_debut:
             try:

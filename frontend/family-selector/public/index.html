@@ -4,17 +4,25 @@
   <meta charset="utf-8">
   <title>Ronrhone Family Selector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8000/static/css/base.css">
+  <link rel="stylesheet" type="text/css" href="elm-datepicker.css">
 </head>
 <body class="container-fluid">
-    <h3>Select a family</h3>
-    <div id="family-form-selector"></div>
+  <h3>Choisir une famille pour Tulipe</h3>
+  <div id="family-form-selector"></div>
 
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <script src="app.js"></script>
   <script>
     const family_form_selector_element = document.getElementById("family-form-selector");
     const family_form_selector_app = Elm.FamilySelector.init({
       node: family_form_selector_element,
-      flags: {}
+      flags: { animals: [
+        {id: 2, label: "Panpan"},
+        {id: 1, label:"Verveine"},
+        {id: 3, label: "Tulipe"}
+      ]}
     });
 </script>
 </body>

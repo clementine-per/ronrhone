@@ -1,8 +1,11 @@
 {% extends "gestion_association/base.html" %}
 {% load static %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendors/family-selector/elm-datepicker.css' %}">
+{% endblock %}
+
+
 {% block content %}
-
-
 <form method="post" action="">
     {% csrf_token %}
     <div id="family-form-selector"></div>
