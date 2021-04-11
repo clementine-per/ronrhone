@@ -18,6 +18,7 @@ class TableSelectMultiple(SelectMultiple):
     def __init__(
         self,
         item_attrs,
+        item_headers,
         enable_datatables=False,
         bootstrap_style=False,
         datatable_options={},
@@ -36,6 +37,7 @@ class TableSelectMultiple(SelectMultiple):
         """
         super(TableSelectMultiple, self).__init__(*args, **kwargs)
         self.item_attrs = item_attrs
+        self.item_headers = item_headers
         self.enable_datatables = enable_datatables
         self.bootstrap_style = bootstrap_style
         self.datatable_options = datatable_options
@@ -84,7 +86,7 @@ class TableSelectMultiple(SelectMultiple):
     def render_head(self):
         output = []
         output.append('<thead><tr><th class="no-sort"></th>')
-        for item in self.item_attrs:
+        for item in self.item_headers:
             name = item if isinstance(item, str) else item[1]
             output.append(
                 '<th>{}</th>'.format(clean_underscores(escape(name))),
@@ -119,7 +121,7 @@ class TableSelectMultiple(SelectMultiple):
                     if isinstance(item_attr, str) \
                     else item_attr[0]
                 content = get_underscore_attrs(attr, item)
-                output.append('<td>{}</td>'.format(escape(content)))
+                output.append('<td>{}</td>'.format(content))
             output.append('</tr>')
         output.append('</tbody>')
         return ''.join(output)

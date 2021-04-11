@@ -24,3 +24,25 @@ div .adoptant{
     margin-top: .3rem;
     margin-left: 0;
 }
+
+ul,li {
+    list-style-type: none;
+}
+
+input[type=text], select {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+th,td {
+  text-align: center;
+}
+
+th {
+  background-color: #17a2b8;
+  color: white;
+}

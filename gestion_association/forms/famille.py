@@ -1,8 +1,11 @@
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import ModelForm, Form, CharField, ChoiceField, Select, IntegerField, DateField, DateInput
+from django.forms import ModelForm, Form, CharField, ChoiceField, Select, IntegerField, DateField, DateInput, \
+    ModelMultipleChoiceField, CheckboxSelectMultiple
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.famille import Famille, StatutFamille, Indisponibilite
+from gestion_association.models.animal import Animal
+from gestion_association.models.famille import Famille, StatutFamille, Indisponibilite, Accueil
+from gestion_association.widgets import TableSelectMultiple
 
 
 class DateInput(DateInput):
@@ -56,4 +59,27 @@ class FamilleAccueilUpdateForm(ModelForm):
 class IndisponibiliteForm(ModelForm):
     class Meta:
         model = Indisponibilite
-        fields = ( "date_debut","date_fin")
+        fields = ("date_debut","date_fin")
+
+
+class AccueilForm(ModelForm):
+    class Meta:
+        model = Accueil
+        fields = ("date_debut","animaux","famille")
+
+class SelectFamilleForm(ModelForm):
+
+    class Meta:
+        model = Accueil
+        fields = ("date_debut","animaux","famille")
+
+    animaux = ModelMultipleChoiceField(widget= CheckboxSelectMultiple, queryset = Animal.objects.none())
+    famille = ModelMultipleChoiceField(queryset = Famille.objects.all(), required=False,
+                                       widget=TableSelectMultiple(
+                                           item_attrs=['get_nb_places_str', 'personne', 'get_disponibilite_str',
+                                                       'get_preference_str', 'commentaire'],
+                                           item_headers = ['Places disponibles', 'Personne', 'Disponibilité',
+                                                           'Caractéristiques','Commentaire'],
+                                           enable_datatables=True,
+                                           bootstrap_style=True,
+                                           datatable_options={'language': {'url': '/foobar.js'}},))

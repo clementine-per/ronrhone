@@ -70,7 +70,7 @@ urlpatterns = [
     path("familles/<int:pk>/", login_required(
         DetailView.as_view(model=Famille, template_name="gestion_association/famille/famille_detail.html")),
          name="detail_famille"),
-    path("familles/select", famille.famille_select, name="famille_select"),
+    path("familles/select/animal/<int:pk>/", famille.famille_select_for_animal, name="famille_select_for_animal"),
     path("familles/update_accueil/<int:pk>/", famille.update_accueil_famille, name="update_accueil_famille"),
     path(
         "familles/update_main/<int:pk>/",

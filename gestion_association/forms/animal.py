@@ -3,12 +3,11 @@ from string import capwords
 
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import DateField, Form, CharField, ChoiceField, Select, ModelForm, DateInput, MultipleChoiceField, \
-    ModelMultipleChoiceField
+    ModelMultipleChoiceField, SelectMultiple
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, Preference, statuts_association
-from gestion_association.models.famille import Famille
-from gestion_association.widgets import TableSelectMultiple
+from gestion_association.models.animal import TypeChoice, StatutAnimal, Animal, statuts_association
+
 
 
 class DateInput(DateInput):
@@ -75,12 +74,10 @@ class AnimalLinkedForm(ModelForm):
         model = Animal
         fields = ("animaux_lies",)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["animaux_lies"].queryset = Animal.objects.filter(statut__in=[StatutAnimal.A_ADOPTER.name,
+    animaux_lies = ModelMultipleChoiceField(required=False, widget=SelectMultiple, queryset = Animal.objects.filter(statut__in=[StatutAnimal.A_ADOPTER.name,
                                                                      StatutAnimal.QUARANTAINE.name,
                                                                      StatutAnimal.SEVRAGE.name, StatutAnimal.SOCIA.name,
-                                                                     StatutAnimal.SOIN.name])
+                                                                     StatutAnimal.SOIN.name]))
 
 
 class AnimalInfoUpdateForm(ModelForm):
@@ -96,16 +93,3 @@ class AnimalSanteUpdateForm(ModelForm):
         model = Animal
         fields = ("sterilise","date_sterilisation","primo_vaccine", "vaccin_ok",
                   "date_dernier_vaccin", "date_prochain_vaccin", "fiv","felv", "date_parasite")
-
-
-class SelectFamilleForm(ModelForm):
-    class Meta:
-        model = Animal
-        fields = ("famille",)
-
-    famille = ModelMultipleChoiceField( queryset = Famille.objects.all(), required=False,
-                                             widget=TableSelectMultiple(
-        item_attrs=['date_mise_a_jour', 'personne', 'statut'],
-       enable_datatables=True,
-       bootstrap_style=True,
-       datatable_options={'language': {'url': '/foobar.js'}},))

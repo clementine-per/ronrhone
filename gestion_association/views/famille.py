@@ -1,3 +1,6 @@
+import sys
+from itertools import chain
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
@@ -6,9 +9,9 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms import PreferenceForm
-from gestion_association.forms.animal import SelectFamilleForm
 from gestion_association.forms.famille import FamilleCreateForm, FamilleSearchForm, FamilleMainUpdateForm, \
-    FamilleAccueilUpdateForm, IndisponibiliteForm
+    FamilleAccueilUpdateForm, IndisponibiliteForm, SelectFamilleForm
+from gestion_association.models.animal import Animal
 from gestion_association.models.famille import Famille, Indisponibilite
 from gestion_association.models.person import Person
 
@@ -73,8 +76,21 @@ def famille_list(request):
     return render(request, "gestion_association/famille/famille_list.html", locals())
 
 @login_required
-def famille_select(request):
-    form = SelectFamilleForm()
+def famille_select_for_animal(request, pk):
+
+    animal = Animal.objects.get(id=pk)
+    title = "Trouver une famille pour " + animal.nom
+
+    if request.method == "POST":
+        print(request.POST["famille"])
+        sys.stdout.flush()
+        form = SelectFamilleForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = SelectFamilleForm()
+        form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
+        form.fields["famille"].queryset = Famille.objects.exclude(statut='INACTIVE')
     return render(request, "gestion_association/famille/famille_select_form.html", locals())
 
 

@@ -2,6 +2,8 @@ import sys
 from enum import Enum
 
 from django.db import models
+from django.utils import timezone
+from django.utils.safestring import mark_safe
 
 from gestion_association.models import OuiNonChoice, TypeChoice
 from gestion_association.models.person import Person
@@ -65,7 +67,53 @@ class Famille(models.Model):
             for indispo in self.indisponibilite_set.all():
                 result += str(indispo)
                 result += "<br>"
+        return mark_safe(result)
+
+    def get_disponibilite_str(self):
+        today = timezone.now().date()
+        result = self.get_statut_display()
+        prochaines_indispos = self.indisponibilite_set.filter(date_fin__gte=today).all()
+        if(prochaines_indispos):
+            result += "<br>"
+            result += "Prochaines indisponibilités : "
+            for indispo in prochaines_indispos:
+                result += "<br>"
+                result += str(indispo)
+        return mark_safe(result)
+
+    def get_preference_str(self):
+        result = ""
+        result += "Famille pour "
+        result += self.get_type_animal_display()
+        result += " de niveau "
+        result += self.get_niveau_display()
+        result += "<br>"
+        if self.taille_logement :
+            result += "Logement de "
+            result += str(self.taille_logement)
+            result += " m2"
+        if self.preference.exterieur and self.preference.exterieur == 'OUI':
+            result += " avec extérieur"
+        else :
+            result += " sans extérieur"
+        result += "<br>"
+        if self.longue_duree and self.longue_duree == 'OUI':
+            result += "OK longues durées"
+            result += "<br>"
+        if self.preference.sociabilisation and self.preference.sociabilisation == 'OUI':
+            result += "OK sociabilisation"
+            result += "<br>"
+        if self.preference.quarantaine and self.preference.quarantaine == 'OUI':
+            result += "OK quarantaine"
+            result += "<br>"
+        if self.preference.biberonnage and self.preference.biberonnage == 'OUI':
+            result += "OK biberonnage"
+            result += "<br>"
+        result += "Niveau de présence : "
+        result += self.preference.get_presence_display()
+        result += "<br>"
         return result
+
 
 
 class Indisponibilite(models.Model):
@@ -79,3 +127,11 @@ class Indisponibilite(models.Model):
         result += " au "
         result += self.date_fin.strftime("%d/%m/%Y")
         return result
+
+
+class Accueil(models.Model):
+    date_debut = models.DateField(verbose_name="Date de début")
+    date_fin = models.DateField(verbose_name="Date de fin", blank=True)
+    famille = models.ForeignKey(Famille, on_delete=models.PROTECT)
+    animaux = models.ManyToManyField('Animal', verbose_name="Animal(aux)")
+    commentaire = models.CharField(max_length=1000, blank=True)
