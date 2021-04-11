@@ -128,3 +128,4 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "/templates/")
 LANGUAGE_CODE = "fr"
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+CORS_ALLOW_CREDENTIALS = True

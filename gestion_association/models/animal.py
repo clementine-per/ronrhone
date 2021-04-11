@@ -176,7 +176,7 @@ class Animal(models.Model):
         verbose_name="Tranche d'âge",
         choices=[(tag.name, tag.value) for tag in TrancheAge],
     )
-    famille = models.ForeignKey(Famille, on_delete=models.PROTECT, null=True)
+    famille = models.ForeignKey(Famille, on_delete=models.PROTECT, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Au premier enregistrement en base, on initialise les préférences

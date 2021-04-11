@@ -1,11 +1,14 @@
 {% extends "gestion_association/base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendors/family-selector/elm-datepicker.css' %}">
+{% endblock %}
+
 
 {% block content %}
-
-
 <form method="post" action="">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div id="family-form-selector"></div>
     <div class="row">
         <div class="col">
             <a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
@@ -20,12 +23,21 @@
 {% endblock %}
 
 {% block script %}
-<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'vendors/family-selector/family-selector.js' %}"></script>
 <script>
-$(function() {
-  $('[name="date_debut"]').datepicker({
-      dateFormat: 'dd/mm/yy'
-  });
-});
+    $(function() {
+      const family_form_selector_element = document.getElementById("family-form-selector");
+      const family_form_selector_app = Elm.FamilySelector.init({
+        node: family_form_selector_element,
+        flags: {
+          animals : [
+            {% for animal in animals %}
+            {"id": {{ animal.pk }}, "label": "{{ animal.nom }}"}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ],
+          url: "{% url 'familles_candidates_for_animal' animal.pk %}"
+        }
+      });
+    });
 </script>
 {% endblock %}
