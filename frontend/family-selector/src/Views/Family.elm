@@ -2,9 +2,8 @@ module Views.Family exposing (view)
 
 import Data.Core exposing (Msg(..))
 import Data.Family exposing (Family)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (Html, input, pre, table, tbody, td, text, th, thead, tr)
+import Html.Attributes exposing (checked, class, colspan, id, name, required, type_, value)
 
 
 view : List Family -> Html Msg

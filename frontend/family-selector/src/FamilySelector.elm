@@ -1,16 +1,10 @@
 module FamilySelector exposing (main)
 
 import Browser
-import Data.Animal exposing (Animal)
 import Data.Core exposing (Flags, Model, Msg(..))
-import Data.Family as Family exposing (Family)
-import Date exposing (Date)
-import DatePicker exposing (DateEvent(..), defaultSettings)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
-import Http
-import Json.Decode as Decode
+import DatePicker exposing (DateEvent(..))
+import Html exposing (Html, div)
+import Html.Attributes exposing (class)
 import Request.FamilyCandidates as FamilyCandidates
 import Views.Animal as AnimalView
 import Views.DatePicker as DatePickerView exposing (datePickerSettings)
@@ -103,7 +97,7 @@ update msg model =
             in
             refreshFamilies newModel
 
-        FamiliesFetched (Err err) ->
+        FamiliesFetched (Err _) ->
             ( { model | families = [] }, Cmd.none )
 
         FamiliesFetched (Ok families) ->

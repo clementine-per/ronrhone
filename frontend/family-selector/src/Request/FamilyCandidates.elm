@@ -1,4 +1,4 @@
-module Request.FamilyCandidates exposing (..)
+module Request.FamilyCandidates exposing (fetchFamilies)
 
 import Data.Animal exposing (Animal)
 import Data.Family as Family exposing (Family)

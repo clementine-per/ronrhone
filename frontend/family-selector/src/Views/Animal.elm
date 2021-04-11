@@ -2,9 +2,9 @@ module Views.Animal exposing (view)
 
 import Data.Animal exposing (Animal)
 import Data.Core exposing (Msg(..))
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (Html, div, input, label, li, p, text, ul)
+import Html.Attributes exposing (checked, for, id, name, type_, value)
+import Html.Events exposing (onInput)
 
 
 view : List Animal -> List Animal -> Html Msg

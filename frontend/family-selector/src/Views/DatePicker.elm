@@ -1,11 +1,10 @@
-module Views.DatePicker exposing (..)
+module Views.DatePicker exposing (datePickerSettings, view)
 
 import Data.Core exposing (Model, Msg(..))
 import Date
 import DatePicker exposing (defaultSettings)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (Html, label, p, text)
+import Html.Attributes exposing (for)
 
 
 datePickerSettings : DatePicker.Settings
