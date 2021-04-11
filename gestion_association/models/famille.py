@@ -123,6 +123,15 @@ class Famille(models.Model):
         result += "<br>"
         return result
 
+    def to_json(self):
+        return {
+            "places_disponible": self.get_nb_places_str(),
+            "personne": str(self.personne),
+            "disponibilites": self.get_disponibilite_str(),
+            "caracteristiques": self.get_preference_str(),
+            "commentaire": self.commentaire,
+        }
+
 
 class Indisponibilite(models.Model):
     date_debut = models.DateField(verbose_name="Date de départ")

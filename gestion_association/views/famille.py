@@ -1,11 +1,17 @@
+import json
 import sys
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
+from django.db.models import Count, F
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.utils.dateparse import parse_date
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import UpdateView, View
 
 from gestion_association.forms import PreferenceForm
 from gestion_association.forms.famille import (
@@ -169,3 +175,49 @@ class UpdateIndisponibilite(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("detail_famille", kwargs={"pk": self.object.famille.id})
+
+
+def json_error_400(field, message):
+    context = {"status": "400", "field": field, "reason": message}
+    response = HttpResponse(json.dumps(context), content_type="application/json")
+    response.status_code = 400
+    return response
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class FamilleCandidateAPIView(View):
+    def post(self, request, pk, *args, **kwargs):
+        animal = Animal.objects.get(id=pk)
+        animaux_candidats = [animal, *animal.animaux_lies.get_queryset().all()]
+        animaux_selectionnes = [
+            a for a in animaux_candidats if str(a.pk) in self.request.POST.getlist("animaux", [])
+        ]
+        date_debut = self.request.POST.get("date_debut")
+
+        if date_debut:
+            try:
+                date_debut = parse_date(date_debut)
+            except ValueError:
+                return json_error_400("date_debut", "Vous devez sélectionner une date valide.")
+
+        else:
+            return json_error_400("date_debut", "Vous devez sélectionner une date valide.")
+
+        if not animaux_selectionnes:
+            return json_error_400("animaux", "Vous devez sélectionner au moins un animal valide.")
+
+        context = {
+            "familles_candidates": [
+                famille.to_json()
+                for famille in Famille.objects.exclude(statut="INACTIVE")
+                .exclude(
+                    indisponibilite__date_debut__gte=date_debut,
+                    indisponibilite__date_debut__lte=date_debut,
+                )
+                .annotate(nb_animaux=Count("animal"))
+                .filter(nb_places__gte=F("nb_animaux") + len(animaux_selectionnes))
+            ]
+        }
+        response = HttpResponse(json.dumps(context), content_type="application/json")
+        response.status_code = 400
+        return response

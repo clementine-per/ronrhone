@@ -117,6 +117,11 @@ urlpatterns = [
         name="famille_select_for_animal",
     ),
     path(
+        "familles/candidates/animal/<int:pk>/",
+        famille.FamilleCandidateAPIView.as_view(),
+        name="familles_candidates_for_animal",
+    ),
+    path(
         "familles/update_accueil/<int:pk>/",
         famille.update_accueil_famille,
         name="update_accueil_famille",
