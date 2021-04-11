@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ronrhone Family Selector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="container-fluid">
+    <h3>Select a family</h3>
+    <div id="family-form-selector"></div>
+
+  <script src="app.js"></script>
+  <script>
+    const family_form_selector_element = document.getElementById("family-form-selector");
+    const family_form_selector_app = Elm.FamilySelector.init({
+      node: family_form_selector_element,
+      flags: {}
+    });
+</script>
+</body>
+</html>
