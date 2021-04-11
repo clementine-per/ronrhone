@@ -1,16 +1,16 @@
-from django.contrib import admin
-
 # Register your models here.
 from import_export.admin import ImportExportModelAdmin
 
+from django.contrib import admin
+
 from gestion_association.models.adoption import (
-    TarifAdoption,
     Adoption,
-    TarifBonSterilisation,
     BonSterilisation,
+    TarifAdoption,
+    TarifBonSterilisation,
 )
 from gestion_association.models.animal import Animal, Preference
-from gestion_association.models.famille import Famille, Indisponibilite, Accueil
+from gestion_association.models.famille import Accueil, Famille, Indisponibilite
 from gestion_association.models.person import Person
 
 

@@ -1,26 +1,21 @@
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import (
-    ModelForm,
-    Form,
     CharField,
+    CheckboxSelectMultiple,
     ChoiceField,
-    Select,
-    IntegerField,
     DateField,
     DateInput,
+    Form,
+    IntegerField,
     ModelChoiceField,
+    ModelForm,
     ModelMultipleChoiceField,
-    CheckboxSelectMultiple,
+    Select,
 )
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal
-from gestion_association.models.famille import (
-    Famille,
-    StatutFamille,
-    Indisponibilite,
-    Accueil,
-)
+from gestion_association.models.famille import Accueil, Famille, Indisponibilite, StatutFamille
 
 
 class DateInput(DateInput):
@@ -34,9 +29,7 @@ class FamilleSearchForm(Form):
         widget=Select(),
         required=False,
     )
-    places_dispos = IntegerField(
-        required=False, label="Nombre de places disponibles minimum"
-    )
+    places_dispos = IntegerField(required=False, label="Nombre de places disponibles minimum")
     quarantaine = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),
@@ -47,9 +40,7 @@ class FamilleSearchForm(Form):
         widget=Select(),
         required=False,
     )
-    date_presence_min = DateField(
-        label="Plage recherchée du", required=False, widget=DateInput()
-    )
+    date_presence_min = DateField(label="Plage recherchée du", required=False, widget=DateInput())
     date_presence_max = DateField(label=" au ", required=False, widget=DateInput())
 
 

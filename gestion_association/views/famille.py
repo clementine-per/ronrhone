@@ -1,19 +1,18 @@
 import sys
-from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import UpdateView
 
 from gestion_association.forms import PreferenceForm
 from gestion_association.forms.famille import (
-    FamilleCreateForm,
-    FamilleSearchForm,
-    FamilleMainUpdateForm,
     FamilleAccueilUpdateForm,
+    FamilleCreateForm,
+    FamilleMainUpdateForm,
+    FamilleSearchForm,
     IndisponibiliteForm,
     SelectFamilleForm,
 )
@@ -43,9 +42,7 @@ def create_famille(request, pk):
     else:
         famille_form = FamilleCreateForm()
         preference_form = PreferenceForm()
-    return render(
-        request, "gestion_association/famille/famille_create_form.html", locals()
-    )
+    return render(request, "gestion_association/famille/famille_create_form.html", locals())
 
 
 @login_required
@@ -64,15 +61,11 @@ def famille_list(request):
             date_presence_min = form.cleaned_data["date_presence_min"]
             date_presence_max = form.cleaned_data["date_presence_max"]
             if nom_personne_form:
-                famille_list = famille_list.filter(
-                    personne__nom__icontains=nom_personne_form
-                )
+                famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
             if statut_form:
                 famille_list = famille_list.filter(statut=statut_form)
             if quarantaine_form:
-                famille_list = famille_list.filter(
-                    preference__quarantaine=quarantaine_form
-                )
+                famille_list = famille_list.filter(preference__quarantaine=quarantaine_form)
             if exterieur_form:
                 famille_list = famille_list.filter(preference__exterieur=exterieur_form)
     else:
@@ -99,9 +92,9 @@ def famille_select_for_animal(request, pk):
     data = request.POST.get("famille")
 
     form = SelectFamilleForm(request.POST)
-    form.fields[
-        "animaux"
-    ].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
+    form.fields["animaux"].queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(
+        id=pk
+    )
     form.fields["famille"].queryset = Famille.objects.exclude(statut="INACTIVE")
 
     if request.method == "POST":
@@ -111,9 +104,7 @@ def famille_select_for_animal(request, pk):
             form.save()
             return redirect("detail_animal", pk=animal.id)
 
-    return render(
-        request, "gestion_association/famille/famille_select_form.html", locals()
-    )
+    return render(request, "gestion_association/famille/famille_select_form.html", locals())
 
 
 class FamilleUpdateMainForm(object):
@@ -134,9 +125,7 @@ def update_accueil_famille(request, pk):
     else:
         famille_form = FamilleAccueilUpdateForm(instance=famille)
         preference_form = PreferenceForm(instance=famille.preference)
-    return render(
-        request, "gestion_association/famille/famille_accueil_form.html", locals()
-    )
+    return render(request, "gestion_association/famille/famille_accueil_form.html", locals())
 
 
 class UpdateMainFamille(LoginRequiredMixin, UpdateView):
@@ -162,9 +151,7 @@ def create_indisponibilite(request, pk):
             return redirect("detail_famille", pk=famille.id)
     else:
         form = IndisponibiliteForm()
-    return render(
-        request, "gestion_association/famille/indisponibilite_form.html", locals()
-    )
+    return render(request, "gestion_association/famille/indisponibilite_form.html", locals())
 
 
 @login_required()

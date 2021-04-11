@@ -3,11 +3,11 @@ from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import (
-    StatutAnimal,
     Animal,
-    TypeChoice,
     SexeChoice,
+    StatutAnimal,
     TrancheAge,
+    TypeChoice,
 )
 from gestion_association.models.person import Person
 
@@ -89,9 +89,7 @@ class BonSterilisation(models.Model):
         default="NON",
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
-    date_utilisation = models.DateField(
-        verbose_name="Date d'utilisation", null=True, blank=True
-    )
+    date_utilisation = models.DateField(verbose_name="Date d'utilisation", null=True, blank=True)
 
     def __str__(self):
         result = "Bon de stérilisation "
@@ -132,9 +130,7 @@ class TarifAdoption(models.Model):
         verbose_name="Vaccins à jour",
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
-    montant = models.DecimalField(
-        verbose_name="Montant", max_digits=7, decimal_places=2
-    )
+    montant = models.DecimalField(verbose_name="Montant", max_digits=7, decimal_places=2)
 
     def __str__(self):
         return "Tarif adoption pour " + self.type_animal
@@ -152,9 +148,7 @@ class TarifBonSterilisation(models.Model):
         choices=[(tag.name, tag.value) for tag in SexeChoice],
     )
 
-    montant = models.DecimalField(
-        verbose_name="Montant", max_digits=7, decimal_places=2
-    )
+    montant = models.DecimalField(verbose_name="Montant", max_digits=7, decimal_places=2)
 
     def __str__(self):
         return "Tarif bon de stérilisation pour " + self.type_animal

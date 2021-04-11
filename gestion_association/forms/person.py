@@ -1,5 +1,5 @@
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import Form, CharField, ModelForm, ChoiceField, Select
+from django.forms import CharField, ChoiceField, Form, ModelForm, Select
 
 from gestion_association.models.person import Person, TypePersonChoice
 

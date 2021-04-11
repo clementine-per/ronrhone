@@ -1,27 +1,19 @@
-import json
-from string import capwords
-
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import (
-    DateField,
-    Form,
     CharField,
     ChoiceField,
-    Select,
-    ModelForm,
+    DateField,
     DateInput,
-    MultipleChoiceField,
+    Form,
+    ModelForm,
     ModelMultipleChoiceField,
+    MultipleChoiceField,
+    Select,
     SelectMultiple,
 )
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import (
-    TypeChoice,
-    StatutAnimal,
-    Animal,
-    statuts_association,
-)
+from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association
 
 
 class DateInput(DateInput):
@@ -30,9 +22,7 @@ class DateInput(DateInput):
 
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
-    identification = CharField(
-        max_length=100, required=False, label="Numéro d'identification"
-    )
+    identification = CharField(max_length=100, required=False, label="Numéro d'identification")
     type = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in TypeChoice],
         widget=Select(),
@@ -56,9 +46,7 @@ class AnimalSearchForm(Form):
         required=False,
         widget=DateInput(),
     )
-    date_prochaine_visite_max = DateField(
-        label=" et le ", required=False, widget=DateInput()
-    )
+    date_prochaine_visite_max = DateField(label=" et le ", required=False, widget=DateInput())
     sans_fa = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),

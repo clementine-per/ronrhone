@@ -1,13 +1,11 @@
-import sys
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
-from gestion_association.forms.person import PersonForm, PersonSearchForm, BenevoleForm
+from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm
 from gestion_association.models.person import Person
 
 

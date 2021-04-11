@@ -5,24 +5,24 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
 
 from gestion_association.forms.adoption import (
-    AdoptionCreateFormNoAdoptant,
     AdoptionCreateForm,
+    AdoptionCreateFormNoAdoptant,
     AdoptionFromUserForm,
     AdoptionUpdateForm,
-    ShowBonForm,
     BonSterilisationForm,
+    ShowBonForm,
 )
 from gestion_association.forms.person import PersonForm
 from gestion_association.models.adoption import (
     Adoption,
+    BonSterilisation,
     TarifAdoption,
     TarifBonSterilisation,
-    BonSterilisation,
 )
 from gestion_association.models.animal import Animal, StatutAnimal
 from gestion_association.models.person import Person
@@ -63,9 +63,7 @@ def adoption_complete(request, pk):
             adoption_form.fields["montant"].initial = montant_adoption
             adoption_form.fields["montant_restant"].initial = montant_adoption
 
-    return render(
-        request, "gestion_association/adoption/adoption_complete.html", locals()
-    )
+    return render(request, "gestion_association/adoption/adoption_complete.html", locals())
 
 
 @login_required
@@ -92,9 +90,7 @@ def adoption_allegee(request, pk):
             adoption_form.fields["montant"].initial = montant_adoption
             adoption_form.fields["montant_restant"].initial = montant_adoption
 
-    return render(
-        request, "gestion_association/adoption/adoption_allegee.html", locals()
-    )
+    return render(request, "gestion_association/adoption/adoption_allegee.html", locals())
 
 
 @login_required
@@ -116,9 +112,7 @@ def adoption_from_user(request, pk):
         show_bon_form = ShowBonForm(initial={"show": "NON"})
         bon_form = BonSterilisationForm()
 
-    return render(
-        request, "gestion_association/adoption/adoption_from_user.html", locals()
-    )
+    return render(request, "gestion_association/adoption/adoption_from_user.html", locals())
 
 
 class UpdateAdoption(LoginRequiredMixin, UpdateView):
@@ -136,9 +130,7 @@ class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
     template_name = "gestion_association/adoption/bon_form.html"
 
     def get_success_url(self):
-        return reverse_lazy(
-            "detail_animal", kwargs={"pk": self.object.adoption.animal.id}
-        )
+        return reverse_lazy("detail_animal", kwargs={"pk": self.object.adoption.animal.id})
 
 
 def get_montant_adoption(animal):

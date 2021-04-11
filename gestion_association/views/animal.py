@@ -1,22 +1,20 @@
-import sys
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms import PreferenceForm
 from gestion_association.forms.animal import (
-    AnimalSearchForm,
     AnimalCreateForm,
     AnimalInfoUpdateForm,
-    AnimalSanteUpdateForm,
     AnimalLinkedForm,
+    AnimalSanteUpdateForm,
+    AnimalSearchForm,
 )
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import Animal, Preference
+from gestion_association.models.animal import Animal
 
 
 @login_required()
@@ -60,13 +58,9 @@ def search_animal(request):
             if date_naissance_max:
                 animals = animals.filter(date_naissance__lte=date_naissance_max)
             if date_prochaine_visite_min:
-                animals = animals.filter(
-                    date_prochain_vaccin__gte=date_prochaine_visite_min
-                )
+                animals = animals.filter(date_prochain_vaccin__gte=date_prochaine_visite_min)
             if date_prochaine_visite_max:
-                animals = animals.filter(
-                    date_prochain_vaccin__lte=date_prochaine_visite_max
-                )
+                animals = animals.filter(date_prochain_vaccin__lte=date_prochaine_visite_max)
             if date_vermifuge_min:
                 animals = animals.filter(date_vermifuge__gte=date_vermifuge_min)
             if date_vermifuge_max:

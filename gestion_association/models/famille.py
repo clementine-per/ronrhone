@@ -1,4 +1,3 @@
-import sys
 from enum import Enum
 
 from django.db import models
@@ -22,11 +21,11 @@ class Niveau(Enum):
 
 
 class Famille(models.Model):
-    date_mise_a_jour = models.DateField(
-        verbose_name="Date de mise à jour", auto_now=True
-    )
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
     personne = models.OneToOneField(
-        Person, verbose_name="Personne", on_delete=models.PROTECT,
+        Person,
+        verbose_name="Personne",
+        on_delete=models.PROTECT,
     )
     statut = models.CharField(
         max_length=20,

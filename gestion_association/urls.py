@@ -5,7 +5,7 @@ from django.views.generic import DetailView
 from .models.animal import Animal
 from .models.famille import Famille
 from .models.person import Person
-from .views import home, animal, person, adoption, famille
+from .views import adoption, animal, famille, home, person
 
 urlpatterns = [
     path("", home.index, name="accueil"),
@@ -39,9 +39,7 @@ urlpatterns = [
     ),
     # Personnes
     path("persons/create", person.CreatePerson.as_view(), name="create_person"),
-    path(
-        "persons/update/<int:pk>/", person.UpdatePerson.as_view(), name="update_person"
-    ),
+    path("persons/update/<int:pk>/", person.UpdatePerson.as_view(), name="update_person"),
     path(
         "persons/update/benevole/<int:pk>/",
         person.BenevolePerson.as_view(),

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ChoiceField, Form
+from django.forms import ChoiceField, Form, ModelForm
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption, BonSterilisation
@@ -53,9 +53,7 @@ class AdoptionFromUserForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["animal"].queryset = Animal.objects.filter(
-            statut=StatutAnimal.A_ADOPTER.name
-        )
+        self.fields["animal"].queryset = Animal.objects.filter(statut=StatutAnimal.A_ADOPTER.name)
 
 
 class AdoptionUpdateForm(ModelForm):

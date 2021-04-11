@@ -92,19 +92,14 @@ class Preference(models.Model):
 
 
 class Animal(models.Model):
-    date_mise_a_jour = models.DateField(
-        verbose_name="Date de mise à jour", auto_now=True
-    )
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
     nom = models.CharField(max_length=150)
     circonstances = models.CharField(max_length=150)
-    date_naissance = models.DateField(
-        verbose_name="Date de naissance", null=True, blank=True
-    )
-    date_arrivee = models.DateField(
-        verbose_name="Date de prise en charge", null=True, blank=True
-    )
+    date_naissance = models.DateField(verbose_name="Date de naissance", null=True, blank=True)
+    date_arrivee = models.DateField(verbose_name="Date de prise en charge", null=True, blank=True)
     sexe = models.CharField(
-        max_length=30, choices=[(tag.name, tag.value) for tag in SexeChoice],
+        max_length=30,
+        choices=[(tag.name, tag.value) for tag in SexeChoice],
     )
     type = models.CharField(
         max_length=30,
@@ -158,7 +153,8 @@ class Animal(models.Model):
         verbose_name="Date d'administration de l'anti parasite", null=True, blank=True
     )
     statut = models.CharField(
-        max_length=30, choices=[(tag.name, tag.value) for tag in StatutAnimal],
+        max_length=30,
+        choices=[(tag.name, tag.value) for tag in StatutAnimal],
     )
     date_mise_adoption = models.DateField(
         verbose_name="Date de mise à l'adoption", null=True, blank=True
@@ -172,12 +168,8 @@ class Animal(models.Model):
     )
     commentaire = models.CharField(max_length=1000, blank=True)
     commentaire_sante = models.CharField(max_length=1000, blank=True)
-    preference = models.OneToOneField(
-        Preference, on_delete=models.PROTECT, blank=True, null=True
-    )
-    animaux_lies = models.ManyToManyField(
-        "self", verbose_name="Animaux liés", blank=True
-    )
+    preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
+    animaux_lies = models.ManyToManyField("self", verbose_name="Animaux liés", blank=True)
     tranche_age = models.CharField(
         max_length=10,
         blank=True,
@@ -229,8 +221,7 @@ class Animal(models.Model):
                 + " )"
             )
         elif (
-            self.primo_vaccine == OuiNonChoice.OUI.name
-            or self.vaccin_ok == OuiNonChoice.OUI.name
+            self.primo_vaccine == OuiNonChoice.OUI.name or self.vaccin_ok == OuiNonChoice.OUI.name
         ):
             return "Oui"
         else:
@@ -238,12 +229,7 @@ class Animal(models.Model):
 
     def get_sterilisation_str(self):
         if self.date_sterilisation:
-            return (
-                "Oui"
-                + " (en date du "
-                + self.date_sterilisation.strftime("%d/%m/%Y")
-                + " )"
-            )
+            return "Oui" + " (en date du " + self.date_sterilisation.strftime("%d/%m/%Y") + " )"
         elif self.sterilise == OuiNonChoice.OUI.name:
             return "Oui"
         else:
