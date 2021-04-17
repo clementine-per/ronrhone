@@ -46,3 +46,17 @@ th {
   background-color: #17a2b8;
   color: white;
 }
+
+p.required { font-weight: bold; }
+
+i.DISPONIBLE{
+    color:#398a21;
+}
+
+i.INDISPONIBLE{
+    color:#eda426;
+}
+
+i.INACTIVE{
+    color:#e6331c;
+}

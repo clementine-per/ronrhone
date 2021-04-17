@@ -45,6 +45,8 @@ class FamilleSearchForm(Form):
 
 
 class FamilleCreateForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Famille
         fields = (
@@ -59,18 +61,24 @@ class FamilleCreateForm(ModelForm):
 
 
 class FamilleMainUpdateForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Famille
         fields = ("type_animal", "statut", "niveau", "commentaire")
 
 
 class FamilleAccueilUpdateForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Famille
         fields = ("taille_logement", "nb_places", "longue_duree")
 
 
 class IndisponibiliteForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Indisponibilite
         fields = ("date_debut", "date_fin")

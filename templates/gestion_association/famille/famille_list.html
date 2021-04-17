@@ -71,6 +71,7 @@
     <table class="table table-sm">
         <thead>
         <tr>
+            <th scope="col">Consulter</th>
             <th scope="col">Statut</th>
             <th scope="col" style="width:15%;">Personne</th>
             <th scope="col" >Nombre de places</th>
@@ -79,21 +80,20 @@
             <th scope="col">Sociabilisation</th>
             <th scope="col">Animaux acceuillis</th>
             <th scope="col" style="width:15%;">Indisponibilité(s)</th>
-            <th scope="col">Consulter</th>
         </tr>
         </thead>
         <tbody>
         {% for famille in famille_list %}
         <tr class="table-info">
-            <td class="{{famille.get_statut_display}}">{{famille.get_statut_display}}</td>
-            <td><a href = "{% url 'detail_person' famille.personne.id %}">{{famille.personne}}</a></td>
+            <td class="text-center"><a href = "{% url 'detail_famille' famille.id %}"><i class="fa fa-house-user"></i></a></td>
+            <td><i class="fa fa-circle {{famille.statut}}"></i> {{famille.get_statut_display}}</td>
+            <td>{{famille.personne}}</td>
             <td>{{famille.get_nb_places_str}}</td>
             <td>{{famille.preference.get_quarantaine_display}}</td>
             <td>{{famille.preference.get_exterieur_display}}</td>
             <td>{{famille.preference.get_sociabilisation_display}}</td>
             <td>{% for animal in famille.animal_set.all %}{{animal.nom}}<br>{% endfor %}</td>
             <td>{% autoescape off %}{{famille.get_indisponibilites_str}}{% endautoescape %} </td>
-            <td class="text-center"><a href = "{% url 'detail_famille' famille.id %}"><i class="fa fa-house-user"></i></a></td>
         </tr>
         {% endfor %}
         </tbody>

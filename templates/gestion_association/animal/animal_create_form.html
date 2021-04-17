@@ -1,7 +1,5 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
-<h2>Créer un animal</h2>
-<br/>
 <form method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}

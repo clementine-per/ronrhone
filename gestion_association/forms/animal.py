@@ -56,6 +56,7 @@ class AnimalSearchForm(Form):
         choices=[(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
         initial=[tag.name for tag in StatutAnimal],
+        widget=SelectMultiple(attrs={'class':"selectpicker"})
     )
 
     def __init__(self, *args, **kwargs):
@@ -64,6 +65,8 @@ class AnimalSearchForm(Form):
 
 
 class AnimalCreateForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Animal
         fields = (
@@ -85,19 +88,27 @@ class AnimalCreateForm(ModelForm):
             "fiv",
             "felv",
             "date_parasite",
+            "date_vermifuge",
             "lien_icad",
         )
 
 
 class AnimalLinkedForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Animal
-        fields = ("animaux_lies",)
+        fields = ("animaux_lies","tranche_age")
 
     animaux_lies = ModelMultipleChoiceField(
         required=False,
-        widget=SelectMultiple,
-        queryset=Animal.objects.filter(
+        widget=SelectMultiple(attrs={'class':"selectpicker"}),
+        queryset=Animal.objects.none(),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["animaux_lies"].queryset = Animal.objects.filter(
             statut__in=[
                 StatutAnimal.A_ADOPTER.name,
                 StatutAnimal.QUARANTAINE.name,
@@ -105,11 +116,12 @@ class AnimalLinkedForm(ModelForm):
                 StatutAnimal.SOCIA.name,
                 StatutAnimal.SOIN.name,
             ]
-        ),
-    )
+        ).exclude(pk=self.instance.id)
 
 
 class AnimalInfoUpdateForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Animal
         fields = (
@@ -127,6 +139,8 @@ class AnimalInfoUpdateForm(ModelForm):
 
 
 class AnimalSanteUpdateForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Animal
         fields = (
@@ -139,4 +153,5 @@ class AnimalSanteUpdateForm(ModelForm):
             "fiv",
             "felv",
             "date_parasite",
+            "date_vermifuge",
         )

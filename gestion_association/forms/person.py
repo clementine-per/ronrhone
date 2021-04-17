@@ -15,6 +15,8 @@ class PersonSearchForm(Form):
 
 
 class PersonForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
     class Meta:
         model = Person
         fields = (

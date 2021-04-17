@@ -211,8 +211,8 @@ class FamilleCandidateAPIView(View):
                 famille.to_json()
                 for famille in Famille.objects.exclude(statut="INACTIVE")
                 .exclude(
-                    indisponibilite__date_debut__gte=date_debut,
                     indisponibilite__date_debut__lte=date_debut,
+                    indisponibilite__date_fin__gte=date_debut,
                 )
                 .annotate(nb_animaux=Count("animal"))
                 .filter(nb_places__gte=F("nb_animaux") + len(animaux_selectionnes))

@@ -119,11 +119,13 @@ class Animal(models.Model):
         max_length=30,
         verbose_name="FIV",
         choices=[(tag.name, tag.value) for tag in TestResultChoice],
+        default="NT",
     )
     felv = models.CharField(
         max_length=30,
         verbose_name="FELV",
         choices=[(tag.name, tag.value) for tag in TestResultChoice],
+        default="NT",
     )
     primo_vaccine = models.CharField(
         max_length=3,

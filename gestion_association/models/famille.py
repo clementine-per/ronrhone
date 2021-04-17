@@ -83,10 +83,10 @@ class Famille(models.Model):
         result = self.get_statut_display()
         prochaines_indispos = self.indisponibilite_set.filter(date_fin__gte=today).all()
         if prochaines_indispos:
-            result += "<br>"
+            result += "\n"
             result += "Prochaines indisponibilités : "
             for indispo in prochaines_indispos:
-                result += "<br>"
+                result += "\n"
                 result += str(indispo)
         return mark_safe(result)
 

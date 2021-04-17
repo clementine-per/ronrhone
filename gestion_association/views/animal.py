@@ -94,10 +94,16 @@ class CreateAnimal(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
+    def get_context_data(self, **kwargs):
+        context = super(CreateAnimal, self).get_context_data(**kwargs)
+        context['title'] = "Créer un animal"
+        return context
+
 
 @login_required()
 def update_preference(request, pk):
     animal = Animal.objects.get(id=pk)
+    title = "Modification des préférences de " + animal.nom
     if request.method == "POST":
         preference_form = PreferenceForm(data=request.POST, instance=animal.preference)
         animal_linked_form = AnimalLinkedForm(data=request.POST, instance=animal)
