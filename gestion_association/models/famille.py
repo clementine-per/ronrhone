@@ -41,7 +41,7 @@ class Famille(models.Model):
         choices=[(tag.name, tag.value) for tag in Niveau],
     )
     nb_animaux_historique = models.IntegerField(
-        null=True, verbose_name="Nombre d'animaux au total"
+        default=0, verbose_name="Nombre d'animaux au total"
     )
     commentaire = models.CharField(max_length=1000, blank=True)
     taille_logement = models.IntegerField(

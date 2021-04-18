@@ -31,7 +31,9 @@
                 <strong> Type d'animaux accueillis </strong> : {{famille.get_type_animal_display}} <br>
                 <strong> Commentaire </strong> : {{famille.commentaire}} <br>
                 <hr />
-                <strong> Animaux acceuillis au total </strong> : {{famille.nb_animaux_historique |default:" 0 "}} <br>
+                <strong> Animaux accueillis au total </strong> : {{famille.nb_animaux_historique |default:" 0 "}} <br>
+                <strong> Animaux accueillis en ce moment </strong> : {% for animal in famille.animal_set.all %}
+                <a href = "{% url 'detail_animal' animal.id %}"> {{animal.nom}}</a>, {% endfor %} <br>
                 <hr />
                 <strong> Prochaine(s) indisponibilité(s) </strong> :
                 <a href= "{% url 'create_indisponibilite' famille.id %}" class="close">
@@ -52,8 +54,8 @@
     </div>
 </div>
 
-<div class="row p-4">
-    <div class="col-sm-12 mt-3">
+<div class="row p-2">
+    <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
                 Informations d'accueil
@@ -71,29 +73,61 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Extérieur </strong> : {{famille.preference.get_exterieur_display}} <br>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Biberonnage </strong> : {{famille.preference.get_biberonnage_display}} <br>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Sociabilistaion </strong> : {{famille.preference.get_sociabilisation_display}} <br>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Niveau de présence </strong> : {{famille.preference.get_presence_display}} <br>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Quarantaine </strong> : {{famille.preference.get_quarantaine_display}} <br>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Longue durée </strong> : {{famille.get_longue_duree_display}} <br>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row p-2">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Historique des accueils
+            </div>
+            <div class="table-responsive-sm p-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date de début</th>
+                            <th scope="col">Date de fin</th>
+                            <th scope="col">Animaux accueillis</th>
+                            <th scope="col">Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for acc in famille.accueil_set.all %}
+                        <tr class="table-info">
+                            <td>{{acc.date_debut}}</td>
+                            <td>{{acc.date_fin|default:" - "}}</td>
+                            <td>{% for animal in acc.animaux.all %}{{animal.nom}}<br>{% endfor %}</td>
+                            <td>{{acc.commentaire}} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

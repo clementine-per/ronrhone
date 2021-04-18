@@ -105,4 +105,6 @@ class SelectFamilleForm(ModelForm):
         for animal in self.instance.animaux.all():
             animal.famille = self.instance.famille
             animal.save()
+        self.instance.famille.nb_animaux_historique += self.instance.animaux.count()
+        self.instance.famille.save()
         return self.instance
