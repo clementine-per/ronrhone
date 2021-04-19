@@ -47,7 +47,7 @@
                         <strong> Statut </strong> : {{animal.get_statut_display}} <br>
                     </div>
                     <div class="col-sm-6">
-                        <strong> Famille d'accueil </strong> :  <a href = "{% url 'detail_famille' animal.famille.id %}">{{ animal.famille.personne }}</a> <br>
+                        <strong> Famille d'accueil </strong> :  {% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{ animal.famille.personne }}</a> {% endif %} <br>
                     </div>
                 </div>
                 <div class="row">

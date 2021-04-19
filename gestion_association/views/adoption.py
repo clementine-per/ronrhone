@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -16,7 +17,7 @@ from gestion_association.forms.adoption import (
     AdoptionUpdateForm,
     BonSterilisationForm,
     ShowBonForm,
-)
+    AdoptionSearchForm)
 from gestion_association.forms.person import PersonForm
 from gestion_association.models.adoption import (
     Adoption,
@@ -33,6 +34,27 @@ def index(request, pk):
     animal = Animal.objects.get(id=pk)
     title = "Adoption de " + animal.nom
     return render(request, "gestion_association/adoption/choix_adoption.html", locals())
+
+
+@login_required()
+def search_adoption(request):
+    adoptions = Adoption.objects.all()
+    selected = "adoptions"
+    title = "Liste des adoptions"
+    form = AdoptionSearchForm()
+
+    # Pagination : 20 éléments par page
+    paginator = Paginator(adoptions.order_by("-date"), 20)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        adoption_list = paginator.page(page)
+    except EmptyPage:
+        # Si on dépasse la limite de pages, on prend la dernière
+        adoption_list = paginator.page(paginator.num_pages())
+
+    return render(request, "gestion_association/adoption/adoption_list.html", locals())
 
 
 @login_required

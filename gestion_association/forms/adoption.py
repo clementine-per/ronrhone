@@ -1,4 +1,5 @@
-from django.forms import ChoiceField, Form, ModelForm
+from django.db.models import BLANK_CHOICE_DASH
+from django.forms import ChoiceField, Form, ModelForm, Select, IntegerField, CharField, DateField, DateInput
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption, BonSterilisation
@@ -6,6 +7,7 @@ from gestion_association.models.animal import Animal, StatutAnimal
 
 
 class AdoptionCreateFormNoAdoptant(ModelForm):
+    required_css_class = 'required'
     class Meta:
         model = Adoption
         fields = (
@@ -20,7 +22,29 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
         )
 
 
+class AdoptionSearchForm(Form):
+    montant_restant = IntegerField(required=False, label="Montant restant minimum")
+    animal = CharField(max_length=150)
+    pre_visite = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
+    )
+    visite_controle = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
+    )
+    date_min = DateField(
+        label="Date d'adoption entre le", required=False, widget=DateInput()
+    )
+    date_max = DateField(
+        label="et le", required=False, widget=DateInput()
+    )
+
+
 class AdoptionCreateForm(ModelForm):
+    required_css_class = 'required'
     class Meta:
         model = Adoption
         fields = (
@@ -37,6 +61,7 @@ class AdoptionCreateForm(ModelForm):
 
 
 class AdoptionFromUserForm(ModelForm):
+    required_css_class = 'required'
     class Meta:
         model = Adoption
         fields = (

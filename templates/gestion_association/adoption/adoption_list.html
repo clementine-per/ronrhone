@@ -1,0 +1,111 @@
+{% extends "gestion_association/base.html" %}
+{% load tag %}
+{% block content %}
+
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Recherche
+            </div>
+		<form action = "{% url 'familles' %}" method="post">
+            <div class="card-body">
+                {%csrf_token %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.montant_restant.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.montant_restant }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.animal.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.animal }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.pre_visite.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.pre_visite }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.visite_controle.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.visite_controle }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_min.label_tag }} {{ form.date_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_max.label_tag }} {{ form.date_max }}
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">Animal</th>
+            <th scope="col">Adoptant</th>
+            <th scope="col">Date de l'adoption</th>
+             <th scope="col">Acompte versé</th>
+            <th scope="col" >Montant restant</th>
+            <th scope="col">Pré-visite effectuée</th>
+            <th scope="col">Visite de contrôle effectuée</th>
+            <th scope="col">Bénévole visites</th>
+            <th scope="col">Bon stérilisation</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for adoption in adoption_list %}
+        <tr class="table-info">
+            <td class="text-center"><a href = "{% url 'detail_animal' adoption.animal.id %}">
+                {{adoption.animal.nom}}</a></td>
+            <td class="text-center"><a href = "{% url 'detail_person' adoption.adoptant.id %}">
+                {{adoption.adoptant}}</a></td>
+            <td>{{adoption.date}}</td>
+            <td>{{adoption.get_acompte_verse_display}}</td>
+            <td>{{adoption.montant_restant|default:" - "}} €</td>
+            <td>{{adoption.get_pre_visite_display}}</td>
+            <td>{{adoption.get_visite_controle_display}}</td>
+            <td>{{adoption.personne_visite}}</td>
+            <td>{{adoption.bon_sterilisation}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        {% if adoption_list.has_previous %}
+        <a href="?{% param_replace page=adoption_list.previous_page_number%}">Précédente</a> -
+        {% endif %}
+
+        <span class="current">
+            Page {{ adoption_list.number }} sur {{ adoption_list.paginator.num_pages }}
+        </span>
+
+        {% if adoption_list.has_next %}
+        - <a href="?{% param_replace page=adoption_list.next_page_number%}">Suivante</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -26,26 +26,32 @@
 
             <span class="d-flex">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#accountOptions" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="far fa-user "> Clémentine PERREAUT</i>
+                <i class="far fa-user "> {{request.user.username}}</i>
                 </button>
                 <button class="navbar-toggler mr-3 ml-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
             </span>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav mr-auto ">
                     <li class="nav-item {% if selected == 'accueil' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'accueil' %}">Accueil</a>
                     </li>
+                    <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'animals' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'animals' %}">Animaux</a>
                     </li>
+                    <li class="nav-item {% if selected == 'adoptions' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'adoptions' %}">Adoptions</a>
+                    </li>
+                    <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'familles' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'familles' %}">Familles d'accueil</a>
                     </li>
                     <li class="nav-item {% if selected == 'persons' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'persons' %}">Personnes</a>
                     </li>
+                    <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'parametrage' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'parametrage' %}">Paramétrage</a>
                     </li>
@@ -72,14 +78,7 @@
         </div> <!-- /.container-fluid -->
     </div><!-- End of Main Content -->
 
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white mt-4">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; Your Website 2020</span>
-            </div>
-        </div>
-    </footer> <!-- End of Footer -->
+
 </div> <!-- End of Content Wrapper -->
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>

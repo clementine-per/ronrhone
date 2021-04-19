@@ -120,7 +120,7 @@
             <td>{{animal.get_sterilisation_str}}</td>
             <td>{{animal.get_vaccin_str}}</td>
             <td>{{animal.date_naissance|default:" - "}}</td>
-            <td>{{animal.famille.personne}}</td>
+            <td>{% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{animal.famille.personne}}</a>{% endif %}</td>
             <td>{{animal.date_prochain_vaccin|default:" - "}}</td>
             <td>{{animal.date_vermifuge|default:" - "}}</td>
             <td>{% if animal.lien_icad %}<a href= "{{animal.lien_icad}}"><i class="fas fa-link"></i></a>{% endif %}</td>

@@ -62,6 +62,7 @@ urlpatterns = [
         name="detail_person",
     ),
     # Adoptions
+    path("adoptions/", adoption.search_adoption, name="adoptions"),
     path("adoption/<int:pk>/", adoption.index, name="adoption"),
     path(
         "adoption_complete/<int:pk>/",

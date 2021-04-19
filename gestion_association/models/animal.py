@@ -18,10 +18,12 @@ class TestResultChoice(Enum):
 class SexeChoice(Enum):
     F = "Femelle"
     M = "Mâle"
+    NI = "Non identifié"
 
 
 class StatutAnimal(Enum):
     A_ADOPTER = "A l'adoption"
+    ADOPTABLE = "Adoptable"
     ADOPTION = "En cours d'adoption"
     SOCIA = "Sociabilisation"
     ADOPTE = "Adopté"
@@ -37,6 +39,7 @@ class StatutAnimal(Enum):
 statuts_association = [
     StatutAnimal.A_ADOPTER.name,
     StatutAnimal.ADOPTION.name,
+    StatutAnimal.ADOPTABLE.name,
     StatutAnimal.SOCIA.name,
     StatutAnimal.ADOPTE.name,
     StatutAnimal.QUARANTAINE.name,
