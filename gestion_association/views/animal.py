@@ -1,8 +1,11 @@
+import sys
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.utils.dateparse import parse_date
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms import PreferenceForm
@@ -26,44 +29,59 @@ def search_animal(request):
     if request.method == "POST":
         form = AnimalSearchForm(request.POST)
         if form.is_valid():
-            nom_form = form.cleaned_data["nom"]
-            identification_form = form.cleaned_data["identification"]
-            type_form = form.cleaned_data["type"]
-            sterilise_form = form.cleaned_data["sterilise"]
-            sans_fa_form = form.cleaned_data["sans_fa"]
-            statuts_form = form.cleaned_data["statuts"]
-            date_naissance_min = form.cleaned_data["date_naissance_min"]
-            date_naissance_max = form.cleaned_data["date_naissance_max"]
-            date_prochaine_visite_min = form.cleaned_data["date_prochaine_visite_min"]
-            date_prochaine_visite_max = form.cleaned_data["date_prochaine_visite_max"]
-            date_vermifuge_min = form.cleaned_data["date_vermifuge_min"]
-            date_vermifuge_max = form.cleaned_data["date_vermifuge_max"]
-
-            if nom_form:
-                animals = animals.filter(nom__icontains=nom_form)
-            if type_form:
-                animals = animals.filter(type=type_form)
-            if identification_form:
-                animals = animals.filter(identification__icontains=identification_form)
-            if sterilise_form:
-                animals = animals.filter(sterilise=sterilise_form)
-            if sans_fa_form and sans_fa_form == OuiNonChoice.OUI.name:
-                animals = animals.filter(famille__isnull=True)
-            if sans_fa_form and sans_fa_form == OuiNonChoice.NON.name:
-                animals = animals.filter(famille__isnull=False)
-            if statuts_form:
-                animals = animals.filter(statut__in=statuts_form)
-            if date_naissance_min:
-                animals = animals.filter(date_naissance__gte=date_naissance_min)
-            if date_naissance_max:
-                animals = animals.filter(date_naissance__lte=date_naissance_max)
-            if date_prochaine_visite_min:
-                animals = animals.filter(date_prochain_vaccin__gte=date_prochaine_visite_min)
-            if date_prochaine_visite_max:
-                animals = animals.filter(date_prochain_vaccin__lte=date_prochaine_visite_max)
+            base_url = reverse('animals')
+            query_string = form.data.urlencode()
+            url = '{}?{}'.format(base_url, query_string)
+            return redirect(url)
 
     else:
         form = AnimalSearchForm()
+        nom_form = request.GET.get("nom", "")
+        identification_form = request.GET.get("identification", "")
+        type_form = request.GET.get("type", "")
+        sterilise_form = request.GET.get("sterilise", "")
+        sans_fa_form = request.GET.get("sans_fa", "")
+        statuts_form = request.GET.getlist("statuts","")
+        date_naissance_min = request.GET.get("date_naissance_min", "")
+        date_naissance_max = request.GET.get("date_naissance_max", "")
+        date_prochaine_visite_min = request.GET.get("date_prochaine_visite_min", "")
+        date_prochaine_visite_max = request.GET.get("date_prochaine_visite_max", "")
+        date_vermifuge_min = request.GET.get("date_vermifuge_min", "")
+        date_vermifuge_max = request.GET.get("date_vermifuge_max", "")
+
+        if nom_form:
+            animals = animals.filter(nom__icontains=nom_form)
+            form.fields["nom"].initial = nom_form
+        if type_form:
+            animals = animals.filter(type=type_form)
+            form.fields["type"].initial = type_form
+        if identification_form:
+            animals = animals.filter(identification__icontains=identification_form)
+            form.fields["identification"].initial = identification_form
+        if sterilise_form:
+            animals = animals.filter(sterilise=sterilise_form)
+            form.fields["sterilise"].initial = sterilise_form
+        if sans_fa_form:
+            form.fields["sans_fa"].initial = sans_fa_form
+            if sans_fa_form == OuiNonChoice.OUI.name:
+                animals = animals.filter(famille__isnull=True)
+            if sans_fa_form == OuiNonChoice.NON.name:
+                animals = animals.filter(famille__isnull=False)
+        if statuts_form:
+            form.fields["statuts"].initial = statuts_form
+            animals = animals.filter(statut__in=statuts_form)
+        if date_naissance_min:
+            form.fields["date_naissance_min"].initial = date_naissance_min
+            animals = animals.filter(date_naissance__gte=parse_date(date_naissance_min))
+        if date_naissance_max:
+            form.fields["date_naissance_max"].initial = date_naissance_max
+            animals = animals.filter(date_naissance__lte=parse_date(date_naissance_max))
+        if date_prochaine_visite_min:
+            form.fields["date_prochaine_visite_min"].initial = date_prochaine_visite_min
+            animals = animals.filter(date_prochain_vaccin__gte=parse_date(date_prochaine_visite_min))
+        if date_prochaine_visite_max:
+            form.fields["date_prochaine_visite_max"].initial = date_prochaine_visite_max
+            animals = animals.filter(date_prochain_vaccin__lte=parse_date(date_prochaine_visite_max))
         # Le champ statut est initialisé, il faut appliquer le filtre dessus
         statuts_form = form["statuts"].value()
         animals = animals.filter(statut__in=statuts_form)
