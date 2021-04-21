@@ -8,7 +8,7 @@
             <div class="card-header">
                 Recherche
             </div>
-		<form action = "{% url 'familles' %}" method="post">
+		<form action = "{% url 'adoptions' %}" method="post">
             <div class="card-body">
                 {%csrf_token %}
                 <div class="row">
@@ -25,6 +25,14 @@
                     </div>
                     <div class="col-sm-8">
                         {{ form.animal }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.statut.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.statut }}
                     </div>
                 </div>
                 <div class="row">
@@ -67,7 +75,7 @@
             <th scope="col">Animal</th>
             <th scope="col">Adoptant</th>
             <th scope="col">Date de l'adoption</th>
-             <th scope="col">Acompte versé</th>
+             <th scope="col">Statut</th>
             <th scope="col" >Montant restant</th>
             <th scope="col">Pré-visite effectuée</th>
             <th scope="col">Visite de contrôle effectuée</th>
@@ -83,7 +91,7 @@
             <td class="text-center"><a href = "{% url 'detail_person' adoption.adoptant.id %}">
                 {{adoption.adoptant}}</a></td>
             <td>{{adoption.date}}</td>
-            <td>{{adoption.get_acompte_verse_display}}</td>
+            <td>{{adoption.animal.get_statut_display}}</td>
             <td>{{adoption.montant_restant|default:" - "}} €</td>
             <td>{{adoption.get_pre_visite_display}}</td>
             <td>{{adoption.get_visite_controle_display}}</td>

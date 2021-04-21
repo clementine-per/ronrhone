@@ -61,10 +61,6 @@ def search_animal(request):
                 animals = animals.filter(date_prochain_vaccin__gte=date_prochaine_visite_min)
             if date_prochaine_visite_max:
                 animals = animals.filter(date_prochain_vaccin__lte=date_prochaine_visite_max)
-            if date_vermifuge_min:
-                animals = animals.filter(date_vermifuge__gte=date_vermifuge_min)
-            if date_vermifuge_max:
-                animals = animals.filter(date_vermifuge__lte=date_vermifuge_max)
 
     else:
         form = AnimalSearchForm()

@@ -37,10 +37,6 @@ class AnimalSearchForm(Form):
         label="Date de naissance entre le", required=False, widget=DateInput()
     )
     date_naissance_max = DateField(label=" et le ", required=False, widget=DateInput())
-    date_vermifuge_min = DateField(
-        label="Date du dernier vermifuge entre le", required=False, widget=DateInput()
-    )
-    date_vermifuge_max = DateField(label=" et le ", required=False, widget=DateInput())
     date_prochaine_visite_min = DateField(
         label="Date de prochaine visite vétérinaire entre le",
         required=False,

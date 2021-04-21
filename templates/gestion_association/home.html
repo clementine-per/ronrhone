@@ -9,6 +9,11 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-3">Adoptions</div>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=NON"><strong>{{adoptes}}</strong> animaux attendant leur viste post adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> adoptions à clore</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON"><strong>{{adoption_previsite}}</strong> pré-visites à faire</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI"><strong>{{adoption_en_cours}}</strong> autres adoptions en cours</a></p>
+
                         <p><a class="text-secondary" href= ""><strong>60</strong> animaux à l'adoption</a></p>
                         <p><a class="text-secondary" href= ""><strong>20</strong> animaux en cours d'adoption</a></p>
                         <p><a class="text-secondary" href= ""><strong>10</strong> visites pré-adoption à faire</a></p>

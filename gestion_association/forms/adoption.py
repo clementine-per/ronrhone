@@ -5,6 +5,8 @@ from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption, BonSterilisation
 from gestion_association.models.animal import Animal, StatutAnimal
 
+class DateInput(DateInput):
+    input_type = "date"
 
 class AdoptionCreateFormNoAdoptant(ModelForm):
     required_css_class = 'required'
@@ -24,7 +26,7 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
 
 class AdoptionSearchForm(Form):
     montant_restant = IntegerField(required=False, label="Montant restant minimum")
-    animal = CharField(max_length=150)
+    animal = CharField(required=False, max_length=150)
     pre_visite = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),
@@ -40,6 +42,11 @@ class AdoptionSearchForm(Form):
     )
     date_max = DateField(
         label="et le", required=False, widget=DateInput()
+    )
+    statut = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in StatutAnimal],
+        required=False,
+        widget=Select()
     )
 
 

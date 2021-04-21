@@ -1,4 +1,3 @@
-import sys
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
@@ -7,7 +6,8 @@ from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.utils.dateparse import parse_date
 from django.views.generic import UpdateView
 
 from gestion_association.forms.adoption import (
@@ -41,7 +41,47 @@ def search_adoption(request):
     adoptions = Adoption.objects.all()
     selected = "adoptions"
     title = "Liste des adoptions"
-    form = AdoptionSearchForm()
+
+    if request.method == "POST":
+        form = AdoptionSearchForm(request.POST)
+        if form.is_valid():
+            base_url = reverse('adoptions')
+            query_string = form.data.urlencode()
+            url = '{}?{}'.format(base_url, query_string)
+            return redirect(url)
+    else:
+        form = AdoptionSearchForm()
+        montant_restant_form =request.GET.get("montant_restant", "")
+        animal_form = request.GET.get("animal", "")
+        pre_visite_form = request.GET.get("pre_visite", "")
+        visite_controle_form = request.GET.get("visite_controle", "")
+        date_min_form = request.GET.get("date_min", "")
+        date_max_form = request.GET.get("date_max", "")
+        statut_form = request.GET.get("statut", "")
+
+        if montant_restant_form:
+            form.fields["montant_restant"].initial = montant_restant_form
+            adoptions = adoptions.filter(montant_restant__gt=int(montant_restant_form))
+        if animal_form:
+            form.fields["animal"].initial = animal_form
+            adoptions = adoptions.filter(animal__nom__icontains=animal_form)
+        if pre_visite_form:
+            form.fields["pre_visite"].initial = pre_visite_form
+            adoptions = adoptions.filter(pre_visite=pre_visite_form)
+        if visite_controle_form:
+            form.fields["visite_controle"].initial = visite_controle_form
+            adoptions = adoptions.filter(visite_controle=visite_controle_form)
+        if date_min_form:
+            form.fields["date_min"].initial = date_min_form
+            adoptions = adoptions.filter(date__gte=parse_date(date_min_form))
+        if date_max_form:
+            form.fields["date_max"].initial = date_max_form
+            adoptions = adoptions.filter(date__lte=parse_date(date_max_form))
+        if statut_form:
+            form.fields["statut"].initial = statut_form
+            adoptions = adoptions.filter(animal__statut=statut_form)
+
+
 
     # Pagination : 20 éléments par page
     paginator = Paginator(adoptions.order_by("-date"), 20)
