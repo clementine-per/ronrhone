@@ -40,6 +40,11 @@ class FamilleSearchForm(Form):
         widget=Select(),
         required=False,
     )
+    vide = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
+    )
     date_presence_min = DateField(label="Plage recherchée du", required=False, widget=DateInput())
     date_presence_max = DateField(label=" au ", required=False, widget=DateInput())
 

@@ -6,7 +6,7 @@ from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Count, F
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.dateparse import parse_date
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -55,26 +55,61 @@ def famille_list(request):
     title = "Liste des familles"
     selected = "familles"
     famille_list = Famille.objects.all()
+
     if request.method == "POST":
         form = FamilleSearchForm(request.POST)
         if form.is_valid():
-            nom_personne_form = form.cleaned_data["nom_personne"]
-            places_dispos_form = form.cleaned_data["places_dispos"]
-            quarantaine_form = form.cleaned_data["quarantaine"]
-            exterieur_form = form.cleaned_data["exterieur"]
-            statut_form = form.cleaned_data["statut"]
-            date_presence_min = form.cleaned_data["date_presence_min"]
-            date_presence_max = form.cleaned_data["date_presence_max"]
-            if nom_personne_form:
-                famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
-            if statut_form:
-                famille_list = famille_list.filter(statut=statut_form)
-            if quarantaine_form:
-                famille_list = famille_list.filter(preference__quarantaine=quarantaine_form)
-            if exterieur_form:
-                famille_list = famille_list.filter(preference__exterieur=exterieur_form)
+            base_url = reverse('familles')
+            query_string = form.data.urlencode()
+            url = '{}?{}'.format(base_url, query_string)
+            return redirect(url)
     else:
         form = FamilleSearchForm()
+        nom_personne_form = request.GET.get("nom_personne", "")
+        places_dispos_form = request.GET.get("places_dispos", "")
+        quarantaine_form = request.GET.get("quarantaine", "")
+        exterieur_form = request.GET.get("exterieur", "")
+        statut_form = request.GET.get("statut", "")
+        vide_form = request.GET.get("vide", "")
+        date_presence_min = request.GET.get("date_presence_min", "")
+        date_presence_max = request.GET.get("date_presence_max", "")
+
+        if nom_personne_form:
+            famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
+            form.fields["nom_personne"].initial = nom_personne_form
+        if statut_form:
+            famille_list = famille_list.filter(statut=statut_form)
+            form.fields["statut"].initial = statut_form
+        if vide_form:
+            form.fields["vide"].initial = vide_form
+            if vide_form == 'NON':
+                famille_list = famille_list.filter(animal__isnull=False)
+            elif vide_form == 'OUI':
+                famille_list = famille_list.filter(animal__isnull=True)
+        if quarantaine_form:
+            famille_list = famille_list.filter(preference__quarantaine=quarantaine_form)
+            form.fields["quarantaine"].initial = quarantaine_form
+        if exterieur_form:
+            famille_list = famille_list.filter(preference__exterieur=exterieur_form)
+            form.fields["exterieur"].initial = exterieur_form
+        if places_dispos_form:
+            famille_list = famille_list.annotate(nb_animaux=Count("animal"))\
+                .filter(nb_places__gte=F("nb_animaux") + int(places_dispos_form))
+            form.fields["places_dispos"].initial = places_dispos_form
+        if date_presence_min:
+            famille_list = famille_list.exclude(
+                indisponibilite__date_debut__lte=date_presence_min,
+                indisponibilite__date_fin__gte=date_presence_min,
+            )
+            form.fields["date_presence_min"].initial = date_presence_min
+        if date_presence_max:
+            famille_list = famille_list.exclude(
+                indisponibilite__date_debut__lte=date_presence_max,
+                indisponibilite__date_fin__gte=date_presence_max,
+            )
+            form.fields["date_presence_max"].initial = date_presence_max
+
+
     # Pagination : 10 éléments par page
     paginator = Paginator(famille_list.order_by("-date_mise_a_jour"), 10)
     try:
@@ -182,7 +217,7 @@ def json_error_400(field, message):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class FamilleCandidateAPIView(View):
+class FamilleCandidateAPIView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         animal = Animal.objects.get(id=pk)
         animaux_candidats = [animal, *animal.animaux_lies.get_queryset().all()]

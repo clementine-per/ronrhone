@@ -9,15 +9,12 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-3">Adoptions</div>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=NON"><strong>{{adoptes}}</strong> animaux attendant leur viste post adoption</a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> adoptions à clore</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_proposer}}</strong> animaux à mettre à l'adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong> animaux à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON"><strong>{{adoption_previsite}}</strong> pré-visites à faire</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI"><strong>{{adoption_en_cours}}</strong> autres adoptions en cours</a></p>
-
-                        <p><a class="text-secondary" href= ""><strong>60</strong> animaux à l'adoption</a></p>
-                        <p><a class="text-secondary" href= ""><strong>20</strong> animaux en cours d'adoption</a></p>
-                        <p><a class="text-secondary" href= ""><strong>10</strong> visites pré-adoption à faire</a></p>
-                        <p><a class="text-secondary" href= ""><strong>5</strong> visites post adoption à faire</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=NON"><strong>{{adoption_adoptes}}</strong> animaux attendant leur viste post adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> adoptions à clore</a></p>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-paw fa-2x text-gray-300"></i>
@@ -34,9 +31,8 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-3">Santé</div>
-                        <p><a class="text-secondary" href= ""><strong>15</strong> rappels de vaccin dans les 10 jours</a></p>
-                        <p><a class="text-secondary" href= ""><strong>20</strong> animaux à stériliser</a></p>
-                        <p><a class="text-secondary" href= ""><strong>2</strong> animaux en suivi santé rapproché</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?sterilise=NON"><strong>{{sterilises}}</strong> animaux non stérilisés</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SOIN"><strong>{{soins}}</strong> animaux en suivi santé rapproché</a></p>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-heartbeat fa-2x text-gray-300"></i>
@@ -56,19 +52,19 @@
                         </div>
                         <div class="row no-gutters align-items-center mb-4">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">70%</div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{taux_remplissage}}%</div>
                             </div>
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
                                     <div class="progress-bar bg-info" role="progressbar"
-                                         style="width: 70%" aria-valuenow="70" aria-valuemin="0"
+                                         style="width: {{taux_remplissage}}%" aria-valuenow="{{taux_remplissage}}" aria-valuemin="0"
                                          aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
-                        <p><a class="text-secondary" href= ""><strong>90</strong> animaux actuellement en FA</a></p>
-                        <p><a class="text-secondary" href= ""><strong>15</strong> FAs disponibles</a></p>
-                        <p><a class="text-secondary" href= ""><strong>5</strong> animaux à placer/déplacer</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?sans_fa=NON"><strong>{{en_famille}}</strong> animaux actuellement en FA</a></p>
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?vide=OUI&statut=DISPONIBLE"><strong>{{disponibles}}</strong> FAs disponibles</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?sans_fa=OUI"><strong>{{a_placer}}</strong> animaux à placer</a></p>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-home fa-2x text-gray-300"></i>

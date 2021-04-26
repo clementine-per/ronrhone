@@ -82,9 +82,6 @@ def search_animal(request):
         if date_prochaine_visite_max:
             form.fields["date_prochaine_visite_max"].initial = date_prochaine_visite_max
             animals = animals.filter(date_prochain_vaccin__lte=parse_date(date_prochaine_visite_max))
-        # Le champ statut est initialisé, il faut appliquer le filtre dessus
-        statuts_form = form["statuts"].value()
-        animals = animals.filter(statut__in=statuts_form)
 
     # Pagination : 20 éléments par page
     paginator = Paginator(animals.order_by("-date_mise_a_jour"), 20)

@@ -55,11 +55,6 @@ class AnimalSearchForm(Form):
         widget=SelectMultiple(attrs={'class':"selectpicker"})
     )
 
-    def __init__(self, *args, **kwargs):
-        super(AnimalSearchForm, self).__init__(*args, **kwargs)
-        self.initial["statuts"] = statuts_association
-
-
 class AnimalCreateForm(ModelForm):
     # Pour mettre les champs obligatoires en gras
     required_css_class = 'required'

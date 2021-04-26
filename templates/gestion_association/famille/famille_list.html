@@ -1,4 +1,5 @@
 {% extends "gestion_association/base.html" %}
+{% load tag %}
 {% block content %}
 
 <div class="row p-4">
@@ -48,6 +49,14 @@
                     </div>
                     <div class="col-sm-8">
                         {{ form.exterieur }}
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-sm-4">
+		    		    Familles d'accueil vide actuellement
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.vide }}
                     </div>
                 </div>
                 <div class="row">
@@ -100,7 +109,7 @@
     </table>
     <div class="pagination">
         {% if famille_list.has_previous %}
-        <a href="{% url 'familles'%}?page={{ famille_list.previous_page_number}}">Précédente</a> -
+        <a href="?{% param_replace page=famille_list.previous_page_number%}">Précédente</a> -
         {% endif %}
 
         <span class="current">
@@ -108,7 +117,7 @@
         </span>
 
         {% if famille_list.has_next %}
-        - <a href="{% url 'familles'%}?page={{ famille_list.next_page_number}}">Suivante</a>
+        - <a href="?{% param_replace page=famille_list.next_page_number%}">Suivante</a>
         {% endif %}
     </div>
 </div>
