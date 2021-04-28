@@ -1,4 +1,5 @@
 import json
+import sys
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,9 +21,9 @@ from gestion_association.forms.famille import (
     FamilleSearchForm,
     IndisponibiliteForm,
     SelectFamilleForm,
-)
-from gestion_association.models.animal import Animal
-from gestion_association.models.famille import Famille, Indisponibilite
+    AccueilUpdateForm)
+from gestion_association.models.animal import Animal, statuts_association
+from gestion_association.models.famille import Famille, Indisponibilite, Accueil
 from gestion_association.models.person import Person
 
 
@@ -124,6 +125,34 @@ def famille_list(request):
 
 
 @login_required
+def update_accueil(request, pk):
+    accueil = Accueil.objects.get(id=pk)
+    famille = accueil.famille
+    title = "Mise à jour d'un accueil"
+
+    if request.method == "POST":
+        form = AccueilUpdateForm(request.POST,instance=accueil)
+        form.fields["animaux"].queryset = Animal.objects.filter(statut__in=statuts_association)
+        if form.is_valid():
+            new_accueil = form.save()
+            # Animaux ajoutés
+            for animal in new_accueil.animaux.exclude(id__in=famille.animal_set.values_list('id', flat=True)):
+                animal.famille = famille
+                animal.save()
+            # Animaux enlevés
+            for animal in famille.animal_set.exclude(id__in=new_accueil.animaux.values_list('id', flat=True)):
+                animal.famille = None
+                animal.save()
+
+            return redirect("detail_famille", pk=famille.id)
+    else:
+        form = AccueilUpdateForm(instance=accueil)
+        form.fields["animaux"].queryset = Animal.objects.filter(statut__in=statuts_association)
+
+    return render(request, "gestion_association/famille/accueil_update_form.html", locals())
+
+
+@login_required
 def famille_select_for_animal(request, pk):
 
     animal = Animal.objects.get(id=pk)
@@ -173,6 +202,11 @@ class UpdateMainFamille(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("detail_famille", kwargs={"pk": self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateMainFamille, self).get_context_data(**kwargs)
+        context['title'] = "Modification de la FA de   " + str(self.object.personne)
+        return context
 
 
 @login_required()

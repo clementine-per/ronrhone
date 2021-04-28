@@ -1,9 +1,6 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
 
-<h3 class="m-3">Modifier {{ object.prenom }} {{ object.nom }} en tant que bénévole</h3>
-
-
 <form method="post" action="">
     {% csrf_token %}
     {{ form.as_p }}

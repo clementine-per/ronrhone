@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render
 
 from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption
-from gestion_association.models.animal import Animal
+from gestion_association.models.animal import Animal, statuts_association
 from gestion_association.models.famille import Famille
 
 
@@ -27,9 +28,11 @@ def index(request):
 
     # Partie soins
     # Animaux à stériliser
-    sterilises = Animal.objects.filter(sterilise='NON').count()
+    sterilises = Animal.objects.filter(sterilise='NON').filter(statut__in=statuts_association).count()
     # Animaux en soin
     soins = Animal.objects.filter(statut='SOIN').count()
+    #Animaux à tester (fiv/felv)
+    fiv_felv = Animal.objects.filter(statut__in=statuts_association).filter(Q(fiv='NT')|Q(felv='NT')).count()
 
     # Partie FA
     # Animaux en FA
@@ -37,7 +40,7 @@ def index(request):
     # Familles disponibles
     disponibles = Famille.objects.filter(animal__isnull=True).filter(statut='DISPONIBLE').count()
     # Animaux à placer
-    a_placer = Animal.objects.filter(famille__isnull=True).count()
+    a_placer = Animal.objects.filter(famille__isnull=True).filter(statut__in=statuts_association).count()
     # Animaux à déplacer
 
     #Taux de remplissage

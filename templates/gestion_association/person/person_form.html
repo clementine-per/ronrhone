@@ -1,11 +1,6 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
 
-{% if object %}
-<h3>Modification de {{object.prenom}} {{object.nom}}</h3>
-{% else %}
-<h3> Créer une personne </h3>
-{% endif %}
 
 <form method="post" action="">
     {% csrf_token %}

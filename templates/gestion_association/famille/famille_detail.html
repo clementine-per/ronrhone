@@ -115,6 +115,8 @@
                             <th scope="col">Date de fin</th>
                             <th scope="col">Animaux accueillis</th>
                             <th scope="col">Commentaire</th>
+                            <th scope="col">Modifier</th>
+                            <th scope="col">Terminer</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,8 +124,18 @@
                         <tr class="table-info">
                             <td>{{acc.date_debut}}</td>
                             <td>{{acc.date_fin|default:" - "}}</td>
-                            <td>{% for animal in acc.animaux.all %}{{animal.nom}}<br>{% endfor %}</td>
+                            <td>{% for animal in acc.animaux.all %}<a href = "{% url 'detail_animal' animal.id %}"> {{animal.nom}}</a><br> {% endfor %} </td>
                             <td>{{acc.commentaire}} </td>
+                            <td>
+                                <a href= "{% url 'update_accueil' acc.id %}" >
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href= "{% url 'update_accueil_famille' famille.id %}" >
+                                    <i class="fas fa-check"></i>
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

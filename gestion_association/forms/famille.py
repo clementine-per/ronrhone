@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import (
     CharField,
@@ -12,6 +13,7 @@ from django.forms import (
     ModelMultipleChoiceField,
     Select,
 )
+from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal
@@ -88,11 +90,23 @@ class IndisponibiliteForm(ModelForm):
         model = Indisponibilite
         fields = ("date_debut", "date_fin")
 
+    def clean_date_fin(self):
+        date_fin = self.cleaned_data['date_fin']
+        date_debut = self.cleaned_data['date_debut']
+        if not date_fin > date_debut:
+            raise ValidationError("La date de fin ne peut se trouver avant la date de début.")
+        return date_fin
 
-class AccueilForm(ModelForm):
+
+class AccueilUpdateForm(ModelForm):
     class Meta:
         model = Accueil
-        fields = ("date_debut", "animaux", "famille")
+        fields = ("date_debut","date_fin","commentaire", "animaux")
+
+    animaux = ModelMultipleChoiceField(
+        widget=CheckboxSelectMultiple, queryset=Animal.objects.none()
+    )
+
 
 
 class SelectFamilleForm(ModelForm):
@@ -108,6 +122,12 @@ class SelectFamilleForm(ModelForm):
     def save(self, commit=True):
         super().save(commit)
         for animal in self.instance.animaux.all():
+            #Mise à jour pour terminer les anciens accueils
+            if animal.famille:
+                last_famille = animal.famille
+                for accueil in last_famille.accueil_set.filter(date_fin__isnull=True).all():
+                    accueil.date_fin = timezone.now().date()
+                    accueil.save()
             animal.famille = self.instance.famille
             animal.save()
         self.instance.famille.nb_animaux_historique += self.instance.animaux.count()

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm
@@ -17,6 +17,11 @@ class CreatePerson(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
 
+    def get_context_data(self, **kwargs):
+        context = super(CreatePerson, self).get_context_data(**kwargs)
+        context['title'] = "Créer une personne"
+        return context
+
 
 class UpdatePerson(LoginRequiredMixin, UpdateView):
     model = Person
@@ -25,6 +30,11 @@ class UpdatePerson(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("detail_person", kwargs={"pk": self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdatePerson, self).get_context_data(**kwargs)
+        context['title'] = "Mettre à jour " + str(self.object)
+        return context
 
 
 class BenevolePerson(LoginRequiredMixin, UpdateView):
@@ -41,6 +51,11 @@ class BenevolePerson(LoginRequiredMixin, UpdateView):
         self.object.save()
         return redirect_url
 
+    def get_context_data(self, **kwargs):
+        context = super(BenevolePerson, self).get_context_data(**kwargs)
+        context['title'] = "Bénévole  " + str(self.object)
+        return context
+
 
 @login_required
 def person_list(request):
@@ -50,19 +65,25 @@ def person_list(request):
     if request.method == "POST":
         form = PersonSearchForm(request.POST)
         if form.is_valid():
-            nom_form = form.cleaned_data["nom"]
-            type_person_form = form.cleaned_data["type_person"]
-            if type_person_form is not None:
-                if type_person_form == "ADOPTANTE":
-                    person_list = person_list.filter(is_adoptante=True)
-                if type_person_form == "FA":
-                    person_list = person_list.filter(is_famille=True)
-                if type_person_form == "BENEVOLE":
-                    person_list = person_list.filter(is_benevole=True)
-            if nom_form is not None:
-                person_list = person_list.filter(nom__icontains=nom_form)
+            base_url = reverse('persons')
+            query_string = form.data.urlencode()
+            url = '{}?{}'.format(base_url, query_string)
+            return redirect(url)
     else:
         form = PersonSearchForm()
+        nom_form = request.GET.get("nom", "")
+        type_person_form = request.GET.get("type_person", "")
+        if type_person_form:
+            form.fields["type_person"].initial = type_person_form
+            if type_person_form == "ADOPTANTE":
+                person_list = person_list.filter(is_adoptante=True)
+            if type_person_form == "FA":
+                person_list = person_list.filter(is_famille=True)
+            if type_person_form == "BENEVOLE":
+                person_list = person_list.filter(is_benevole=True)
+        if nom_form:
+            form.fields["nom"].initial = nom_form
+            person_list = person_list.filter(nom__icontains=nom_form)
     # Pagination : 10 éléments par page
     paginator = Paginator(person_list.order_by("-date_mise_a_jour"), 10)
     try:

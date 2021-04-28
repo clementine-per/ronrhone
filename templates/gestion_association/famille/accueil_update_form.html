@@ -4,8 +4,7 @@
 
 <form method="post" action="">
     {% csrf_token %}
-    {{ famille_form.as_p }}
-    {{ preference_form.as_p }}
+    {{ form.as_p }}
     <div class="row">
         <div class="col">
             <a href = "{% url 'detail_famille' famille.id %}"  class="btn btn-secondary">Annuler</a>
@@ -17,4 +16,14 @@
 </form>
 
 
+{% endblock %}
+
+{% block script %}
+<script>
+$(function() {
+  $('[name="date_debut"],[name="date_fin"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+  });
+});
+</script>
 {% endblock %}

@@ -147,6 +147,11 @@ urlpatterns = [
         famille.delete_indisponibilite,
         name="delete_indisponibilite",
     ),
+    path(
+        "familles/update/accueil/<int:pk>/",
+        famille.update_accueil,
+        name="update_accueil",
+    ),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
 ]

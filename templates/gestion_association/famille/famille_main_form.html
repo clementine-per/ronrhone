@@ -2,9 +2,6 @@
 
 {% block content %}
 
-
-<h1> Modifier les information générale de la famille d'accueil de {{object.personne}} </h1>
-
 <form method="post" action="">
     {% csrf_token %}
     {{ form.as_p }}

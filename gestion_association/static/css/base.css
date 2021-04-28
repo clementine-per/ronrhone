@@ -60,3 +60,21 @@ i.INDISPONIBLE{
 i.INACTIVE{
     color:#e6331c;
 }
+
+/* Affichage des erreurs de formulaire */
+ul.errorlist {
+    margin: 0;
+    padding: 0;
+}
+.errorlist li {
+    border: 1px solid red;
+    color: red;
+    background: rgba(255, 0, 0, 0.15);
+    list-style-position: inside;
+    display: block;
+    font-size: 1.2em;
+    margin: 0 0 3px;
+    padding: 4px 5px;
+    text-align: center;
+    border-radius: 3px;
+}
