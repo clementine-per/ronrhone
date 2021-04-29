@@ -197,25 +197,21 @@ class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
 
 def get_montant_adoption(animal):
     # Méthode récupérant le montant de l'adoption à l'initialisation du formulaire
-    try:
-        preselection_tarifs = TarifAdoption.objects.filter(
-            type_animal=animal.type, sexe=animal.sexe, tranche_age=animal.tranche_age
-        )
-        preselection_tarifs = preselection_tarifs.filter(
-            Q(sterilise=animal.sterilise) | Q(sterilise="")
-        )
-        print("Apres sterilisation")
-        print(preselection_tarifs)
-        preselection_tarifs = preselection_tarifs.filter(
-            Q(vaccin_ok=animal.vaccin_ok) | Q(vaccin_ok="")
-        )
-        print("Apres vaccin")
-        print(preselection_tarifs)
-        sys.stdout.flush()
-        tarif_applicable = preselection_tarifs.first()
+
+    preselection_tarifs = TarifAdoption.objects.filter(
+        type_animal=animal.type, sexe=animal.sexe, tranche_age=animal.tranche_age
+    )
+    preselection_tarifs = preselection_tarifs.filter(
+        Q(sterilise=animal.sterilise) | Q(sterilise="")
+    )
+    preselection_tarifs = preselection_tarifs.filter(
+        Q(vaccin_ok=animal.vaccin_ok) | Q(vaccin_ok="")
+    )
+
+    tarif_applicable = preselection_tarifs.first()
+    if tarif_applicable :
         return tarif_applicable.montant
-    except TarifAdoption.DoesNotExist:
-        return None
+    return None
 
 
 def calcul_montant_restant(request):
