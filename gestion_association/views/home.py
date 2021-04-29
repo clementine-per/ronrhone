@@ -1,3 +1,5 @@
+import sys
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
@@ -44,8 +46,11 @@ def index(request):
     # Animaux à déplacer
 
     #Taux de remplissage
-    familles_occupees =  Famille.objects.filter(animal__isnull=False).count()
-    total_familles = Famille.objects.filter(statut='DISPONIBLE').count()
+    familles_occupees =  Famille.objects.filter(animal__isnull=False).distinct().count()
+    total_familles = Famille.objects.filter(statut__in=('DISPONIBLE','INDISPONIBLE')).count()
+    print("Famille occupées : ")
+    print(Famille.objects.filter(animal__isnull=False))
+    sys.stdout.flush()
     if total_familles > 1:
         taux_remplissage = int((familles_occupees/total_familles) * 100)
 
