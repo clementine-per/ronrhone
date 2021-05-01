@@ -6,6 +6,7 @@ from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.dateparse import parse_date
+from django.db.models import Q
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms import PreferenceForm
@@ -48,6 +49,7 @@ def search_animal(request):
         date_prochaine_visite_max = request.GET.get("date_prochaine_visite_max", "")
         date_vermifuge_min = request.GET.get("date_vermifuge_min", "")
         date_vermifuge_max = request.GET.get("date_vermifuge_max", "")
+        fiv_felv_form = request.GET.get("fiv_felv", "")
 
         if nom_form:
             animals = animals.filter(nom__icontains=nom_form)
@@ -82,6 +84,12 @@ def search_animal(request):
         if date_prochaine_visite_max:
             form.fields["date_prochaine_visite_max"].initial = date_prochaine_visite_max
             animals = animals.filter(date_prochain_vaccin__lte=parse_date(date_prochaine_visite_max))
+        if fiv_felv_form:
+            form.fields["fiv_felv"].initial = fiv_felv_form
+            if fiv_felv_form == OuiNonChoice.OUI.name:
+                animals = animals.filter(fiv=OuiNonChoice.OUI.name).filter(felv=OuiNonChoice.OUI.name)
+            if fiv_felv_form == OuiNonChoice.NON.name:
+                animals = animals.filter(Q(fiv='NT')|Q(felv='NT'))
 
     # Pagination : 20 éléments par page
     paginator = Paginator(animals.order_by("-date_mise_a_jour"), 20)

@@ -10,6 +10,8 @@ from gestion_association.models.person import Person
 
 class StatutFamille(Enum):
     DISPONIBLE = "Disponible"
+    OCCUPE = "Occupée"
+    A_VISITER = "A visiter"
     INDISPONIBLE = "Temporairement indisponible"
     INACTIVE = "Inactive"
 
@@ -30,7 +32,7 @@ class Famille(models.Model):
     statut = models.CharField(
         max_length=20,
         verbose_name="Statut",
-        default="DISPONIBLE",
+        default="A_VISITER",
         choices=[(tag.name, tag.value) for tag in StatutFamille],
     )
     niveau = models.CharField(
@@ -63,6 +65,7 @@ class Famille(models.Model):
         default="CHAT",
         choices=[(tag.name, tag.value) for tag in TypeChoice],
     )
+    autres_animaux = models.CharField(max_length=1000, blank=True, verbose_name="Animaux de la FA ")
 
     def get_nb_places_str(self):
         count = self.nb_places
@@ -106,6 +109,10 @@ class Famille(models.Model):
         else:
             result += " sans extérieur"
         result += "\n"
+        if self.autres_animaux:
+            result += "Autres animaux de la FA : "
+            result +=self.autres_animaux
+            result += "\n"
         if self.longue_duree and self.longue_duree == "OUI":
             result += "OK longues durées"
             result += "\n"

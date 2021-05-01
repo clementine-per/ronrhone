@@ -60,6 +60,7 @@ class FamilleCreateForm(ModelForm):
             "type_animal",
             "commentaire",
             "taille_logement",
+            "autres_animaux",
             "nb_places",
             "longue_duree",
             "statut",
@@ -80,7 +81,7 @@ class FamilleAccueilUpdateForm(ModelForm):
     required_css_class = 'required'
     class Meta:
         model = Famille
-        fields = ("taille_logement", "nb_places", "longue_duree")
+        fields = ("taille_logement", "autres_animaux", "nb_places", "longue_duree")
 
 
 class IndisponibiliteForm(ModelForm):
@@ -128,8 +129,13 @@ class SelectFamilleForm(ModelForm):
                 for accueil in last_famille.accueil_set.filter(date_fin__isnull=True).all():
                     accueil.date_fin = timezone.now().date()
                     accueil.save()
+                # Mettre à jour le statut de l'ancienne famille
+                last_famille.statut = StatutFamille.DISPONIBLE.name
+                last_famille.save()
             animal.famille = self.instance.famille
             animal.save()
+        # Mise à jour du compteur d'animaux et du statut de la nouvelle famille
         self.instance.famille.nb_animaux_historique += self.instance.animaux.count()
+        self.instance.famille.statut = StatutFamille.OCCUPE.name
         self.instance.famille.save()
         return self.instance

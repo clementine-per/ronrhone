@@ -31,9 +31,9 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-3">Santé</div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?sterilise=NON"><strong>{{sterilises}}</strong> animaux non stérilisés</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sterilise=NON"><strong>{{sterilises}}</strong> animaux non stérilisés</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SOIN"><strong>{{soins}}</strong> animaux en suivi santé rapproché</a></p>
-                        <p><strong>{{fiv_felv}}</strong> animaux non testés FIV/FELV</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}fiv_felv=NON">{{fiv_felv}}</strong> animaux non testés FIV/FELV</a></p>
 
                     </div>
                     <div class="col-auto">
@@ -64,9 +64,10 @@
                                 </div>
                             </div>
                         </div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?sans_fa=NON"><strong>{{en_famille}}</strong> animaux actuellement en FA</a></p>
-                        <p><a class="text-secondary" href= "{% url 'familles' %}?vide=OUI&statut=DISPONIBLE"><strong>{{disponibles}}</strong> FAs disponibles</a></p>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?sans_fa=OUI"><strong>{{a_placer}}</strong> animaux à placer</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=NON"><strong>{{en_famille}}</strong> animaux actuellement en FA</a></p>
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=DISPONIBLE"><strong>{{disponibles}}</strong> FAs disponibles</a></p>
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=A_VISITER"><strong>{{visites}}</strong> FAs à visiter</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=OUI"><strong>{{a_placer}}</strong> animaux à placer</a></p>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-home fa-2x text-gray-300"></i>

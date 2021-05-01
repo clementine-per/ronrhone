@@ -14,6 +14,11 @@ def index(request):
     selected = "accueil"
     title = "Tableau de bord"
 
+    statuts_association_filter = ""
+    for statut in statuts_association:
+        statuts_association_filter += 'statuts='
+        statuts_association_filter += statut
+        statuts_association_filter += '&'
     # Partie adoptions
     # Adoptions attendant leur visite de contrôle
     adoption_adoptes = Adoption.objects.filter(animal__statut='ADOPTE').filter(visite_controle='NON').count()
@@ -40,7 +45,9 @@ def index(request):
     # Animaux en FA
     en_famille = Animal.objects.filter(famille__isnull=False).count()
     # Familles disponibles
-    disponibles = Famille.objects.filter(animal__isnull=True).filter(statut='DISPONIBLE').count()
+    disponibles = Famille.objects.filter(statut='DISPONIBLE').count()
+    # Familles à visiter
+    visites = Famille.objects.filter(statut='A_VISITER').count()
     # Animaux à placer
     a_placer = Animal.objects.filter(famille__isnull=True).filter(statut__in=statuts_association).count()
     # Animaux à déplacer

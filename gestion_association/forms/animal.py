@@ -33,6 +33,12 @@ class AnimalSearchForm(Form):
         widget=Select(),
         required=False,
     )
+    fiv_felv = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
+        label= "Testé FIV et FELV"
+    )
     date_naissance_min = DateField(
         label="Date de naissance entre le", required=False, widget=DateInput()
     )

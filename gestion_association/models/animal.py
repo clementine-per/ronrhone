@@ -159,6 +159,7 @@ class Animal(models.Model):
     )
     statut = models.CharField(
         max_length=30,
+        default="QUARANTAINE",
         choices=[(tag.name, tag.value) for tag in StatutAnimal],
     )
     date_mise_adoption = models.DateField(
@@ -201,7 +202,13 @@ class Animal(models.Model):
                     self.tranche_age = TrancheAge.ADULTE.name
                 else:
                     self.tranche_age = TrancheAge.SENIOR.name
-
+        # Mise à jour des préférences en fonction du statut
+        if self.statut == StatutAnimal.QUARANTAINE.name:
+            self.preference.quarantaine = OuiNonChoice.OUI.name
+            self.preference.save()
+        if self.statut == StatutAnimal.SOCIA.name:
+            self.preference.sociabilisation = OuiNonChoice.OUI.name
+            self.preference.save()
         return super(Animal, self).save(*args, **kwargs)
 
     def get_latest_adoption(self):
