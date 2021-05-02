@@ -13,7 +13,8 @@ from gestion_association.models.person import Person
 
 
 class Adoption(models.Model):
-    date = models.DateField(verbose_name="Date de l'adoption")
+    date = models.DateField(verbose_name="Date de l'adoption",null=True,
+        blank=True,)
     montant = models.DecimalField(
         verbose_name="Montant à payer",
         max_digits=7,

@@ -48,12 +48,6 @@ statuts_association = [
 ]
 
 
-class Presence(Enum):
-    BAS = "Bas"
-    NORMAL = "Normal"
-    ELEVE = "Elevé"
-
-
 class TrancheAge(Enum):
     ENFANT = "Enfant"
     ADULTE = "Adulte"
@@ -84,13 +78,6 @@ class Preference(models.Model):
         default="NON",
         verbose_name="Biberonnage",
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
-    )
-    presence = models.CharField(
-        max_length=10,
-        blank=True,
-        default="BAS",
-        verbose_name="Niveau de présence",
-        choices=[(tag.name, tag.value) for tag in Presence],
     )
 
 

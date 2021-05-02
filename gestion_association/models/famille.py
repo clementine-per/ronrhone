@@ -66,6 +66,11 @@ class Famille(models.Model):
         choices=[(tag.name, tag.value) for tag in TypeChoice],
     )
     autres_animaux = models.CharField(max_length=1000, blank=True, verbose_name="Animaux de la FA ")
+    nb_heures_absence = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=" Nombre maximum d'heures d'absence consécutives",
+    )
 
     def get_nb_places_str(self):
         count = self.nb_places
@@ -125,9 +130,10 @@ class Famille(models.Model):
         if self.preference.biberonnage and self.preference.biberonnage == "OUI":
             result += "OK biberonnage"
             result += "\n"
-        result += "Niveau de présence : "
-        result += self.preference.get_presence_display()
-        result += "\n"
+        if self.nb_heures_absence :
+            result += "Nombre maximum d'heures d'absence consécutives : "
+            result += str(self.nb_heures_absence)
+            result += "\n"
         return result
 
     def to_json(self):
