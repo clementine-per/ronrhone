@@ -11,6 +11,7 @@ from django.forms import (
     Select,
     SelectMultiple,
 )
+import sys
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association
@@ -113,7 +114,7 @@ class AnimalLinkedForm(ModelForm):
                 StatutAnimal.SOCIA.name,
                 StatutAnimal.SOIN.name,
             ]
-        ).exclude(pk=self.instance.id)
+        ).exclude(pk=self.instance.id).order_by('nom')
 
 
 class AnimalInfoUpdateForm(ModelForm):

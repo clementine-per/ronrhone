@@ -4,6 +4,8 @@ from django.forms import ChoiceField, Form, ModelForm, Select, IntegerField, Cha
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption, BonSterilisation
 from gestion_association.models.animal import Animal, StatutAnimal
+from gestion_association.models.person import Person
+
 
 class DateInput(DateInput):
     input_type = "date"
@@ -22,6 +24,10 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
             "personne_visite",
             "date_visite",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
 
 
 class AdoptionSearchForm(Form):
@@ -66,6 +72,10 @@ class AdoptionCreateForm(ModelForm):
             "date_visite",
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
+
 
 class AdoptionFromUserForm(ModelForm):
     required_css_class = 'required'
@@ -86,6 +96,7 @@ class AdoptionFromUserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["animal"].queryset = Animal.objects.filter(statut=StatutAnimal.A_ADOPTER.name)
+        self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
 
 
 class AdoptionUpdateForm(ModelForm):
@@ -101,6 +112,10 @@ class AdoptionUpdateForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
 
 
 class ShowBonForm(Form):

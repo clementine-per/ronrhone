@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.utils import timezone
 
@@ -66,12 +68,14 @@ class Adoption(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        # Calcul du statut de l'animal
-        if self.date >= timezone.now().date():
+        # Maj statut lors de la création de l'adoption
+        if self._state.adding:
             self.animal.statut = StatutAnimal.ADOPTION.name
-        else:
+            self.animal.save()
+        # Maj statut si adoption complète
+        if self.visite_controle == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
             self.animal.statut = StatutAnimal.ADOPTE.name
-        self.animal.save()
+            self.animal.save()
         return super(Adoption, self).save(*args, **kwargs)
 
 
