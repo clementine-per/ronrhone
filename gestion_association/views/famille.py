@@ -8,6 +8,7 @@ from django.db.models import Count, F
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
+from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -23,7 +24,7 @@ from gestion_association.forms.famille import (
     SelectFamilleForm,
     AccueilUpdateForm)
 from gestion_association.models.animal import Animal, statuts_association
-from gestion_association.models.famille import Famille, Indisponibilite, Accueil
+from gestion_association.models.famille import Famille, Indisponibilite, Accueil, StatutFamille
 from gestion_association.models.person import Person
 
 
@@ -151,6 +152,18 @@ def update_accueil(request, pk):
 
     return render(request, "gestion_association/famille/accueil_update_form.html", locals())
 
+@login_required
+def end_accueil(request, pk):
+    accueil = Accueil.objects.get(id=pk)
+    famille = accueil.famille
+    for animal in famille.animal_set.all():
+        animal.famille = None
+        animal.save()
+    famille.statut = StatutFamille.DISPONIBLE.name
+    accueil.date_fin = timezone.now().date()
+    famille.save()
+    accueil.save()
+    return redirect("detail_famille", pk=famille.id)
 
 @login_required
 def famille_select_for_animal(request, pk):

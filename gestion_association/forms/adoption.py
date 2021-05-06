@@ -1,8 +1,9 @@
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import ChoiceField, Form, ModelForm, Select, IntegerField, CharField, DateField, DateInput
+from django.forms import ChoiceField, Form, ModelForm, Select, IntegerField, CharField, DateField, DateInput, \
+    MultipleChoiceField, SelectMultiple
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.adoption import Adoption, BonSterilisation
+from gestion_association.models.adoption import Adoption, BonSterilisation, OuiNonVisiteChoice
 from gestion_association.models.animal import Animal, StatutAnimal
 from gestion_association.models.person import Person
 
@@ -38,11 +39,13 @@ class AdoptionSearchForm(Form):
         widget=Select(),
         required=False,
     )
-    visite_controle = ChoiceField(
-        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
-        widget=Select(),
+    visite_controle = MultipleChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonVisiteChoice],
         required=False,
+        initial=[tag.name for tag in OuiNonVisiteChoice],
+        widget=SelectMultiple(attrs={'class': "selectpicker"})
     )
+
     date_min = DateField(
         label="Date d'adoption entre le", required=False, widget=DateInput()
     )
@@ -53,6 +56,22 @@ class AdoptionSearchForm(Form):
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
         widget=Select()
+    )
+    date_expiration_min = DateField(
+        label="Date d'expiration entre le", required=False, widget=DateInput()
+    )
+    date_expiration_max = DateField(
+        label="et le", required=False, widget=DateInput()
+    )
+    bon_envoye = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
+    )
+    bon_utilise = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
     )
 
 

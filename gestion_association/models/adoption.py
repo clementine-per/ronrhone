@@ -1,4 +1,5 @@
 from decimal import Decimal
+from enum import Enum
 
 from django.db import models
 from django.utils import timezone
@@ -12,6 +13,13 @@ from gestion_association.models.animal import (
     TypeChoice,
 )
 from gestion_association.models.person import Person
+
+class OuiNonVisiteChoice(Enum):
+    OUI = "Oui"
+    NON = "Non"
+    VACCIN = "Attente vaccin"
+    ALIMENTAIRE = "Transition alimentaire"
+
 
 
 class Adoption(models.Model):
@@ -43,9 +51,9 @@ class Adoption(models.Model):
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
     visite_controle = models.CharField(
-        max_length=3,
+        max_length=15,
         verbose_name="Visite de contrôle (2 mois)",
-        choices=[(tag.name, tag.value) for tag in OuiNonChoice],
+        choices=[(tag.name, tag.value) for tag in OuiNonVisiteChoice],
     )
     personne_visite = models.ForeignKey(
         Person,
@@ -80,7 +88,7 @@ class Adoption(models.Model):
 
 
 class BonSterilisation(models.Model):
-    adoption = models.OneToOneField(Adoption, on_delete=models.PROTECT)
+    adoption = models.OneToOneField(Adoption, on_delete=models.PROTECT, related_name="bon")
     date_max = models.DateField(verbose_name="Date d'expiration")
     envoye = models.CharField(
         max_length=3,

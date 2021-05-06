@@ -21,13 +21,14 @@ def index(request):
         statuts_association_filter += '&'
     # Partie adoptions
     # Adoptions attendant leur visite de contrôle
-    adoption_adoptes = Adoption.objects.filter(animal__statut='ADOPTE').filter(visite_controle='NON').count()
+    adoption_adoptes = Adoption.objects.filter(pre_visite='OUI').filter(visite_controle='NON').count()
     # Adoptions à clore
     adoption_over = Adoption.objects.filter(animal__statut='ADOPTE').filter(visite_controle='OUI').count()
     # Adoptions pré-visites
     adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite='NON').count()
-    # Adoptions en cours
-    adoption_en_cours = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite='OUI').count()
+    # Adoptions en cours (à payer, ou à contrôler)
+    adoption_en_cours = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite='OUI')\
+        .exclude(pre_visite='NON').count()
     #A l'adoption
     a_l_adoption = Animal.objects.filter(statut='A_ADOPTER').count()
     # A proposer à l'adoption
@@ -54,10 +55,7 @@ def index(request):
 
     #Taux de remplissage
     familles_occupees =  Famille.objects.filter(animal__isnull=False).distinct().count()
-    total_familles = Famille.objects.filter(statut__in=('DISPONIBLE','INDISPONIBLE')).count()
-    print("Famille occupées : ")
-    print(Famille.objects.filter(animal__isnull=False))
-    sys.stdout.flush()
+    total_familles = Famille.objects.filter(statut__in=('DISPONIBLE','INDISPONIBLE','OCCUPE')).count()
     if total_familles > 1:
         taux_remplissage = int((familles_occupees/total_familles) * 100)
 

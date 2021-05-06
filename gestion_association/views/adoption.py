@@ -1,3 +1,4 @@
+import sys
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
@@ -54,10 +55,14 @@ def search_adoption(request):
         montant_restant_form =request.GET.get("montant_restant", "")
         animal_form = request.GET.get("animal", "")
         pre_visite_form = request.GET.get("pre_visite", "")
-        visite_controle_form = request.GET.get("visite_controle", "")
+        visite_controle_form = request.GET.getlist("visite_controle", "")
         date_min_form = request.GET.get("date_min", "")
         date_max_form = request.GET.get("date_max", "")
         statut_form = request.GET.get("statut", "")
+        date_expiration_min_form = request.GET.get("date_expiration_min", "")
+        date_expiration_max_form = request.GET.get("date_expiration_max", "")
+        bon_envoye_form = request.GET.get("bon_envoye", "")
+        bon_utilise_form = request.GET.get("bon_utilise", "")
 
         if montant_restant_form:
             form.fields["montant_restant"].initial = montant_restant_form
@@ -70,7 +75,7 @@ def search_adoption(request):
             adoptions = adoptions.filter(pre_visite=pre_visite_form)
         if visite_controle_form:
             form.fields["visite_controle"].initial = visite_controle_form
-            adoptions = adoptions.filter(visite_controle=visite_controle_form)
+            adoptions = adoptions.filter(visite_controle__in=visite_controle_form)
         if date_min_form:
             form.fields["date_min"].initial = date_min_form
             adoptions = adoptions.filter(date__gte=parse_date(date_min_form))
@@ -80,6 +85,18 @@ def search_adoption(request):
         if statut_form:
             form.fields["statut"].initial = statut_form
             adoptions = adoptions.filter(animal__statut=statut_form)
+        if date_expiration_min_form:
+            form.fields["date_expiration_min"].initial = date_expiration_min_form
+            adoptions = adoptions.filter(bon__date_max__gte=parse_date(date_expiration_min_form))
+        if date_expiration_max_form:
+            form.fields["date_expiration_max"].initial = date_expiration_max_form
+            adoptions = adoptions.filter(bon__date_max__lte=parse_date(date_expiration_max_form))
+        if bon_envoye_form:
+            form.fields["bon_envoye"].initial = bon_envoye_form
+            adoptions = adoptions.filter(bon__envoye=bon_envoye_form)
+        if bon_utilise_form:
+            form.fields["bon_utilise"].initial = bon_utilise_form
+            adoptions = adoptions.filter(bon__utilise=bon_utilise_form)
 
 
 
@@ -251,21 +268,23 @@ def calcul_montant_sterilisation(request, pk):
     if montant_actuel_str:
         montant_adoption = Decimal(montant_actuel_str)
     bon_input = request.POST["show"]
-    montant_bon = TarifBonSterilisation.objects.get(
-        type_animal=animal.type, sexe=animal.sexe
-    ).montant
-    if montant_actuel_str and bon_input and bon_input == "OUI":
-        montant_adoption = Decimal(montant_actuel_str) + montant_bon
-        montant_restant = montant_restant + montant_bon
-    if montant_actuel_str and bon_input and bon_input == "NON":
-        montant_adoption = Decimal(montant_actuel_str) - montant_bon
-        montant_restant = montant_restant - montant_bon
-    return JsonResponse(
-        {
-            "montant": montant_adoption.max(Decimal(0)),
-            "montant_restant": montant_restant.max(Decimal(0)),
-        }
-    )
+    try:
+        montant_bon = TarifBonSterilisation.objects.get(
+            type_animal=animal.type, sexe=animal.sexe
+        ).montant
+        if montant_actuel_str and bon_input and bon_input == "OUI":
+            montant_adoption = Decimal(montant_actuel_str) + montant_bon
+            montant_restant = montant_restant + montant_bon
+        if montant_actuel_str and bon_input and bon_input == "NON":
+            montant_adoption = Decimal(montant_actuel_str) - montant_bon
+            montant_restant = montant_restant - montant_bon
+    finally:
+        return JsonResponse(
+            {
+                "montant": montant_adoption.max(Decimal(0)),
+                "montant_restant": montant_restant.max(Decimal(0)),
+            }
+        )
 
 
 def save_adoption(adoption, animal, person, show_form, bon_form):

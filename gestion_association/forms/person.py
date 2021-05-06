@@ -31,6 +31,12 @@ class PersonForm(ModelForm):
             "commentaire",
         )
 
+    def clean_ville(self):
+        return self.cleaned_data['ville'].upper()
+
+    def clean_nom(self):
+        return self.cleaned_data['nom'].upper()
+
 
 class BenevoleForm(ModelForm):
     class Meta:

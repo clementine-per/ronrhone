@@ -131,16 +131,21 @@
                             <td>{{acc.date_fin|default:" - "}}</td>
                             <td>{% for animal in acc.animaux.all %}<a href = "{% url 'detail_animal' animal.id %}"> {{animal.nom}}</a><br> {% endfor %} </td>
                             <td>{{acc.commentaire}} </td>
+                            {% if not acc.date_fin %}
                             <td>
                                 <a href= "{% url 'update_accueil' acc.id %}" >
                                     <i class="fas fa-pen"></i>
                                 </a>
                             </td>
                             <td>
-                                <a href= "{% url 'update_accueil_famille' famille.id %}" >
+                                <a href= "{% url 'end_accueil' acc.id %}" >
                                     <i class="fas fa-check"></i>
                                 </a>
                             </td>
+                            {% else %}
+                            <td></td>
+                            <td></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

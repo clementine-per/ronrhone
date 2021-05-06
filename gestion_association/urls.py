@@ -152,6 +152,11 @@ urlpatterns = [
         famille.update_accueil,
         name="update_accueil",
     ),
+    path(
+        "familles/end/accueil/<int:pk>/",
+        famille.end_accueil,
+        name="end_accueil",
+    ),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
 ]
