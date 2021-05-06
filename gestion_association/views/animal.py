@@ -1,4 +1,3 @@
-import sys
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -45,8 +44,8 @@ def search_animal(request):
         statuts_form = request.GET.getlist("statuts","")
         date_naissance_min = request.GET.get("date_naissance_min", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
-        date_prochaine_visite_min = request.GET.get("date_prochaine_visite_min", "")
-        date_prochaine_visite_max = request.GET.get("date_prochaine_visite_max", "")
+        date_prochain_vaccin_min = request.GET.get("date_prochain_vaccin_min", "")
+        date_prochain_vaccin_max = request.GET.get("date_prochain_vaccin_max", "")
         date_vermifuge_min = request.GET.get("date_vermifuge_min", "")
         date_vermifuge_max = request.GET.get("date_vermifuge_max", "")
         fiv_felv_form = request.GET.get("fiv_felv", "")
@@ -78,12 +77,12 @@ def search_animal(request):
         if date_naissance_max:
             form.fields["date_naissance_max"].initial = date_naissance_max
             animals = animals.filter(date_naissance__lte=parse_date(date_naissance_max))
-        if date_prochaine_visite_min:
-            form.fields["date_prochaine_visite_min"].initial = date_prochaine_visite_min
-            animals = animals.filter(date_prochain_vaccin__gte=parse_date(date_prochaine_visite_min))
-        if date_prochaine_visite_max:
-            form.fields["date_prochaine_visite_max"].initial = date_prochaine_visite_max
-            animals = animals.filter(date_prochain_vaccin__lte=parse_date(date_prochaine_visite_max))
+        if date_prochain_vaccin_min:
+            form.fields["date_prochain_vaccin_min"].initial = date_prochain_vaccin_min
+            animals = animals.filter(date_prochain_vaccin__gte=parse_date(date_prochain_vaccin_min))
+        if date_prochain_vaccin_max:
+            form.fields["date_prochain_vaccin_max"].initial = date_prochain_vaccin_max
+            animals = animals.filter(date_prochain_vaccin__lte=parse_date(date_prochain_vaccin_max))
         if fiv_felv_form:
             form.fields["fiv_felv"].initial = fiv_felv_form
             if fiv_felv_form == OuiNonChoice.OUI.name:

@@ -232,6 +232,11 @@
                         <strong> Animaux liés </strong> : {% for liaison in animal.animaux_lies.all %} <a href= "{% url 'detail_animal' liaison.id %}">{{liaison.nom}}</a>, {% endfor %} <br>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Commentaire animaux liés </strong> : {{animal.commentaire_animaux_lies}} <br>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

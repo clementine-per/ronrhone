@@ -44,12 +44,12 @@ class AnimalSearchForm(Form):
         label="Date de naissance entre le", required=False, widget=DateInput()
     )
     date_naissance_max = DateField(label=" et le ", required=False, widget=DateInput())
-    date_prochaine_visite_min = DateField(
-        label="Date de prochaine visite vétérinaire entre le",
+    date_prochain_vaccin_min = DateField(
+        label="Date du prochain vaccin entre le",
         required=False,
         widget=DateInput(),
     )
-    date_prochaine_visite_max = DateField(label=" et le ", required=False, widget=DateInput())
+    date_prochain_vaccin_max = DateField(label=" et le ", required=False, widget=DateInput())
     sans_fa = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),
@@ -87,6 +87,7 @@ class AnimalCreateForm(ModelForm):
             "felv",
             "date_parasite",
             "date_vermifuge",
+            "commentaire_sante",
             "lien_icad",
         )
 
@@ -96,7 +97,7 @@ class AnimalLinkedForm(ModelForm):
     required_css_class = 'required'
     class Meta:
         model = Animal
-        fields = ("animaux_lies","tranche_age")
+        fields = ("animaux_lies","tranche_age","commentaire_animaux_lies")
 
     animaux_lies = ModelMultipleChoiceField(
         required=False,
@@ -152,4 +153,5 @@ class AnimalSanteUpdateForm(ModelForm):
             "felv",
             "date_parasite",
             "date_vermifuge",
+            "commentaire_sante"
         )

@@ -163,6 +163,7 @@ class Animal(models.Model):
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
     animaux_lies = models.ManyToManyField("self", verbose_name="Animaux liés", blank=True)
+    commentaire_animaux_lies = models.CharField(max_length=1000, blank=True)
     tranche_age = models.CharField(
         max_length=10,
         blank=True,

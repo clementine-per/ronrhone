@@ -75,6 +75,8 @@ def famille_list(request):
         vide_form = request.GET.get("vide", "")
         date_presence_min = request.GET.get("date_presence_min", "")
         date_presence_max = request.GET.get("date_presence_max", "")
+        date_indispo_min = request.GET.get("date_indispo_min", "")
+        date_indispo_max = request.GET.get("date_indispo_max", "")
 
         if nom_personne_form:
             famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
@@ -106,10 +108,16 @@ def famille_list(request):
             form.fields["date_presence_min"].initial = date_presence_min
         if date_presence_max:
             famille_list = famille_list.exclude(
-                indisponibilite__date_debut__lte=date_presence_max,
-                indisponibilite__date_fin__gte=date_presence_max,
+                indisponibilite__date_debut__lte=parse_date(date_presence_max),
+                indisponibilite__date_fin__gte=parse_date(date_presence_max),
             )
             form.fields["date_presence_max"].initial = date_presence_max
+        # Ces deux valeurs ne sont pas des champs du formulaire, uniquement
+        # des parametres d'url remplis depuis la page d'accueil
+        if date_indispo_min:
+            famille_list = famille_list.filter(indisponibilite__date_debut__gte=parse_date(date_indispo_min))
+        if date_indispo_max:
+            famille_list = famille_list.filter(indisponibilite__date_debut__lte=parse_date(date_indispo_max))
 
 
     # Pagination : 10 éléments par page

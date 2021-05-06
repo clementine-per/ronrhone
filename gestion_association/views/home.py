@@ -58,6 +58,9 @@ def index(request):
     # Bon de stérilisation arrivant à expiation (10 jours)
     bon_a_utilise = BonSterilisation.objects.filter(utilise=OuiNonChoice.NON.name).filter(date_max__gte=today)\
         .filter(date_max__lte=interval_10).count()
+    # Vaccins à faire (10 jours)
+    vaccins = Animal.objects.filter(statut__in=statuts_association).filter(date_prochain_vaccin__gte=today)\
+        .filter(date_prochain_vaccin__lte=interval_10).count()
 
     # Partie FA
     # Animaux en FA
@@ -68,7 +71,11 @@ def index(request):
     visites = Famille.objects.filter(statut='A_VISITER').count()
     # Animaux à placer
     a_placer = Animal.objects.filter(famille__isnull=True).filter(statut__in=statuts_association).count()
-    # Animaux à déplacer
+    # Animaux à déplacer sous 10 jours
+    a_deplacer_10 = Famille.objects.filter(animal__isnull=False).filter(indisponibilite__date_debut__gte=today)\
+        .filter(indisponibilite__date_debut__lte=interval_10).count()
+    # Animaux à déplacer manuellement
+
 
     #Taux de remplissage
     familles_occupees =  Famille.objects.filter(animal__isnull=False).distinct().count()

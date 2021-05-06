@@ -47,7 +47,7 @@ th {
   color: white;
 }
 
-p.required { font-weight: bold; }
+label.required { font-weight: bold; }
 
 i.DISPONIBLE{
     color:#398a21;
