@@ -36,12 +36,12 @@ class PersonListTests(TestCase):
 
     def test_person_list_filter(self):
         # Test filtre sur le nom
-        response_nom = self.client.post("/ronrhone/persons/", data={"nom": "nc"})
+        response_nom = self.client.get("/ronrhone/persons/?nom=nc")
         self.assertContains(response_nom, "MINCH")
         self.assertNotContains(response_nom, "JANNE")
 
         # Test filtre sur le rôle
-        response_role = self.client.post("/ronrhone/persons/", data={"type_person": "BENEVOLE"})
+        response_role = self.client.get("/ronrhone/persons/?type_person=BENEVOLE")
         self.assertContains(response_role, "JANNE")
         self.assertNotContains(response_role, "MINCH")
 
