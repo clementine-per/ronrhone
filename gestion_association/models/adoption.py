@@ -80,8 +80,8 @@ class Adoption(models.Model):
         if self._state.adding:
             self.animal.statut = StatutAnimal.ADOPTION.name
             self.animal.save()
-        # Maj statut si adoption complète
-        if self.visite_controle == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
+        # Maj statut si adoption payée
+        if self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
             self.animal.statut = StatutAnimal.ADOPTE.name
             self.animal.save()
         return super(Adoption, self).save(*args, **kwargs)

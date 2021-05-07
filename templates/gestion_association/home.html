@@ -11,9 +11,19 @@
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-3">Adoptions</div>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_proposer}}</strong> animaux à mettre à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong> animaux à l'adoption</a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON"><strong>{{adoption_previsite}}</strong> pré-visites à faire</a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI"><strong>{{adoption_en_cours}}</strong> autres adoptions en cours</a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=NON"><strong>{{adoption_adoptes}}</strong> animaux attendant leur viste post adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?acompte_verse=NON"><strong>{{acomptes}}</strong> adoptions en attente d'acompte</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON&acompte_verse=OUI">
+                            <strong>{{adoption_previsite}}</strong> pré-visites à faire
+                        </a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI&acompte_verse=OUI&montant_restant=0">
+                            <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet
+                        </a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_max={{interval_5_weeks_ago_str}}">
+                            <strong>{{adoption_post}}</strong> animaux attendant leur viste post adoption
+                        </a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
+                            <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)
+                        </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> adoptions à clore</a></p>
                     </div>
                     <div class="col-auto">

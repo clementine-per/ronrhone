@@ -63,6 +63,8 @@ def search_adoption(request):
         date_expiration_max_form = request.GET.get("date_expiration_max", "")
         bon_envoye_form = request.GET.get("bon_envoye", "")
         bon_utilise_form = request.GET.get("bon_utilise", "")
+        # champ hors formulaire, uniquement parametre url depuis TDB
+        acompte_verse = request.GET.get("acompte_verse", "")
 
         if montant_restant_form:
             form.fields["montant_restant"].initial = montant_restant_form
@@ -97,6 +99,8 @@ def search_adoption(request):
         if bon_utilise_form:
             form.fields["bon_utilise"].initial = bon_utilise_form
             adoptions = adoptions.filter(bon__utilise=bon_utilise_form)
+        if acompte_verse:
+            adoptions = adoptions.filter(acompte_verse=acompte_verse)
 
 
 

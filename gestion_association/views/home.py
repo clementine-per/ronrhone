@@ -1,5 +1,6 @@
 import sys
 from datetime import timedelta
+from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -7,7 +8,8 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption, BonSterilisation
+from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption, BonSterilisation, \
+    OuiNonVisiteChoice
 from gestion_association.models.animal import Animal, statuts_association
 from gestion_association.models.famille import Famille
 
@@ -18,10 +20,12 @@ def index(request):
     title = "Tableau de bord"
 
     today = timezone.now().date()
-    interval_10 = timezone.now().date() + timedelta(days=10)
+    interval_10 = today + timedelta(days=10)
+    interval_5_weeks_ago = today - timedelta(days=35)
     # Valeurs str utilisées dans le template html
     today_str = today.strftime("%Y-%m-%d")
     interval_10_str = interval_10.strftime("%Y-%m-%d")
+    interval_5_weeks_ago_str = interval_5_weeks_ago.strftime("%Y-%m-%d")
 
     statuts_association_filter = ""
     for statut in statuts_association:
@@ -29,22 +33,29 @@ def index(request):
         statuts_association_filter += statut
         statuts_association_filter += '&'
     # Partie adoptions
+    # A proposer à l'adoption
+    a_proposer = Animal.objects.filter(statut='ADOPTABLE').count()
+    #A l'adoption
+    a_l_adoption = Animal.objects.filter(statut='A_ADOPTER').count()
+    # Acomptes
+    acomptes = Adoption.objects.filter(acompte=OuiNonChoice.NON.name).count()
+    # Adoptions pré-visites
+    adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION') \
+        .filter(pre_visite=OuiNonChoice.NON.name).filter(acompte=OuiNonChoice.OUI.name).count()
+    # Adoptions en attente de paiement complet
+    adoption_paiement = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite=OuiNonChoice.OUI.name) \
+        .filter(acompte=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0)).count()
     # Adoptions attendant leur visite de contrôle
-    adoption_adoptes = Adoption.objects.filter(pre_visite=OuiNonChoice.OUI.name)\
-        .filter(visite_controle=OuiNonChoice.NON.name).count()
+    adoption_post = Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name)\
+        .filter(date_lte=interval_5_weeks_ago).count()
+    # Post visite à contrôler
+    adoption_controle = Adoption.objects.\
+        filter(visite_controle__in=[OuiNonVisiteChoice.ALIMENTAIRE.name,OuiNonVisiteChoice.VACCIN.name])\
+    .count()
     # Adoptions à clore
     adoption_over = Adoption.objects.filter(animal__statut='ADOPTE')\
         .filter(visite_controle=OuiNonChoice.OUI.name).count()
-    # Adoptions pré-visites
-    adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION')\
-        .filter(pre_visite=OuiNonChoice.NON.name).count()
-    # Adoptions en cours (à payer, ou à contrôler)
-    adoption_en_cours = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite=OuiNonChoice.OUI.name)\
-        .exclude(pre_visite=OuiNonChoice.NON.name).count()
-    #A l'adoption
-    a_l_adoption = Animal.objects.filter(statut='A_ADOPTER').count()
-    # A proposer à l'adoption
-    a_proposer = Animal.objects.filter(statut='ADOPTABLE').count()
+
 
     # Partie soins
     # Animaux à stériliser
