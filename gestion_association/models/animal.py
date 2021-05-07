@@ -236,4 +236,7 @@ class Animal(models.Model):
             return "Non"
 
     def is_sterilise(self):
-        return self.sterilise == "OUI"
+        return self.sterilise == OuiNonChoice.OUI.name
+
+    def is_adoptable(self):
+        return self.statut == StatutAnimal.ADOPTABLE.name or self.statut == StatutAnimal.A_ADOPTER.name
