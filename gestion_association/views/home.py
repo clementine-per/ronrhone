@@ -38,16 +38,16 @@ def index(request):
     #A l'adoption
     a_l_adoption = Animal.objects.filter(statut='A_ADOPTER').count()
     # Acomptes
-    acomptes = Adoption.objects.filter(acompte=OuiNonChoice.NON.name).count()
+    acomptes = Adoption.objects.filter(acompte_verse=OuiNonChoice.NON.name).count()
     # Adoptions pré-visites
     adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION') \
-        .filter(pre_visite=OuiNonChoice.NON.name).filter(acompte=OuiNonChoice.OUI.name).count()
+        .filter(pre_visite=OuiNonChoice.NON.name).filter(acompte_verse=OuiNonChoice.OUI.name).count()
     # Adoptions en attente de paiement complet
     adoption_paiement = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite=OuiNonChoice.OUI.name) \
-        .filter(acompte=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0)).count()
+        .filter(acompte_verse=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0)).count()
     # Adoptions attendant leur visite de contrôle
     adoption_post = Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name)\
-        .filter(date_lte=interval_5_weeks_ago).count()
+        .filter(date__lte=interval_5_weeks_ago).count()
     # Post visite à contrôler
     adoption_controle = Adoption.objects.\
         filter(visite_controle__in=[OuiNonVisiteChoice.ALIMENTAIRE.name,OuiNonVisiteChoice.VACCIN.name])\
