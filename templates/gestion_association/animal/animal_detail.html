@@ -1,5 +1,7 @@
 {% extends "gestion_association/base.html" %}
+{% load i18n %}
 {% block content %}
+{% language 'fr' %}
 <div class="row p-4">
     <div class="col-sm-12 mt-3">
         <div class="card">
@@ -23,7 +25,7 @@
                         <strong> Type </strong> : {{animal.get_type_display}} <br>
                     </div>
                     <div class="col-sm-6">
-                        <strong> Date de naissance </strong> : {{animal.date_naissance|default:" - "}} <br>
+                        <strong> Date de naissance </strong> : {{animal.date_naissance|date:'d F Y'|default:" - "}} <br>
                     </div>
                 </div>
                 <div class="row">
@@ -36,7 +38,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Date de prise en charge </strong> : {{animal.date_arrivee|default:" - "}} <br>
+                        <strong> Date de prise en charge </strong> : {{animal.date_arrivee|date:'d F Y'|default:" - "}} <br>
                     </div>
                     <div class="col-sm-6">
                         <strong> Commentaire </strong> : {{animal.commentaire}} <br>
@@ -243,5 +245,5 @@
         </div>
     </div>
 </div>
-
+{% endlanguage %}
 {% endblock %}

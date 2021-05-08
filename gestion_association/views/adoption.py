@@ -300,7 +300,7 @@ def save_adoption(adoption, animal, person, show_form, bon_form):
     adoption.animal = animal
     adoption.save()
     # l'animal passe au statut à en cours d'adoption
-    animal.statut = StatutAnimal.ADOPTION
+    animal.statut = StatutAnimal.ADOPTION.name
     animal.adoptant = person
     animal.save()
     # Gestion du bon de stérilisation uniquement si necessaire
