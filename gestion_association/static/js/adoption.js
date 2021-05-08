@@ -1,11 +1,3 @@
-$(function () {
-  $(
-    '[name="date"],[name="date_visite"],[name="date_max"],[name="date_utilisation"]'
-  ).datepicker({
-    dateFormat: "dd/mm/yy",
-  });
-});
-
 $("#adoptionForm").on("change", "*", function (event) {
   var champs_restant = ["acompte_verse", "montant", "show"];
   var champ_sterilisation = ["show"];

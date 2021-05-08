@@ -90,6 +90,9 @@ class AdoptionCreateForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
+        widgets = {
+            'date_visite': DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -111,6 +114,9 @@ class AdoptionFromUserForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
+        widgets = {
+            'date_visite': DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -131,6 +137,9 @@ class AdoptionUpdateForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
+        widgets = {
+            'date_visite': DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -149,3 +158,7 @@ class BonSterilisationForm(ModelForm):
     class Meta:
         model = BonSterilisation
         fields = ("date_max", "envoye", "utilise", "date_utilisation")
+        widgets = {
+            'date_max': DateInput(attrs={'type': 'date'}),
+            'date_utilisation': DateInput(attrs={'type': 'date'}),
+        }

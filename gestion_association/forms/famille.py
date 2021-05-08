@@ -91,6 +91,10 @@ class IndisponibiliteForm(ModelForm):
     class Meta:
         model = Indisponibilite
         fields = ("date_debut", "date_fin")
+        widgets = {
+            'date_debut': DateInput(attrs={'type': 'date'}),
+            'date_fin': DateInput(attrs={'type': 'date'}),
+        }
 
     def clean_date_fin(self):
         date_fin = self.cleaned_data['date_fin']
@@ -104,6 +108,10 @@ class AccueilUpdateForm(ModelForm):
     class Meta:
         model = Accueil
         fields = ("date_debut","date_fin","commentaire", "animaux")
+        widgets = {
+            'date_debut': DateInput(attrs={'type': 'date'}),
+            'date_fin': DateInput(attrs={'type': 'date'}),
+        }
 
     animaux = ModelMultipleChoiceField(
         widget=CheckboxSelectMultiple, queryset=Animal.objects.none()

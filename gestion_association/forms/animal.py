@@ -90,6 +90,15 @@ class AnimalCreateForm(ModelForm):
             "commentaire_sante",
             "lien_icad",
         )
+        widgets = {
+            'date_naissance': DateInput(attrs={'type': 'date'}),
+            'date_arrivee': DateInput(attrs={'type': 'date'}),
+            'date_sterilisation': DateInput(attrs={'type': 'date'}),
+            'date_dernier_vaccin': DateInput(attrs={'type': 'date'}),
+            'date_prochain_vaccin': DateInput(attrs={'type': 'date'}),
+            'date_parasite': DateInput(attrs={'type': 'date'}),
+            'date_vermifuge': DateInput(attrs={'type': 'date'}),
+        }
 
 
 class AnimalLinkedForm(ModelForm):
@@ -135,6 +144,10 @@ class AnimalInfoUpdateForm(ModelForm):
             "statut",
             "lien_icad",
         )
+        widgets = {
+            'date_naissance': DateInput(attrs={'type': 'date'}),
+            'date_arrivee': DateInput(attrs={'type': 'date'}),
+        }
 
 
 class AnimalSanteUpdateForm(ModelForm):
@@ -155,3 +168,10 @@ class AnimalSanteUpdateForm(ModelForm):
             "date_vermifuge",
             "commentaire_sante"
         )
+        widgets = {
+            'date_sterilisation': DateInput(attrs={'type': 'date'}),
+            'date_dernier_vaccin': DateInput(attrs={'type': 'date'}),
+            'date_prochain_vaccin': DateInput(attrs={'type': 'date'}),
+            'date_parasite': DateInput(attrs={'type': 'date'}),
+            'date_vermifuge': DateInput(attrs={'type': 'date'}),
+        }
