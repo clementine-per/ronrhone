@@ -100,14 +100,14 @@
         <thead>
         <tr>
             <th scope="col">Nom</th>
-            <th scope="col" style="width:15%;">Statut</th>
-            <th scope="col" >Identification</th>
-            <th scope="col">Stérilisé</th>
-            <th scope="col">Vacciné</th>
             <th scope="col">Date de naissance</th>
-            <th scope="col">FA</th>
-            <th scope="col" style="width:15%;">Date prochaine visite</th>
+            <th scope="col">Stérilisé</th>
+            <th scope="col" >Identification</th>
+            <th scope="col">Vacciné</th>
+            <th scope="col" style="width:15%;">Date prochain vaccin</th>
             <th scope="col">Date dernier vermifuge</th>
+            <th scope="col" style="width:15%;">Statut</th>
+            <th scope="col">FA</th>
             <th scope="col">ICAD</th>
         </tr>
         </thead>
@@ -115,14 +115,14 @@
         {% for animal in animal_list %}
         <tr class="table-info">
             <td><a href= "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a></td>
-            <td>{{animal.get_statut_display}}</td>
-            <td>{{animal.identification}}</td>
-            <td>{{animal.get_sterilisation_str}}</td>
-            <td>{{animal.get_vaccin_str}}</td>
             <td>{{animal.date_naissance|default:" - "}}</td>
-            <td>{% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{animal.famille.personne}}</a>{% endif %}</td>
+            <td>{{animal.get_sterilisation_str}}</td>
+            <td>{{animal.identification}}</td>
+            <td>{{animal.get_vaccin_str}}</td>
             <td>{{animal.date_prochain_vaccin|default:" - "}}</td>
             <td>{{animal.date_vermifuge|default:" - "}}</td>
+            <td>{{animal.get_statut_display}}</td>
+            <td>{% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{animal.famille.personne}}</a>{% endif %}</td>
             <td>{% if animal.lien_icad %}<a target="_blank" href= "{{animal.lien_icad}}"><i class="fas fa-link"></i></a>{% endif %}</td>
         </tr>
         {% endfor %}
