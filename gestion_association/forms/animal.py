@@ -16,7 +16,9 @@ from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, 
 
 
 class DateInput(DateInput):
-    input_type = "date"class AnimalSearchForm(Form):
+    input_type = "date"
+
+class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
     identification = CharField(max_length=100, required=False, label="Numéro d'identification")
     type = ChoiceField(
