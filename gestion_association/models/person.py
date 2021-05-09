@@ -27,7 +27,7 @@ class Person(models.Model):
     )
     telephone = models.CharField(validators=[telephone_regex], max_length=10)
     date_inscription = models.DateField(auto_now_add=True)
-    profession = models.CharField(max_length=250)
+    profession = models.CharField(max_length=250, blank=True)
     commentaire = models.CharField(max_length=1000, blank=True)
     inactif = models.BooleanField(
         default=False,
