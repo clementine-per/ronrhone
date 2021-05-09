@@ -82,17 +82,17 @@ class Adoption(models.Model):
             self.animal.statut = StatutAnimal.ADOPTION.name
             self.animal.save()
         # Maj statut si adoption payée et retirer de la FA
-        if self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0))\
-                and self.animal.famille:
+        if self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
             self.animal.statut = StatutAnimal.ADOPTE.name
-            famille = self.animal.famille
-            for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animaux__pk=self.animal.id).all():
-                accueil.date_fin = timezone.now().date()
-                accueil.save()
-            # Mettre à jour le statut de l'ancienne famille
-            famille.statut = StatutFamille.DISPONIBLE.name
-            famille.save()
-            self.animal.famille = None
+            if self.animal.famille:
+                famille = self.animal.famille
+                for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animaux__pk=self.animal.id).all():
+                    accueil.date_fin = timezone.now().date()
+                    accueil.save()
+                # Mettre à jour le statut de l'ancienne famille
+                famille.statut = StatutFamille.DISPONIBLE.name
+                famille.save()
+                self.animal.famille = None
             self.animal.save()
         return super(Adoption, self).save(*args, **kwargs)
 
