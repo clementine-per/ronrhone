@@ -81,8 +81,8 @@
                             </div>
                         </div>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=NON"><strong>{{en_famille}}</strong> animaux actuellement en FA</a></p>
-                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=DISPONIBLE"><strong>{{disponibles}}</strong> FAs disponibles</a></p>
-                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=A_VISITER"><strong>{{visites}}</strong> FAs à visiter</a></p>
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=DISPONIBLE"><strong>{{disponibles}}</strong> FA disponibles</a></p>
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=A_VISITER"><strong>{{visites}}</strong> FA à visiter</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=OUI"><strong>{{a_placer}}</strong> animaux à placer</a></p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?vide=NON&date_indispo_min={{today_str}}&date_indispo_max={{interval_10_str}}">
                             <strong> {{a_deplacer_10}} </strong> animaux à déplacer dans moins de 10 jours

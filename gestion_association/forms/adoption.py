@@ -90,13 +90,12 @@ class AdoptionCreateForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
-        widgets = {
-            'date_visite': DateInput(attrs={'type': 'date'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
+        self.fields['date'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_visite'].widget.attrs['class'] = 'datePicker'
 
 
 class AdoptionFromUserForm(ModelForm):
@@ -114,14 +113,13 @@ class AdoptionFromUserForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
-        widgets = {
-            'date_visite': DateInput(attrs={'type': 'date'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["animal"].queryset = Animal.objects.filter(statut=StatutAnimal.A_ADOPTER.name)
         self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
+        self.fields['date'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_visite'].widget.attrs['class'] = 'datePicker'
 
 
 class AdoptionUpdateForm(ModelForm):
@@ -137,13 +135,12 @@ class AdoptionUpdateForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
-        widgets = {
-            'date_visite': DateInput(attrs={'type': 'date'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
+        self.fields['date'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_visite'].widget.attrs['class'] = 'datePicker'
 
 
 class ShowBonForm(Form):
@@ -158,7 +155,8 @@ class BonSterilisationForm(ModelForm):
     class Meta:
         model = BonSterilisation
         fields = ("date_max", "envoye", "utilise", "date_utilisation")
-        widgets = {
-            'date_max': DateInput(attrs={'type': 'date'}),
-            'date_utilisation': DateInput(attrs={'type': 'date'}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date_max'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_utilisation'].widget.attrs['class'] = 'datePicker'

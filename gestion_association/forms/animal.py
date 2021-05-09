@@ -9,19 +9,14 @@ from django.forms import (
     ModelMultipleChoiceField,
     MultipleChoiceField,
     Select,
-    SelectMultiple,
-)
-import sys
+    SelectMultiple)
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association
 
 
 class DateInput(DateInput):
-    input_type = "date"
-
-
-class AnimalSearchForm(Form):
+    input_type = "date"class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
     identification = CharField(max_length=100, required=False, label="Numéro d'identification")
     type = ChoiceField(
@@ -90,15 +85,16 @@ class AnimalCreateForm(ModelForm):
             "commentaire_sante",
             "lien_icad",
         )
-        widgets = {
-            'date_naissance': DateInput(attrs={'type': 'date'}),
-            'date_arrivee': DateInput(attrs={'type': 'date'}),
-            'date_sterilisation': DateInput(attrs={'type': 'date'}),
-            'date_dernier_vaccin': DateInput(attrs={'type': 'date'}),
-            'date_prochain_vaccin': DateInput(attrs={'type': 'date'}),
-            'date_parasite': DateInput(attrs={'type': 'date'}),
-            'date_vermifuge': DateInput(attrs={'type': 'date'}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        super(AnimalCreateForm, self).__init__(*args, **kwargs)
+        self.fields['date_naissance'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_arrivee'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_sterilisation'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_dernier_vaccin'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
 
 
 class AnimalLinkedForm(ModelForm):
@@ -144,10 +140,11 @@ class AnimalInfoUpdateForm(ModelForm):
             "statut",
             "lien_icad",
         )
-        widgets = {
-            'date_naissance': DateInput(attrs={'type': 'date'}),
-            'date_arrivee': DateInput(attrs={'type': 'date'}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        super(AnimalInfoUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['date_naissance'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_arrivee'].widget.attrs['class'] = 'datePicker'
 
 
 class AnimalSanteUpdateForm(ModelForm):
@@ -168,10 +165,11 @@ class AnimalSanteUpdateForm(ModelForm):
             "date_vermifuge",
             "commentaire_sante"
         )
-        widgets = {
-            'date_sterilisation': DateInput(attrs={'type': 'date'}),
-            'date_dernier_vaccin': DateInput(attrs={'type': 'date'}),
-            'date_prochain_vaccin': DateInput(attrs={'type': 'date'}),
-            'date_parasite': DateInput(attrs={'type': 'date'}),
-            'date_vermifuge': DateInput(attrs={'type': 'date'}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        super(AnimalSanteUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['date_sterilisation'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_dernier_vaccin'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
