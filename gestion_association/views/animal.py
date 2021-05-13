@@ -86,7 +86,7 @@ def search_animal(request):
         if fiv_felv_form:
             form.fields["fiv_felv"].initial = fiv_felv_form
             if fiv_felv_form == OuiNonChoice.OUI.name:
-                animals = animals.filter(fiv=OuiNonChoice.OUI.name).filter(felv=OuiNonChoice.OUI.name)
+                animals = animals.exclude(Q(fiv='NT')|Q(felv='NT'))
             if fiv_felv_form == OuiNonChoice.NON.name:
                 animals = animals.filter(Q(fiv='NT')|Q(felv='NT'))
 

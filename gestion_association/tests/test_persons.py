@@ -53,12 +53,37 @@ class PersonCreateUpdateTests(TestCase):
         self.client.login(username="temporary", password="temporary")
 
     def test_create_person(self):
-        # Vérification de l'accès au formulaire de création d'une personne
-        response = self.client.get(reverse_lazy("create_person"))
-        self.assertEqual(response.status_code, 200)
+        self.client.post('/ronrhone/persons/create', {'prenom': 'Elise', 'nom': 'FIGMA', 'email': 'adresse@gmail.com',
+                                                      'adresse': '10 rue de la joie', 'code_postal' : '69003', 'ville' : 'Lyon',
+                                                      'telephone' : '0380502635'})
+        response_nom = self.client.get("/ronrhone/persons/?nom=fi")
+        self.assertContains(response_nom, "FIGMA")
 
     def test_update_person(self):
-        person = create_person("MINCH", "Clémentine", "test.test@gmail.com", True, True, False)
+        person = create_person("MINCH", "Clémentine", "test.test@gmail.com", False, False, False)
         # Vérification de l'accès au formulaire de modification d'une personne
-        response = self.client.get(reverse_lazy("update_person", kwargs={"pk": person.id}))
+        response = self.client.post(reverse_lazy("update_person", kwargs={"pk": person.id}))
         self.assertEqual(response.status_code, 200)
+
+
+class PersonOtherViewsTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.client.login(username="temporary", password="temporary")
+
+    def test_declarer_benevole_person(self):
+        person = create_person("MINCH", "Clémentine", "test.test@gmail.com", False, False, False)
+
+        self.client.post(reverse_lazy("benevole_person", kwargs={"pk": person.id}),
+                                    {'commentaire_benevole' : 'Nouvelle bénévole'})
+        response = self.client.get(reverse_lazy("detail_person", kwargs={"pk": person.id}))
+        query_person = Person.objects.get(id=person.id)
+        self.assertEqual(query_person.is_benevole, True)
+        self.assertContains(response, "Nouvelle bénévole")
+
+    def test_annule_benevole(self):
+        person = create_person("MINCH", "Clémentine", "test.test@gmail.com", False, False, True)
+        response = self.client.get(reverse_lazy("cancel_benevole", kwargs={"pk": person.id}))
+        query_person = Person.objects.get(id=person.id)
+        self.assertEqual(query_person.is_benevole, False)
