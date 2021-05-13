@@ -24,7 +24,7 @@ from gestion_association.forms.famille import (
     SelectFamilleForm,
     AccueilUpdateForm)
 from gestion_association.models.animal import Animal, statuts_association
-from gestion_association.models.famille import Famille, Indisponibilite, Accueil, StatutFamille
+from gestion_association.models.famille import Famille, Indisponibilite, Accueil, StatutFamille, StatutAccueil
 from gestion_association.models.person import Person
 
 
@@ -77,6 +77,7 @@ def famille_list(request):
         date_presence_max = request.GET.get("date_presence_max", "")
         date_indispo_min = request.GET.get("date_indispo_min", "")
         date_indispo_max = request.GET.get("date_indispo_max", "")
+        a_deplacer = request.GET.get("a_deplacer", "")
 
         if nom_personne_form:
             famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
@@ -112,12 +113,14 @@ def famille_list(request):
                 indisponibilite__date_fin__gte=parse_date(date_presence_max),
             )
             form.fields["date_presence_max"].initial = date_presence_max
-        # Ces deux valeurs ne sont pas des champs du formulaire, uniquement
+        # Ces trois valeurs ne sont pas des champs du formulaire, uniquement
         # des parametres d'url remplis depuis la page d'accueil
         if date_indispo_min:
             famille_list = famille_list.filter(indisponibilite__date_debut__gte=parse_date(date_indispo_min))
         if date_indispo_max:
             famille_list = famille_list.filter(indisponibilite__date_debut__lte=parse_date(date_indispo_max))
+        if a_deplacer:
+            famille_list = famille_list.filter(accueil__statut=StatutAccueil.A_DEPLACER.name)
 
 
     # Pagination : 10 éléments par page
@@ -140,38 +143,24 @@ def update_accueil(request, pk):
     title = "Mise à jour d'un accueil"
 
     if request.method == "POST":
-        form = AccueilUpdateForm(request.POST,instance=accueil)
-        form.fields["animaux"].queryset = Animal.objects.filter(statut__in=statuts_association)
+        form = AccueilUpdateForm(request.POST, instance=accueil)
         if form.is_valid():
-            new_accueil = form.save()
-            # Animaux ajoutés
-            for animal in new_accueil.animaux.exclude(id__in=famille.animal_set.values_list('id', flat=True)):
-                animal.famille = famille
-                animal.save()
-            # Animaux enlevés
-            for animal in famille.animal_set.exclude(id__in=new_accueil.animaux.values_list('id', flat=True)):
-                animal.famille = None
-                animal.save()
+            # La sauvegarde de l'accueil gère toutes les conséquences éventuelles
+            form.save()
 
             return redirect("detail_famille", pk=famille.id)
     else:
         form = AccueilUpdateForm(instance=accueil)
-        form.fields["animaux"].queryset = Animal.objects.filter(statut__in=statuts_association)
 
     return render(request, "gestion_association/famille/accueil_update_form.html", locals())
 
 @login_required
 def end_accueil(request, pk):
     accueil = Accueil.objects.get(id=pk)
-    famille = accueil.famille
-    for animal in famille.animal_set.all():
-        animal.famille = None
-        animal.save()
-    famille.statut = StatutFamille.DISPONIBLE.name
     accueil.date_fin = timezone.now().date()
-    famille.save()
+    # La sauvegarde de l'accueil gère toutes les conséquences de la fin d'accueil
     accueil.save()
-    return redirect("detail_famille", pk=famille.id)
+    return redirect("detail_famille", pk=accueil.famille.id)
 
 @login_required
 def famille_select_for_animal(request, pk):
@@ -189,7 +178,17 @@ def famille_select_for_animal(request, pk):
 
     if request.method == "POST":
         if form.is_valid():
-            form.save()
+            # On crée un accueil par animal pour faciliter la gestion des accueils
+            famille = form.cleaned_data["famille"]
+            date_debut = form.cleaned_data["date_debut"]
+            for animal_fa in form.cleaned_data["animaux"].all():
+                accueil = Accueil.objects.create(animal=animal_fa, famille=famille, date_debut=date_debut)
+                accueil.save()
+                animal_fa.famille = famille
+                animal_fa.save()
+            # La famille est maintenant occupée
+            famille.statut = StatutFamille.OCCUPE.name
+
             return redirect("detail_animal", pk=animal.id)
 
     return render(request, "gestion_association/famille/famille_select_form.html", locals())

@@ -15,6 +15,11 @@ class StatutFamille(Enum):
     INDISPONIBLE = "Temporairement indisponible"
     INACTIVE = "Inactive"
 
+class StatutAccueil(Enum):
+    EN_COURS = "En cours"
+    TERMINE = "Terminé"
+    A_DEPLACER = "A déplacer"
+
 
 class Niveau(Enum):
     DEBUTANT = "Débutant"
@@ -164,5 +169,49 @@ class Accueil(models.Model):
     date_debut = models.DateField(verbose_name="Date de début")
     date_fin = models.DateField(verbose_name="Date de fin", blank=True, null=True)
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT)
-    animaux = models.ManyToManyField("Animal", verbose_name="Animal(aux)")
+    animal = models.ForeignKey("Animal", on_delete=models.PROTECT)
     commentaire = models.CharField(max_length=1000, blank=True)
+    statut = models.CharField(
+        max_length=20,
+        verbose_name="Statut",
+        default="EN_COURS",
+        choices=[(tag.name, tag.value) for tag in StatutAccueil],
+    )
+
+    def is_termine(self):
+        return self.statut == StatutAccueil.TERMINE.name
+
+    def save(self, *args, **kwargs):
+        # Maj statut lors de la création de l'adoption
+        if self._state.adding:
+            # Un animal ne peut pas être dans deux FA à la fois
+            # On termine donc l'autre accueil éventuel
+            for accueil in self.animal.accueil_set.filter(statut__in=[StatutAccueil.A_DEPLACER.name,StatutAccueil.EN_COURS.name]).all():
+                accueil.date_fin = timezone.now().date()
+                accueil.statut = StatutAccueil.TERMINE.name
+                accueil.save()
+                # S'il s'agissait du dernier accueil de l'ancienne FA, on la remet disponible
+                if not accueil.famille.accueil_set.filter(statut__in=[StatutAccueil.A_DEPLACER.name,StatutAccueil.EN_COURS.name]):
+                    accueil.famille.statut = StatutFamille.DISPONIBLE.name
+                    accueil.famille.save()
+            #On change la FA de l'animal
+            self.animal.famille = self.famille
+            self.animal.save()
+            #On passe le statut FA à occupé
+            self.famille.statut = StatutFamille.OCCUPE.name
+            self.famille.save()
+        else :
+            # Si date de fin aujourd'hui ou dans le passé, l'accueil est terminé
+            if self.date_fin and self.date_fin <= timezone.now().date():
+                self.statut = StatutAccueil.TERMINE.name
+                self.animal.famille = None
+                self.animal.save()
+                # S'il s'agissait du dernier accueil de la FA, elle redevient disponible
+                if not self.famille.accueil_set.filter(statut__in=[StatutAccueil.A_DEPLACER.name,StatutAccueil.EN_COURS.name]).exclude(id = self.id):
+                    self.famille.statut = StatutFamille.DISPONIBLE.name
+                    self.famille.save()
+            # Si date de fin dans le futur, l'animal est à déplacer
+            if self.date_fin and self.date_fin > timezone.now().date():
+                self.statut = StatutAccueil.A_DEPLACER.name
+
+        return super().save(*args, **kwargs)

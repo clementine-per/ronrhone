@@ -108,11 +108,7 @@ class IndisponibiliteForm(ModelForm):
 class AccueilUpdateForm(ModelForm):
     class Meta:
         model = Accueil
-        fields = ("date_debut","date_fin","commentaire", "animaux")
-
-    animaux = ModelMultipleChoiceField(
-        widget=CheckboxSelectMultiple, queryset=Animal.objects.none()
-    )
+        fields = ("date_debut","date_fin","commentaire")
 
     def __init__(self, *args, **kwargs):
         super(AccueilUpdateForm, self).__init__(*args, **kwargs)
@@ -120,37 +116,13 @@ class AccueilUpdateForm(ModelForm):
         self.fields['date_fin'].widget.attrs['class'] = 'datePicker'
 
 
-
-class SelectFamilleForm(ModelForm):
-    class Meta:
-        model = Accueil
-        fields = ("date_debut", "animaux", "famille")
-
-    def __init__(self, *args, **kwargs):
-        super(SelectFamilleForm, self).__init__(*args, **kwargs)
-        self.fields['date_debut'].widget.attrs['class'] = 'datePicker'
-
+class SelectFamilleForm(Form):
+    date_debut = DateField(label="Date de début")
     animaux = ModelMultipleChoiceField(
         widget=CheckboxSelectMultiple, queryset=Animal.objects.none()
     )
     famille = ModelChoiceField(queryset=Famille.objects.all(), required=False)
 
-    def save(self, commit=True):
-        super().save(commit)
-        for animal in self.instance.animaux.all():
-            #Mise à jour pour terminer les anciens accueils
-            if animal.famille:
-                last_famille = animal.famille
-                for accueil in last_famille.accueil_set.filter(date_fin__isnull=True).all():
-                    accueil.date_fin = timezone.now().date()
-                    accueil.save()
-                # Mettre à jour le statut de l'ancienne famille
-                last_famille.statut = StatutFamille.DISPONIBLE.name
-                last_famille.save()
-            animal.famille = self.instance.famille
-            animal.save()
-        # Mise à jour du compteur d'animaux et du statut de la nouvelle famille
-        self.instance.famille.nb_animaux_historique += self.instance.animaux.count()
-        self.instance.famille.statut = StatutFamille.OCCUPE.name
-        self.instance.famille.save()
-        return self.instance
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date_debut'].widget.attrs['class'] = 'datePicker'

@@ -89,9 +89,6 @@ class Adoption(models.Model):
                 for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animaux__pk=self.animal.id).all():
                     accueil.date_fin = timezone.now().date()
                     accueil.save()
-                # Mettre à jour le statut de l'ancienne famille
-                famille.statut = StatutFamille.DISPONIBLE.name
-                famille.save()
                 self.animal.famille = None
             self.animal.save()
         return super(Adoption, self).save(*args, **kwargs)

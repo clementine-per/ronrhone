@@ -11,7 +11,7 @@ from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption, BonSterilisation, \
     OuiNonVisiteChoice
 from gestion_association.models.animal import Animal, statuts_association
-from gestion_association.models.famille import Famille
+from gestion_association.models.famille import Famille, StatutAccueil, Accueil
 
 
 @login_required
@@ -85,7 +85,8 @@ def index(request):
     # Animaux à déplacer sous 10 jours
     a_deplacer_10 = Famille.objects.filter(animal__isnull=False).filter(indisponibilite__date_debut__gte=today)\
         .filter(indisponibilite__date_debut__lte=interval_10).count()
-    # Animaux à déplacer manuellement
+    # Animaux à déplacer manuellement (accueils arrivant à terme)
+    accueils_a_deplacer = Accueil.objects.filter(statut=StatutAccueil.A_DEPLACER.name).count()
 
 
     #Taux de remplissage
