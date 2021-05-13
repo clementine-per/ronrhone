@@ -103,19 +103,23 @@ def search_animal(request):
 
     return render(request, "gestion_association/animal/animal_list.html", locals())
 
-
-class CreateAnimal(LoginRequiredMixin, CreateView):
-    model = Animal
-    form_class = AnimalCreateForm
-    template_name = "gestion_association/animal/animal_create_form.html"
-
-    def get_success_url(self):
-        return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
-
-    def get_context_data(self, **kwargs):
-        context = super(CreateAnimal, self).get_context_data(**kwargs)
-        context['title'] = "Créer un animal"
-        return context
+@login_required()
+def create_animal(request):
+    title = "Créer une famille"
+    if request.method == "POST":
+        animal_form = AnimalCreateForm(data=request.POST)
+        preference_form = PreferenceForm(data=request.POST)
+        if animal_form.is_valid() and preference_form.is_valid():
+            # Rattachement manuel de l'animal et des préférences
+            preference = preference_form.save()
+            animal = animal_form.save(commit=False)
+            animal.preference = preference
+            animal.save()
+            return redirect("detail_animal", pk=animal.id)
+    else:
+        animal_form = AnimalCreateForm()
+        preference_form = PreferenceForm()
+    return render(request, "gestion_association/animal/animal_create_form.html", locals())
 
 
 @login_required()

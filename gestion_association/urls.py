@@ -11,7 +11,7 @@ urlpatterns = [
     path("", home.index, name="accueil"),
     # Animaux
     path("animals/", animal.search_animal, name="animals"),
-    path("animals/create", animal.CreateAnimal.as_view(), name="create_animal"),
+    path("animals/create", animal.create_animal, name="create_animal"),
     path(
         "animals/preference/update/<int:pk>/",
         animal.update_preference,

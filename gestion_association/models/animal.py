@@ -173,11 +173,7 @@ class Animal(models.Model):
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # Au premier enregistrement en base, on initialise les préférences
         if self._state.adding:
-            preference = Preference.objects.create()
-            self.preference = preference
-            preference.save()
             # Déterminer la tranche d'age à partir de la date de naissance
             if self.date_naissance:
                 today = timezone.now().date()

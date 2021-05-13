@@ -80,7 +80,10 @@ class Adoption(models.Model):
         # Maj statut lors de la création de l'adoption
         if self._state.adding:
             self.animal.statut = StatutAnimal.ADOPTION.name
+            self.animal.adoptant = self.adoptant
             self.animal.save()
+            self.adoptant.is_adoptante = True
+            self.adoptant.save()
         # Maj statut si adoption payée et retirer de la FA
         if self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
             self.animal.statut = StatutAnimal.ADOPTE.name
