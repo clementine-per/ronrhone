@@ -84,7 +84,7 @@
             <th scope="col">Statut</th>
             <th scope="col" style="width:15%;">Personne</th>
             <th scope="col" >Nombre de places</th>
-            <th scope="col">Exterieur</th>
+            <th scope="col">Détail des accueils acceptés</th>
             <th scope="col">Sociabilisation</th>
             <th scope="col">Animaux accueillis</th>
             <th scope="col">Animaux de la FA</th>
@@ -98,7 +98,7 @@
             <td><i class="fa fa-circle {{famille.statut}}"></i> {{famille.get_statut_display}}</td>
             <td>{{famille.personne}}</td>
             <td>{{famille.get_nb_places_str}}</td>
-            <td>{{famille.preference.get_exterieur_display}}</td>
+            <td>{{famille.detail_places}}</td>
             <td>{{famille.preference.get_sociabilisation_display}}</td>
             <td>{% for animal in famille.animal_set.all %}{{animal.nom}}<br>{% endfor %}</td>
             <td>{{famille.autres_animaux}}</td>

@@ -61,6 +61,7 @@ class Famille(models.Model):
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
     nb_places = models.IntegerField(verbose_name="Nombre de places")
+    detail_places = models.CharField(max_length=1000, blank=True, verbose_name="Détail des accueils acceptés")
     preference = models.OneToOneField(
         "Preference", on_delete=models.PROTECT, blank=True, null=True
     )
