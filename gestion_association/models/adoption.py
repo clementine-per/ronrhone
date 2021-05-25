@@ -12,7 +12,7 @@ from gestion_association.models.animal import (
     TrancheAge,
     TypeChoice,
 )
-from gestion_association.models.famille import StatutFamille
+from gestion_association.models.famille import StatutFamille, StatutAccueil
 from gestion_association.models.person import Person
 
 class OuiNonVisiteChoice(Enum):
@@ -89,8 +89,9 @@ class Adoption(models.Model):
             self.animal.statut = StatutAnimal.ADOPTE.name
             if self.animal.famille:
                 famille = self.animal.famille
-                for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animaux__pk=self.animal.id).all():
+                for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animal__pk=self.animal.id).all():
                     accueil.date_fin = timezone.now().date()
+                    accueil.statut = StatutAccueil.TERMINE.name
                     accueil.save()
                 self.animal.famille = None
             self.animal.save()

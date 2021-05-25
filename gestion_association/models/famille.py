@@ -111,6 +111,10 @@ class Famille(models.Model):
         result += " de niveau "
         result += self.get_niveau_display()
         result += "\n"
+        if self.detail_places:
+            result += "Détail des accueils acceptés : "
+            result +=self.detail_places
+            result += "\n"
         if self.taille_logement:
             result += "Logement de "
             result += str(self.taille_logement)
