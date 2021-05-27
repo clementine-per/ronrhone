@@ -13,7 +13,6 @@ from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisa
 from gestion_association.models.animal import Animal, statuts_association
 from gestion_association.models.famille import Famille, StatutAccueil, Accueil
 
-
 @login_required
 def index(request):
     selected = "accueil"
