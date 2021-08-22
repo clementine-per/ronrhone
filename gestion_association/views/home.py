@@ -91,7 +91,7 @@ def index(request):
     #Taux de remplissage
     familles_occupees =  Famille.objects.filter(animal__isnull=False).distinct().count()
     total_familles = Famille.objects.filter(statut__in=('DISPONIBLE','INDISPONIBLE','OCCUPE')).count()
-    if total_familles > 1:
+    if total_familles > 0:
         taux_remplissage = int((familles_occupees/total_familles) * 100)
 
     return render(request, "gestion_association/home.html", locals())

@@ -5,9 +5,8 @@
 <h1> Adoption par {{person.prenom}} {{person.nom}} </h1>
 <br>
 
-<form method="post" action="">
+<form method="post" action="" novalidate>
    {% csrf_token %}
-	{{ adoption_form.media }}
    {% include 'gestion_association/adoption/adoption_base_form.html' %}
    <div class="row">
    	<div class="col">

@@ -34,6 +34,7 @@ class StatutAnimal(Enum):
     PERDU = "Perdu"
     DECEDE = "Décédé"
     RENDU = "Rendu à ses propriétaires"
+    RELACHE = "Relâché"
 
 
 statuts_association = [
