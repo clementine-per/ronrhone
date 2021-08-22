@@ -7,6 +7,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.dateparse import parse_date
 from django.db.models import Q
 from django.views.generic import CreateView, UpdateView
+from rest_framework import viewsets
 
 from gestion_association.forms import PreferenceForm
 from gestion_association.forms.animal import (
@@ -18,6 +19,7 @@ from gestion_association.forms.animal import (
 )
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal
+from gestion_association.serializers import AnimalSerializer
 
 
 @login_required()
@@ -155,3 +157,8 @@ class UpdateSante(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
+
+class AnimalViewSet(viewsets.ModelViewSet):
+
+    queryset = Animal.objects.all()
+    serializer_class = AnimalSerializer

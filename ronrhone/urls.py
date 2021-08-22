@@ -16,10 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
+from rest_framework import routers
+
+# Routers provide an easy way of automatically determining the URL conf.
+from gestion_association.views.animal import AnimalViewSet
+
+router = routers.DefaultRouter()
+router.register(r'animals', AnimalViewSet)
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="accueil")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/ronRhonE1901", admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include(router.urls)),
     path("ronrhone/", include("gestion_association.urls")),
 ]
