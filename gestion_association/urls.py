@@ -157,6 +157,11 @@ urlpatterns = [
         famille.end_accueil,
         name="end_accueil",
     ),
+    path(
+        "familles/select_animal/<int:pk>/",
+        famille.select_animal_form,
+        name="famille_select_animal",
+    ),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
 ]

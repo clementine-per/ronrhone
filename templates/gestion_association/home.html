@@ -9,7 +9,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-3">Adoptions</div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_proposer}}</strong> animaux à mettre à l'adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE"><strong>{{a_proposer}}</strong> animaux à mettre à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong> animaux à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?acompte_verse=NON"><strong>{{acomptes}}</strong> adoptions en attente d'acompte</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON&acompte_verse=OUI">

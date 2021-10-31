@@ -13,6 +13,7 @@ from django.forms import (
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association
+from gestion_association.widgets import TableSelectMultiple
 
 
 class DateInput(DateInput):
@@ -175,3 +176,19 @@ class AnimalSanteUpdateForm(ModelForm):
         self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
+
+class AnimalSelectForFaForm(Form):
+    animaux = ModelMultipleChoiceField(
+        queryset=Animal.objects.filter(statut__in=statuts_association).filter(famille__isnull=True),
+        widget=TableSelectMultiple(
+            item_attrs=[
+                'nom',
+                ('get_statut_display', "Statut"),
+                'preference',
+
+            ],
+            enable_shift_select=True,
+            enable_datatables=True,
+            bootstrap_style=True,
+        ), required=False
+    )

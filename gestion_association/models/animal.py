@@ -80,6 +80,19 @@ class Preference(models.Model):
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
 
+    def __str__(self):
+        preferences = "Nécéssités : \n"
+        if self.quarantaine == OuiNonChoice.OUI.name:
+            preferences += "Quarantaine \n"
+        if self.biberonnage == OuiNonChoice.OUI.name:
+            preferences += "Biberonnage \n"
+        if self.exterieur == OuiNonChoice.OUI.name:
+            preferences += "Extérieur \n"
+        if self.sociabilisation == OuiNonChoice.OUI.name:
+            preferences += "Sociabilisation \n"
+
+        return preferences
+
 
 class Animal(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)

@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, View
 
 from gestion_association.forms import PreferenceForm
+from gestion_association.forms.animal import AnimalSelectForFaForm
 from gestion_association.forms.famille import (
     FamilleAccueilUpdateForm,
     FamilleCreateForm,
@@ -22,7 +23,7 @@ from gestion_association.forms.famille import (
     FamilleSearchForm,
     IndisponibiliteForm,
     SelectFamilleForm,
-    AccueilUpdateForm)
+    AccueilForm)
 from gestion_association.models.animal import Animal, statuts_association
 from gestion_association.models.famille import Famille, Indisponibilite, Accueil, StatutFamille, StatutAccueil
 from gestion_association.models.person import Person
@@ -143,14 +144,14 @@ def update_accueil(request, pk):
     title = "Mise à jour d'un accueil"
 
     if request.method == "POST":
-        form = AccueilUpdateForm(request.POST, instance=accueil)
+        form = AccueilForm(request.POST, instance=accueil)
         if form.is_valid():
             # La sauvegarde de l'accueil gère toutes les conséquences éventuelles
             form.save()
 
             return redirect("detail_famille", pk=famille.id)
     else:
-        form = AccueilUpdateForm(instance=accueil)
+        form = AccueilForm(instance=accueil)
 
     return render(request, "gestion_association/famille/accueil_update_form.html", locals())
 
@@ -310,3 +311,30 @@ class FamilleCandidateAPIView(LoginRequiredMixin, View):
         response = HttpResponse(json.dumps(context), content_type="application/json")
         response.status_code = 200
         return response
+
+
+@login_required()
+def select_animal_form(request, pk):
+    itle = "Création d'un accueil"
+    famille = Famille.objects.get(id=pk)
+    if request.method == "POST":
+        animal_form = AnimalSelectForFaForm(data=request.POST)
+        accueil_form = AccueilForm(data=request.POST)
+
+        if animal_form.is_valid() and accueil_form.is_valid():
+            # Un accueil par animal
+            date_debut = accueil_form.cleaned_data["date_debut"]
+            date_fin = accueil_form.cleaned_data["date_fin"]
+            commentaire = accueil_form.cleaned_data["commentaire"]
+            for animal in animal_form.cleaned_data['animaux']:
+                accueil = Accueil.objects.create(animal=animal, famille=famille, date_debut=date_debut,
+                                                 date_fin=date_fin, commentaire=commentaire)
+                accueil.famille = famille
+                accueil.animal = animal
+                accueil.save()
+            famille.statut = StatutFamille.OCCUPE.name
+            return redirect("detail_famille", pk=famille.id)
+    else:
+        animal_form = AnimalSelectForFaForm()
+        accueil_form = AccueilForm()
+    return render(request, "gestion_association/famille/famille_select_animal_form.html", locals())

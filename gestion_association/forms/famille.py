@@ -106,18 +106,21 @@ class IndisponibiliteForm(ModelForm):
         return date_fin
 
 
-class AccueilUpdateForm(ModelForm):
+class AccueilForm(ModelForm):
+    required_css_class = 'required'
+
     class Meta:
         model = Accueil
         fields = ("date_debut","date_fin","commentaire")
 
     def __init__(self, *args, **kwargs):
-        super(AccueilUpdateForm, self).__init__(*args, **kwargs)
+        super(AccueilForm, self).__init__(*args, **kwargs)
         self.fields['date_debut'].widget.attrs['class'] = 'datePicker'
         self.fields['date_fin'].widget.attrs['class'] = 'datePicker'
 
 
 class SelectFamilleForm(Form):
+
     date_debut = DateField(label="Date de début")
     animaux = ModelMultipleChoiceField(
         widget=CheckboxSelectMultiple, queryset=Animal.objects.none()
