@@ -231,7 +231,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <strong> Animaux liés </strong> : {% for liaison in animal.animaux_lies.all %} <a href= "{% url 'detail_animal' liaison.id %}">{{liaison.nom}}</a>, {% endfor %} <br>
+                        <strong> Animaux liés </strong> : {% for liaison in animal.get_animaux_lies %} <a href= "{% url 'detail_animal' liaison.id %}">{{liaison.nom}}</a>, {% endfor %} <br>
                     </div>
                 </div>
                 <div class="row">

@@ -93,6 +93,10 @@ class Preference(models.Model):
 
         return preferences
 
+class AnimalGroup(models.Model):
+    # Groupes d'animaux par foreign key sur animal
+    pass
+
 
 class Animal(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
@@ -175,7 +179,7 @@ class Animal(models.Model):
     commentaire = models.CharField(max_length=1000, blank=True)
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
-    animaux_lies = models.ManyToManyField("self", verbose_name="Animaux liés", blank=True)
+    groupe = models.ForeignKey(AnimalGroup, on_delete=models.CASCADE, blank=True, null=True)
     commentaire_animaux_lies = models.CharField(max_length=1000, blank=True)
     tranche_age = models.CharField(
         max_length=10,
@@ -243,6 +247,17 @@ class Animal(models.Model):
             return "Oui"
         else:
             return "Non"
+
+    def get_animaux_lies_str(self):
+        result = ""
+        for animal in self.groupe.animal_set.all():
+            if animal != self :
+                result += animal.nom + " "
+        return result
+
+    def get_animaux_lies(self):
+        if self.groupe:
+            return self.groupe.animal_set.exclude(id=self.pk)
 
     def is_sterilise(self):
         return self.sterilise == OuiNonChoice.OUI.name

@@ -100,30 +100,19 @@ class AnimalCreateForm(ModelForm):
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
 
 
-class AnimalLinkedForm(ModelForm):
+class AnimalOtherInfosForm(ModelForm):
     # Pour mettre les champs obligatoires en gras
     required_css_class = 'required'
     class Meta:
         model = Animal
-        fields = ("animaux_lies","tranche_age","commentaire_animaux_lies")
+        fields = ("tranche_age","commentaire_animaux_lies")
 
-    animaux_lies = ModelMultipleChoiceField(
+class AnimalSelectForm(Form):
+    animaux = ModelMultipleChoiceField(
         required=False,
-        widget=SelectMultiple(attrs={'class':"selectpicker"}),
-        queryset=Animal.objects.none(),
+        widget=SelectMultiple(attrs={'class': "selectpicker"}),
+        queryset=Animal.objects.all(),
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["animaux_lies"].queryset = Animal.objects.filter(
-            statut__in=[
-                StatutAnimal.A_ADOPTER.name,
-                StatutAnimal.QUARANTAINE.name,
-                StatutAnimal.SEVRAGE.name,
-                StatutAnimal.SOCIA.name,
-                StatutAnimal.SOIN.name,
-            ]
-        ).exclude(pk=self.instance.id).order_by('nom')
 
 
 class AnimalInfoUpdateForm(ModelForm):
@@ -185,6 +174,7 @@ class AnimalSelectForFaForm(Form):
                 'nom',
                 ('get_statut_display', "Statut"),
                 'preference',
+                ('get_animaux_lies_str', "Animaux liés"),
 
             ],
             enable_shift_select=True,

@@ -13,12 +13,12 @@ from gestion_association.forms import PreferenceForm
 from gestion_association.forms.animal import (
     AnimalCreateForm,
     AnimalInfoUpdateForm,
-    AnimalLinkedForm,
+    AnimalOtherInfosForm,
     AnimalSanteUpdateForm,
-    AnimalSearchForm,
+    AnimalSearchForm, AnimalSelectForm,
 )
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import Animal
+from gestion_association.models.animal import Animal, AnimalGroup, statuts_association
 from gestion_association.serializers import AnimalSerializer
 
 
@@ -131,14 +131,37 @@ def update_preference(request, pk):
     title = "Modification des préférences de " + animal.nom
     if request.method == "POST":
         preference_form = PreferenceForm(data=request.POST, instance=animal.preference)
-        animal_linked_form = AnimalLinkedForm(data=request.POST, instance=animal)
-        if preference_form.is_valid() and animal_linked_form.is_valid():
+        animal_other_form = AnimalOtherInfosForm(data=request.POST, instance=animal)
+        animal_group_form = AnimalSelectForm(data=request.POST)
+        if preference_form.is_valid() and animal_other_form.is_valid() and animal_group_form.is_valid():
             preference_form.save()
-            animal_linked_form.save()
+            animal_other_form.save()
+            set_groups = set([])
+            set_animals = set([])
+            if animal_group_form.cleaned_data['animaux']:
+                new_group = AnimalGroup.objects.create()
+                for animal_select in animal_group_form.cleaned_data['animaux']:
+                    if animal_select.groupe:
+                        set_groups.add(animal_select.groupe)
+                    set_animals.add(animal_select)
+                    animal_select.groupe = new_group
+                    animal_select.save()
+                set_groups.add(animal.groupe)
+                set_animals.add(animal)
+                animal.groupe = new_group
+                animal.save()
+                for group in set_groups:
+                    group.delete()
+                new_group.save()
+
             return redirect("detail_animal", pk=pk)
     else:
         preference_form = PreferenceForm(instance=animal.preference)
-        animal_linked_form = AnimalLinkedForm(instance=animal)
+        animal_other_form = AnimalOtherInfosForm(instance=animal)
+        animal_group_form = AnimalSelectForm()
+        animal_group_form.fields['animaux'].queryset = Animal.objects.filter\
+            (statut__in=statuts_association).exclude(id=pk)
+
     return render(request, "gestion_association/animal/preference_form.html", locals())
 
 
