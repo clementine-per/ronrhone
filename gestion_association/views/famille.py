@@ -172,7 +172,7 @@ def famille_select_for_animal(request, pk):
     data = request.POST.get("famille")
 
     form = SelectFamilleForm(request.POST)
-    animals_queryset = animal.animaux_lies.get_queryset() | Animal.objects.filter(id=pk)
+    animals_queryset = animal.get_animaux_lies() | Animal.objects.filter(id=pk)
     form.fields["animaux"].queryset = animals_queryset
     form.fields["famille"].queryset = Famille.objects.exclude(statut="INACTIVE")
     animals = animals_queryset.all()
