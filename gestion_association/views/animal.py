@@ -143,16 +143,19 @@ def update_preference(request, pk):
                 for animal_select in animal_group_form.cleaned_data['animaux']:
                     if animal_select.groupe:
                         set_groups.add(animal_select.groupe)
-                    set_animals.add(animal_select)
                     animal_select.groupe = new_group
                     animal_select.save()
-                set_groups.add(animal.groupe)
-                set_animals.add(animal)
                 animal.groupe = new_group
                 animal.save()
-                for group in set_groups:
-                    group.delete()
                 new_group.save()
+            else :
+                for animal_select in animal.groupe.animal_set.all():
+                    if animal_select.groupe:
+                        set_groups.add(animal_select.groupe)
+                    animal_select.groupe = None
+                    animal_select.save()
+            for group in set_groups:
+                group.delete()
 
             return redirect("detail_animal", pk=pk)
     else:

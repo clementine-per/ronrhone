@@ -278,13 +278,15 @@ def json_error_400(field, message):
 class FamilleCandidateAPIView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         animal = Animal.objects.get(id=pk)
-        animaux_candidats = [animal, *animal.get_animaux_lies().all()]
+        animaux_candidats = [animal]
+        if animal.get_animaux_lies():
+            animaux_candidats = [animal, *animal.get_animaux_lies().all()]
         try:
             data = json.loads(request.body)
         except ValueError:
             return json_error_400("body", "Invalid JSON request.")
 
-        animaux_selectionnes = [a for a in animaux_candidats if a.pk in data.get("animaux", [])]
+        animaux_selectionnes = [a for a in animaux_candidats if a.id in data.get("animaux", [])]
         date_debut = data.get("date_debut")
 
         if date_debut:
