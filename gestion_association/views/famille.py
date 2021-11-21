@@ -278,7 +278,7 @@ def json_error_400(field, message):
 class FamilleCandidateAPIView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         animal = Animal.objects.get(id=pk)
-        animaux_candidats = [animal, *animal.animaux_lies.get_queryset().all()]
+        animaux_candidats = [animal, *animal.get_animaux_lies.all()]
         try:
             data = json.loads(request.body)
         except ValueError:
