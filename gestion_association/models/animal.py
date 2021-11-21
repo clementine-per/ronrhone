@@ -250,9 +250,10 @@ class Animal(models.Model):
 
     def get_animaux_lies_str(self):
         result = ""
-        for animal in self.groupe.animal_set.all():
-            if animal != self :
-                result += animal.nom + " "
+        if self.groupe:
+            for animal in self.groupe.animal_set.all():
+                if animal != self :
+                    result += animal.nom + " "
         return result
 
     def get_animaux_lies(self):

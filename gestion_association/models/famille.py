@@ -52,12 +52,12 @@ class Famille(models.Model):
     )
     commentaire = models.CharField(max_length=1000, blank=True)
     taille_logement = models.IntegerField(
-        null=True, verbose_name="Taille du logement (en mètres carrés)"
+        null=True, blank=True, verbose_name="Taille du logement (en mètres carrés)"
     )
     longue_duree = models.CharField(
         max_length=3,
         default="OUI",
-        verbose_name="Accepte les acceuils de longue durée",
+        verbose_name="Accepte les accueils de longue durée",
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
     nb_places = models.IntegerField(verbose_name="Nombre de places")

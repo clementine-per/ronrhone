@@ -28,6 +28,8 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['date'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_visite'].widget.attrs['class'] = 'datePicker'
         self.fields["personne_visite"].queryset = Person.objects.filter(is_benevole=True).order_by('nom')
 
 
