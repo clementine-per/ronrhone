@@ -107,7 +107,7 @@ def search_animal(request):
 
 @login_required()
 def create_animal(request):
-    title = "Créer une famille"
+    title = "Créer un animal"
     if request.method == "POST":
         animal_form = AnimalCreateForm(data=request.POST)
         preference_form = PreferenceForm(data=request.POST)
