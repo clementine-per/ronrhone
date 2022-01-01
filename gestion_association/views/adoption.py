@@ -106,6 +106,7 @@ def search_adoption(request):
 
     # Pagination : 20 éléments par page
     paginator = Paginator(adoptions.order_by("-date"), 20)
+    nb_results = adoptions.count()
     try:
         page = request.GET.get("page")
         if not page:

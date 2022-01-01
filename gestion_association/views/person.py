@@ -86,6 +86,7 @@ def person_list(request):
             person_list = person_list.filter(nom__icontains=nom_form)
     # Pagination : 10 éléments par page
     paginator = Paginator(person_list.order_by("-date_mise_a_jour"), 10)
+    nb_results = person_list.count()
     try:
         page = request.GET.get("page")
         if not page:

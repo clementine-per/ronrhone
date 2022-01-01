@@ -126,6 +126,7 @@ def famille_list(request):
 
     # Pagination : 10 éléments par page
     paginator = Paginator(famille_list.order_by("-date_mise_a_jour"), 10)
+    nb_results = famille_list.count()
     try:
         page = request.GET.get("page")
         if not page:

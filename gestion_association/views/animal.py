@@ -94,6 +94,7 @@ def search_animal(request):
 
     # Pagination : 20 éléments par page
     paginator = Paginator(animals.order_by("-date_mise_a_jour"), 20)
+    nb_results = animals.count()
     try:
         page = request.GET.get("page")
         if not page:

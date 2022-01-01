@@ -1,4 +1,5 @@
 {% extends "gestion_association/base.html" %}
+{% load tag %}
 {% block content %}
 <div class="row p-4">
     <div class="col-sm-12 mt-3">
@@ -25,7 +26,9 @@
                         {{ form.type_person }}
                     </div>
                 </div>
+
                 <div class="text-right">
+                    <a href="{% url 'persons' %}" class="btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
                     <button class="btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
                 </div>
             </div>
@@ -33,7 +36,7 @@
         </div>
     </div>
 </div>
-
+{{nb_results}} résultat(s)
 <div class="table-responsive-sm p-4">
     <table class="table table-sm">
         <thead>
@@ -69,14 +72,14 @@
     </table>
     <div class="pagination">
         {% if persons.has_previous %}
-        <a href="{% url 'persons'%}?page={{ persons.previous_page_number}}">Précédente</a> -
+        <a href="?{% param_replace page=persons.previous_page_number%}">Précédente</a> -
         {% endif %}
 
         <span class="current">
             Page {{ persons.number }} sur {{ persons.paginator.num_pages }}
         </span>
         {% if persons.has_next %}
-        - <a href="{% url 'persons'%}?page={{ persons.next_page_number}}">Suivante</a>
+        - <a href="?{% param_replace page=persons.next_page_number%}">Suivante</a>
         {% endif %}
     </div>
     <div class="text-right">

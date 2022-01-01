@@ -77,6 +77,7 @@ class AnimalCreateForm(ModelForm):
             "statut",
             "sterilise",
             "date_sterilisation",
+            "type_vaccin",
             "primo_vaccine",
             "vaccin_ok",
             "date_dernier_vaccin",
@@ -147,6 +148,7 @@ class AnimalSanteUpdateForm(ModelForm):
         fields = (
             "sterilise",
             "date_sterilisation",
+            "type_vaccin",
             "primo_vaccine",
             "vaccin_ok",
             "date_dernier_vaccin",

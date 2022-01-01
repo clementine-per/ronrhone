@@ -87,6 +87,7 @@
                     </div>
                 </div>
                 <div class="text-right">
+                    <a href="{% url 'animals' %}" class="btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
                     <button class="btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
                 </div>
             </div>
@@ -94,7 +95,7 @@
         </div>
     </div>
 </div>
-
+{{nb_results}} résultat(s)
 <div class="table-responsive-sm p-4">
     <table class="table table-sm">
         <thead>

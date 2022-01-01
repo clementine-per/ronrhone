@@ -21,6 +21,11 @@ class SexeChoice(Enum):
     NI = "Non identifié"
 
 
+class TypeVaccinChoice(Enum):
+    TC = "TC"
+    TCL = "TCL"
+
+
 class StatutAnimal(Enum):
     A_ADOPTER = "A l'adoption"
     ADOPTABLE = "Adoptable"
@@ -146,6 +151,12 @@ class Animal(models.Model):
         default="NON",
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
+    type_vaccin = models.CharField(
+        max_length=3,
+        verbose_name="Type de vaccin",
+        default="TC",
+        choices=[(tag.name, tag.value) for tag in TypeVaccinChoice],
+    )
     date_dernier_vaccin = models.DateField(
         verbose_name="Date du dernier rappel de vaccin", null=True, blank=True
     )
@@ -228,7 +239,7 @@ class Animal(models.Model):
     def get_vaccin_str(self):
         if self.date_dernier_vaccin:
             return (
-                "Oui "
+                self.type_vaccin + " "
                 + " (dernier rappel le "
                 + self.date_dernier_vaccin.strftime("%d/%m/%Y")
                 + " )"
@@ -236,7 +247,7 @@ class Animal(models.Model):
         elif (
             self.primo_vaccine == OuiNonChoice.OUI.name or self.vaccin_ok == OuiNonChoice.OUI.name
         ):
-            return "Oui"
+            return self.type_vaccin
         else:
             return "Non"
 
