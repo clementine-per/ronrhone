@@ -40,6 +40,7 @@ class StatutAnimal(Enum):
     DECEDE = "Décédé"
     RENDU = "Rendu à ses propriétaires"
     RELACHE = "Relâché"
+    PEC = "Prendre en charge"
 
 
 statuts_association = [
