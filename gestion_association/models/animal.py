@@ -196,7 +196,7 @@ class Animal(models.Model):
                 today = timezone.now().date()
                 twelve_months = today - timedelta(days=12 * 30)
                 senior = today - timedelta(days=30 * 12 * 10)
-                date_naissance = self.date_naissance
+                date_naissance = self.date_naissance.date()
                 if date_naissance > twelve_months:
                     self.tranche_age = TrancheAge.ENFANT.name
                 elif date_naissance > senior:
