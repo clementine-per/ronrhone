@@ -56,7 +56,7 @@ class AnimalSearchForm(Form):
     statuts = MultipleChoiceField(
         choices=[(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
-        initial=[tag.name for tag in StatutAnimal],
+        initial=statuts_association,
         widget=SelectMultiple(attrs={'class':"selectpicker"})
     )
 

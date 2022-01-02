@@ -26,6 +26,18 @@ class PersonResource(ModelResource):
         fields = ('nom', 'prenom','nom_prenom_key', 'code_postal', 'adresse','ville','telephone','is_famille')
 
 
+class FamilleResource(ModelResource):
+    personne = Field(column_name='nom_prenom_key', attribute='personne',
+                         widget=ForeignKeyWidget(Person, 'nom_prenom_key'))
+
+    class Meta:
+        model = Famille
+
+    def before_save_instance(self, instance, using_transactions, dry_run):
+        preference = Preference.objects.create()
+        instance.preference = preference
+        return instance
+
 
 class AdoptionResource(ModelResource):
     adoptant = Field(column_name='nom_prenom_key', attribute='adoptant',
@@ -100,7 +112,7 @@ class PreferenceAdmin(ImportExportModelAdmin):
 
 @admin.register(Famille)
 class FamilleAdmin(ImportExportModelAdmin):
-    pass
+    resource_class = FamilleResource
 
 
 @admin.register(TarifAdoption)

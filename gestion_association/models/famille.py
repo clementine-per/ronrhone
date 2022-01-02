@@ -72,6 +72,7 @@ class Famille(models.Model):
         choices=[(tag.name, tag.value) for tag in TypeChoice],
     )
     autres_animaux = models.CharField(max_length=1000, blank=True, verbose_name="Animaux de la FA ")
+    enfants = models.CharField(max_length=100, blank=True, verbose_name="Enfants de moins de 12 ans")
     nb_heures_absence = models.IntegerField(
         null=True,
         blank=True,
