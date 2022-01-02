@@ -39,6 +39,17 @@ class FamilleResource(ModelResource):
         return instance
 
 
+class AccueilResource(ModelResource):
+    famille = Field(column_name='famille', attribute='famille',
+                         widget=ForeignKeyWidget(Famille, 'id'))
+    animal = Field(column_name='nom_animal', attribute='animal',
+                   widget=ForeignKeyWidget(Animal, 'nom'))
+
+    class Meta:
+        model = Accueil
+
+
+
 class AdoptionResource(ModelResource):
     adoptant = Field(column_name='nom_prenom_key', attribute='adoptant',
                          widget=ForeignKeyWidget(Person, 'nom_prenom_key'))
@@ -137,4 +148,4 @@ class IndisponibiliteAdmin(ImportExportModelAdmin):
 
 @admin.register(Accueil)
 class AccueilAdmin(ImportExportModelAdmin):
-    pass
+    resource_class = AccueilResource
