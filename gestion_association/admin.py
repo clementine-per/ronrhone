@@ -23,7 +23,7 @@ class PersonResource(ModelResource):
     class Meta:
         model = Person
         import_id_fields = ('nom_prenom_key',)
-        fields = ('nom', 'prenom','nom_prenom_key', 'code_postal', 'adresse','ville','telephone','is_famille')
+        fields = ('nom', 'prenom','nom_prenom_key', 'code_postal', 'adresse','ville','telephone','is_famille','is_adoptante')
 
 
 class FamilleResource(ModelResource):

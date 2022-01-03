@@ -156,7 +156,7 @@ class ShowBonForm(Form):
 class BonSterilisationForm(ModelForm):
     class Meta:
         model = BonSterilisation
-        fields = ("date_max", "envoye", "utilise", "date_utilisation")
+        fields = ("date_max", "envoye", "utilise", "date_utilisation", "veterinaire")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -115,6 +115,7 @@ class BonSterilisation(models.Model):
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
     date_utilisation = models.DateField(verbose_name="Date d'utilisation", null=True, blank=True)
+    veterinaire = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         result = "Bon de stérilisation "
