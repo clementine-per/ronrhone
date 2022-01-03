@@ -80,6 +80,7 @@ class AdoptionResource(ModelResource):
 
     class Meta:
         model = Adoption
+        import_id_fields = ('id',)
         widgets = {
             'date': {'format': '%d/%m/%Y'},
         }
