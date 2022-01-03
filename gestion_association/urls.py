@@ -61,6 +61,28 @@ urlpatterns = [
         ),
         name="detail_person",
     ),
+    # Adhésions
+    path(
+        "persons/adhesion/update/<int:pk>/",
+        person.UpdateAdhesion.as_view(),
+        name="update_adhesion",
+    ),
+    path(
+        "persons/adhesion/create/<int:pk>/",
+        person.create_adhesion,
+        name="create_adhesion",
+    ),
+    # Parrainages
+    path(
+        "persons/parrainage/update/<int:pk>/",
+        animal.UpdateParrainage.as_view(),
+        name="update_parrainage",
+    ),
+    path(
+        "persons/parrainage/create/<int:pk>/",
+        animal.create_parrainage,
+        name="create_parrainage",
+    ),
     # Adoptions
     path("adoptions/", adoption.search_adoption, name="adoptions"),
     path("adoption/<int:pk>/", adoption.index, name="adoption"),

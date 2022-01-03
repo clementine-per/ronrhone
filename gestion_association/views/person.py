@@ -5,8 +5,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 
-from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm
-from gestion_association.models.person import Person
+from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm, AdhesionForm
+from gestion_association.models.person import Person, Adhesion
 
 
 class CreatePerson(LoginRequiredMixin, CreateView):
@@ -57,6 +57,39 @@ class BenevolePerson(LoginRequiredMixin, UpdateView):
         return context
 
 
+class UpdateAdhesion(LoginRequiredMixin, UpdateView):
+    model = Adhesion
+    form_class = AdhesionForm
+    template_name = "gestion_association/person/adhesion_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_person", kwargs={"pk": self.object.personne.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateAdhesion, self).get_context_data(**kwargs)
+        context['title'] = "Mise à jour de l'adhésion"
+        return context
+
+@login_required
+def create_adhesion(request, pk):
+    person = Person.objects.get(id=pk)
+    title = "Adhesion de " + person.prenom + " " + person.nom
+    if request.method == "POST":
+        form = AdhesionForm(data=request.POST)
+        if form.is_valid():
+            adhesion = form.save(commit=False)
+            adhesion.personne = person
+            person.is_adherent = True
+            adhesion.save()
+            person.save()
+            return redirect("detail_person", pk=person.id)
+
+    else:
+        form = AdhesionForm()
+
+    return render(request, "gestion_association/person/adhesion_form.html", locals())
+
+
 @login_required
 def person_list(request):
     title = "Liste des personnes"
@@ -77,6 +110,12 @@ def person_list(request):
             form.fields["type_person"].initial = type_person_form
             if type_person_form == "ADOPTANTE":
                 person_list = person_list.filter(is_adoptante=True)
+            if type_person_form == "ADHERENT":
+                person_list = person_list.filter(is_adherent=True)
+            if type_person_form == "PARRAIN":
+                person_list = person_list.filter(is_parrain=True)
+            if type_person_form == "ANCIEN_PROPRIO":
+                person_list = person_list.filter(is_ancien_proprio=True)
             if type_person_form == "FA":
                 person_list = person_list.filter(is_famille=True)
             if type_person_form == "BENEVOLE":

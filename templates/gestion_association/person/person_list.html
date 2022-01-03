@@ -60,6 +60,15 @@
                 {% if person.is_benevole %}
                 <div class="role benevole">Bénévole</div>
                 {% endif %}
+                {% if person.is_adherent %}
+                <div class="role benevole">Adhérent</div>
+                {% endif %}
+                {% if person.is_parrain %}
+                <div class="role benevole">Parrainage</div>
+                {% endif %}
+                {% if person.is_ancien_proprio %}
+                <div class="role ancien">Ancien propriétaire</div>
+                {% endif %}
                 {% if person.is_adoptante %}
                 <div class="role adoptant">Adoptant</div>
                 {% endif %}

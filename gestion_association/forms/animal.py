@@ -12,7 +12,7 @@ from django.forms import (
     SelectMultiple)
 
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association
+from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association, Parrainage
 from gestion_association.widgets import TableSelectMultiple
 
 
@@ -184,3 +184,25 @@ class AnimalSelectForFaForm(Form):
             bootstrap_style=True,
         ), required=False
     )
+
+
+class ParrainageForm(ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = Parrainage
+        fields = (
+            "date_debut",
+            "date_fin",
+            "animal",
+            "type_paiement",
+            "montant"
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(ParrainageForm, self).__init__(*args, **kwargs)
+        self.fields['animal'].queryset = Animal.objects.filter(statut__in=statuts_association)
+        self.fields['date_debut'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_fin'].widget.attrs['class'] = 'datePicker'
+
+

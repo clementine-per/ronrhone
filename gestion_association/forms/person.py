@@ -1,7 +1,7 @@
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import CharField, ChoiceField, Form, ModelForm, Select
 
-from gestion_association.models.person import Person, TypePersonChoice
+from gestion_association.models.person import Person, TypePersonChoice, Adhesion
 
 
 class PersonSearchForm(Form):
@@ -42,3 +42,15 @@ class BenevoleForm(ModelForm):
     class Meta:
         model = Person
         fields = ("commentaire_benevole",)
+
+
+class AdhesionForm(ModelForm):
+    # Pour mettre les champs obligatoires en gras
+    required_css_class = 'required'
+    class Meta:
+        model = Adhesion
+        fields = ("date","montant","commentaire",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].widget.attrs['class'] = 'datePicker'

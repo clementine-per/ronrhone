@@ -86,6 +86,7 @@
             <th scope="col" style="width:15%;">Personne</th>
             <th scope="col" >Nombre de places</th>
             <th scope="col">Détail des accueils acceptés</th>
+            <th scope="col">Commentaire</th>
             <th scope="col">Sociabilisation</th>
             <th scope="col">Animaux accueillis</th>
             <th scope="col">Animaux de la FA</th>
@@ -100,6 +101,7 @@
             <td>{{famille.personne}}</td>
             <td>{{famille.get_nb_places_str}}</td>
             <td>{{famille.detail_places}}</td>
+            <td>{{famille.commentaire}}</td>
             <td>{{famille.preference.get_sociabilisation_display}}</td>
             <td>{% for animal in famille.animal_set.all %}{{animal.nom}}<br>{% endfor %}</td>
             <td>{{famille.autres_animaux}}</td>

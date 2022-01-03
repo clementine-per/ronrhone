@@ -9,6 +9,9 @@ class TypePersonChoice(Enum):
     FA = "Famille d'accueil"
     ADOPTANTE = "Adoptante"
     BENEVOLE = "Bénévole"
+    ADHERENT = "Adhérent"
+    PARRAIN = "Parrain"
+    ANCIEN_PROPRIO = "Ancien propriétaire"
 
 
 class Person(models.Model):
@@ -38,6 +41,9 @@ class Person(models.Model):
     is_famille = models.BooleanField(default=False, verbose_name="Famille d'accueil")
     is_adoptante = models.BooleanField(default=False, verbose_name="Adoptante")
     is_benevole = models.BooleanField(default=False, verbose_name="Bénévole")
+    is_parrain = models.BooleanField(default=False, verbose_name="Parrainage")
+    is_adherent = models.BooleanField(default=False, verbose_name="Adhérent(e)")
+    is_ancien_proprio = models.BooleanField(default=False, verbose_name="Ancien propriétaire")
     commentaire_benevole = models.CharField(
         max_length=1000,
         blank=True,
@@ -52,3 +58,20 @@ class Person(models.Model):
 
     def has_role(self):
         return self.is_famille or self.is_benevole or self.is_adoptante
+
+
+class Adhesion(models.Model):
+    personne = models.ForeignKey(
+        Person,
+        verbose_name="Personne",
+        on_delete=models.PROTECT,
+    )
+    commentaire = models.CharField( max_length=500, blank=True,
+        verbose_name="Commentaire adhésion",
+    )
+    date = models.DateField(verbose_name="Date d'adhésion", blank=True, null=True)
+    montant = models.DecimalField(
+        verbose_name="Montant de la cotisation",
+        max_digits=5,
+        decimal_places=2,
+    )

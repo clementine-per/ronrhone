@@ -54,6 +54,11 @@ statuts_association = [
 ]
 
 
+class TypePaiementChoice(Enum):
+    MENSUEL = "Mensuel"
+    UNIQUE = "En une fois"
+
+
 class TrancheAge(Enum):
     ENFANT = "Enfant"
     ADULTE = "Adulte"
@@ -238,27 +243,26 @@ class Animal(models.Model):
         return self.nom
 
     def get_vaccin_str(self):
-        if self.date_dernier_vaccin:
+        #Primo vacciné
+        if self.primo_vaccine == OuiNonChoice.OUI.name and self.vaccin_ok == OuiNonChoice.NON.name:
             return (
                 self.type_vaccin + " "
-                + " (dernier rappel le "
-                + self.date_dernier_vaccin.strftime("%d/%m/%Y")
-                + " )"
+                + " Primo "
             )
         elif (
-            self.primo_vaccine == OuiNonChoice.OUI.name or self.vaccin_ok == OuiNonChoice.OUI.name
+            self.primo_vaccine == OuiNonChoice.OUI.name and self.vaccin_ok == OuiNonChoice.OUI.name
         ):
             return self.type_vaccin
         else:
             return "Non"
 
-    def get_sterilisation_str(self):
-        if self.date_sterilisation:
-            return "Oui" + " (en date du " + self.date_sterilisation.strftime("%d/%m/%Y") + " )"
-        elif self.sterilise == OuiNonChoice.OUI.name:
-            return "Oui"
-        else:
-            return "Non"
+    def get_tests_str(self):
+        result = ""
+        if self.fiv == OuiNonChoice.OUI.name:
+            result += "FIV "
+        if self.felv == OuiNonChoice.OUI.name:
+            result += "FELV"
+        return result
 
     def get_animaux_lies_str(self):
         result = ""
@@ -277,3 +281,21 @@ class Animal(models.Model):
 
     def is_adoptable(self):
         return self.statut == StatutAnimal.ADOPTABLE.name or self.statut == StatutAnimal.A_ADOPTER.name
+
+
+class Parrainage(models.Model):
+    date_debut = models.DateField(verbose_name="Date de début")
+    date_fin = models.DateField(verbose_name="Date de fin", blank=True, null=True)
+    personne = models.ForeignKey(Person, on_delete=models.PROTECT)
+    animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
+    type_paiement = models.CharField(
+        max_length=20,
+        verbose_name="Type de paiement",
+        default=TypePaiementChoice.MENSUEL.name,
+        choices=[(tag.name, tag.value) for tag in TypePaiementChoice],
+    )
+    montant = models.DecimalField(
+        verbose_name="Montant du parrainage",
+        max_digits=5,
+        decimal_places=2, blank=True, null=True
+    )

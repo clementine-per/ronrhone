@@ -15,10 +15,11 @@ from gestion_association.forms.animal import (
     AnimalInfoUpdateForm,
     AnimalOtherInfosForm,
     AnimalSanteUpdateForm,
-    AnimalSearchForm, AnimalSelectForm,
+    AnimalSearchForm, AnimalSelectForm, ParrainageForm,
 )
 from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import Animal, AnimalGroup, statuts_association
+from gestion_association.models.animal import Animal, AnimalGroup, statuts_association, Parrainage
+from gestion_association.models.person import Person
 from gestion_association.serializers import AnimalSerializer
 
 
@@ -186,7 +187,41 @@ class UpdateSante(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
-class AnimalViewSet(viewsets.ModelViewSet):
 
+class AnimalViewSet(viewsets.ModelViewSet):
     queryset = Animal.objects.all()
     serializer_class = AnimalSerializer
+
+
+class UpdateParrainage(LoginRequiredMixin, UpdateView):
+    model = Parrainage
+    form_class = ParrainageForm
+    template_name = "gestion_association/person/parrainage_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_person", kwargs={"pk": self.object.personne.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateParrainage, self).get_context_data(**kwargs)
+        context['title'] = "Mise à jour du parrainage"
+        return context
+
+
+@login_required
+def create_parrainage(request, pk):
+    person = Person.objects.get(id=pk)
+    title = "Nouveau parrainage pour " + person.prenom + " " + person.nom
+    if request.method == "POST":
+        form = ParrainageForm(data=request.POST)
+        if form.is_valid():
+            parrainage = form.save(commit=False)
+            parrainage.personne = person
+            person.is_parrain = True
+            parrainage.save()
+            person.save()
+            return redirect("detail_person", pk=person.id)
+
+    else:
+        form = ParrainageForm()
+
+    return render(request, "gestion_association/person/parrainage_form.html", locals())

@@ -60,6 +60,23 @@
                     </a>
                 </div>
                 {% endif %}
+                {% if person.is_adherent %}
+                <div class="role benevole mb-3" >
+                    Adhérent
+                </div>
+                {% endif %}
+                {% if person.is_parrain %}
+                <div class="role benevole mb-3" >
+                    Parrain
+
+                </div>
+                {% endif %}
+                {% if person.is_ancien_proprio %}
+                <div class="role ancien mb-3" >
+                    Ancien propriétaire :
+
+                </div>
+                {% endif %}
                 {% if person.is_benevole %}
                 <div class="role benevole mb-3">
                     Bénévole
@@ -99,11 +116,92 @@
                 {% if not person.is_famille %}
                 <a href= "{% url 'create_famille' person.id %}" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>
                 {% endif %}
+                <a href= "{% url 'create_parrainage' person.id %}" class="btn btn-outline-info btn-block ">Parrainage d'un animal</a>
+
+                <a href= "{% url 'create_adhesion' person.id %}" class="btn btn-outline-info btn-block ">Adhérer</a>
+
                 <a href= "{% url 'adoption_from_user' person.id %}" class="btn btn-outline-info btn-block ">Déclarer une adoption</a>
             </div>
         </div>
     </div>
+</div>{% if person.is_adherent %}
+<div class="row p-2">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Adhésions
+            </div>
+            <div class="table-responsive-sm p-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Montant</th>
+                            <th scope="col">Commentaire</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for adhesion in person.adhesion_set.all %}
+                        <tr class="table-info">
+                            <td>{{adhesion.date|default:" - "}}</td>
+                            <td>{{adhesion.montant|default:" - "}}</td>
+                            <td>{{adhesion.commentaire}} </td>
+                            <td>
+                                <a href= "{% url 'update_adhesion' adhesion.id %}" >
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+{% endif %}
+{% if person.is_parrain %}
+<div class="row p-2">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Parrainages
+            </div>
+            <div class="table-responsive-sm p-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date de début</th>
+                            <th scope="col">Date de fin</th>
+                            <th scope="col">Animal</th>
+                            <th scope="col">Type de paiement</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for parrainage in person.parrainage_set.all %}
+                        <tr class="table-info">
+                            <td>{{parrainage.date_debut}}</td>
+                            <td>{{parrainage.date_fin|default:" - "}}</td>
+                            <td><a href = "{% url 'detail_animal' parrainage.animal.id %}"> {{parrainage.animal.nom}}</a><br> </td>
+                            <td>{{parrainage.get_type_paiement_display}} </td>
+                            <td>
+                                <a href= "{% url 'update_parrainage' parrainage.id %}" >
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 
 {% endblock %}
