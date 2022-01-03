@@ -54,6 +54,8 @@ class AccueilResource(ModelResource):
 class AdoptionResource(ModelResource):
     adoptant = Field(column_name='nom_prenom_key', attribute='adoptant',
                          widget=ForeignKeyWidget(Person, 'nom_prenom_key'))
+    personne_visite = Field(column_name='nom_prenom_key_benevole', attribute='personne_visite',
+                     widget=ForeignKeyWidget(Person, 'nom_prenom_key'))
     animal = Field(column_name='nom_animal', attribute='animal',
                    widget=ForeignKeyWidget(Animal, 'nom'))
 
