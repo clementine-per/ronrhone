@@ -32,6 +32,7 @@ class FamilleResource(ModelResource):
 
     class Meta:
         model = Famille
+        import_id_fields = ('id',)
 
     def before_save_instance(self, instance, using_transactions, dry_run):
         preference = Preference.objects.create()
