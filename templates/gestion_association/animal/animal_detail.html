@@ -137,6 +137,8 @@
                         <i class="fas fa-pen"></i>
                     </a>
                 </div>
+                {% else %}
+                <a href= "{% url 'create_bon' animal.get_latest_adoption.id %}" class="mt-3 float-left btn btn-outline-info">Ajout d'un bon de stérilisation</a>
                 {% endif %}
                 <a href= "{% url 'adoption' animal.id %}" class="mt-3 float-right btn btn-outline-info">Ré-adoption</a>
             </div>

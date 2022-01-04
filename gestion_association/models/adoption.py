@@ -119,6 +119,8 @@ class BonSterilisation(models.Model):
 
     def __str__(self):
         result = "Bon de stérilisation "
+        if self.veterinaire:
+            result += "pour " + self.veterinaire + " "
         if self.envoye == "NON":
             return result + "demandé mais non envoyé."
         if self.utilise == "NON":

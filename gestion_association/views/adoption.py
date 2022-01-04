@@ -216,6 +216,24 @@ class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.adoption.animal.id})
 
+@login_required
+def create_bon_sterilisation(request, pk):
+    adoption = Adoption.objects.get(id=pk)
+    title = "Ajout d'un bon de stérilisation"
+    if request.method == "POST":
+        form = BonSterilisationForm(data=request.POST)
+        if form.is_valid():
+            bon = form.save(commit=False)
+            bon.adoption = adoption
+            bon.save()
+            adoption.save()
+            return redirect("detail_animal", pk=adoption.animal.id)
+
+    else:
+        form = BonSterilisationForm()
+
+    return render(request, "gestion_association/adoption/bon_form.html", locals())
+
 
 def get_montant_adoption(animal):
     # Méthode récupérant le montant de l'adoption à l'initialisation du formulaire
