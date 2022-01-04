@@ -14,6 +14,7 @@ class StatutFamille(Enum):
     A_VISITER = "A visiter"
     INDISPONIBLE = "Temporairement indisponible"
     INACTIVE = "Inactive"
+    ADHESION = "Attente adhésion"
 
 class StatutAccueil(Enum):
     EN_COURS = "En cours"

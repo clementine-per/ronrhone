@@ -245,15 +245,18 @@ class Animal(models.Model):
 
     def get_vaccin_str(self):
         #Primo vacciné
+        date_str = ""
+        if self.date_prochain_vaccin:
+            date_str = " rappel avant le " + self.date_prochain_vaccin.strftime("%d/%m/%Y")
         if self.primo_vaccine == OuiNonChoice.OUI.name and self.vaccin_ok == OuiNonChoice.NON.name:
             return (
                 self.type_vaccin + " "
-                + " Primo "
+                + " Primo " + date_str
             )
         elif (
             self.primo_vaccine == OuiNonChoice.OUI.name and self.vaccin_ok == OuiNonChoice.OUI.name
         ):
-            return self.type_vaccin
+            return self.type_vaccin + date_str
         else:
             return "Non"
 

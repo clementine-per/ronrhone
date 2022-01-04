@@ -47,6 +47,9 @@
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}date_prochain_vaccin_min={{today_str}}&date_prochain_vaccin_max={{interval_10_str}}">
                             <strong>{{vaccins}}</strong> animaux à vacciner dans les 10 jours
                         </a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}date_prochain_vaccin_max={{today_str}}">
+                            <strong>{{vaccins_retard}}</strong> animaux avec un retard de vaccin
+                        </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?bon_envoye=NON"><strong>{{bon_a_envoyer}}</strong> bons de stérilisation à envoyer</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?bon_utilise=NON&date_expiration_min={{today_str}}&date_expiration_max={{interval_10_str}}">
                             <strong>{{bon_a_utilise}}</strong> bons de stérilisation à utiliser dans les 10 jours

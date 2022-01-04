@@ -71,7 +71,9 @@ def index(request):
     # Vaccins à faire (10 jours)
     vaccins = Animal.objects.filter(statut__in=statuts_association).filter(date_prochain_vaccin__gte=today)\
         .filter(date_prochain_vaccin__lte=interval_10).count()
-
+    # Vaccins dépassés
+    vaccins_retard = Animal.objects.filter(statut__in=statuts_association).filter(date_prochain_vaccin__lte=today) \
+        .count()
     # Partie FA
     # Animaux en FA
     en_famille = Animal.objects.filter(famille__isnull=False).count()
