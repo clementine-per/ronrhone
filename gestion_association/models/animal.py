@@ -47,6 +47,7 @@ statuts_association = [
     StatutAnimal.A_ADOPTER.name,
     StatutAnimal.ADOPTION.name,
     StatutAnimal.ADOPTABLE.name,
+    StatutAnimal.PEC.name,
     StatutAnimal.SOCIA.name,
     StatutAnimal.QUARANTAINE.name,
     StatutAnimal.SOIN.name,

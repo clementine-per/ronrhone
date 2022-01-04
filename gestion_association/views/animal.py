@@ -151,11 +151,12 @@ def update_preference(request, pk):
                 animal.save()
                 new_group.save()
             else :
-                for animal_select in animal.groupe.animal_set.all():
-                    if animal_select.groupe:
-                        set_groups.add(animal_select.groupe)
-                    animal_select.groupe = None
-                    animal_select.save()
+                if animal.groupe:
+                    for animal_select in animal.groupe.animal_set.all():
+                        if animal_select.groupe:
+                            set_groups.add(animal_select.groupe)
+                        animal_select.groupe = None
+                        animal_select.save()
             for group in set_groups:
                 group.delete()
 
