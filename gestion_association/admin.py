@@ -59,24 +59,6 @@ class AdoptionResource(ModelResource):
     animal = Field(column_name='nom_animal', attribute='animal',
                    widget=ForeignKeyWidget(Animal, 'nom'))
 
-    def before_import_row(self, row, **kwargs):
-        # Encaissement
-        encaisse = row.get('encaisse')
-        # Si vide, pas encaissé
-        if encaisse == "":
-            row['montant_restant'] = row.get('montant')
-            row['acompte_verse'] =  "NON"
-        # Uniquement acompte
-        try:
-            if "acompte" in encaisse:
-                row['montant_restant'] = int(row.get('montant')) - 100
-                row['acompte_verse'] = "OUI"
-            else:
-                row['montant_restant'] = 0
-                row['acompte_verse'] = "OUI"
-        except TypeError:
-            row['montant_restant'] = 0
-            row['acompte_verse'] = "OUI"
 
 
 

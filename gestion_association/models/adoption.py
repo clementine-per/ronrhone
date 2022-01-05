@@ -78,24 +78,24 @@ class Adoption(models.Model):
 
     def save(self, *args, **kwargs):
         # Maj statut lors de la création de l'adoption
-        # if self._state.adding:
+        if self._state.adding:
         #     # Enlevé seulement pour l'import de données, à remettre apres
         #     # self.animal.statut = StatutAnimal.ADOPTION.name
-        #     self.animal.adoptant = self.adoptant
-        #     self.animal.save()
-        #     self.adoptant.is_adoptante = True
-        #     self.adoptant.save()
+            self.animal.adoptant = self.adoptant
+            self.animal.save()
+            self.adoptant.is_adoptante = True
+            self.adoptant.save()
         # # Maj statut si adoption payée et retirer de la FA
-        # if self.visite_controle == OuiNonChoice.NON.name and self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
+        if self.visite_controle == OuiNonChoice.NON.name and self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
         #     self.animal.statut = StatutAnimal.ADOPTE.name
-        #     if self.animal.famille:
-        #         famille = self.animal.famille
-        #         for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animal__pk=self.animal.id).all():
-        #             accueil.date_fin = timezone.now().date()
-        #             accueil.statut = StatutAccueil.TERMINE.name
-        #             accueil.save()
-        #         self.animal.famille = None
-        #     self.animal.save()
+            if self.animal.famille:
+                famille = self.animal.famille
+                for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(animal__pk=self.animal.id).all():
+                    accueil.date_fin = timezone.now().date()
+                    accueil.statut = StatutAccueil.TERMINE.name
+                    accueil.save()
+                self.animal.famille = None
+                self.animal.save()
         return super(Adoption, self).save(*args, **kwargs)
 
 
