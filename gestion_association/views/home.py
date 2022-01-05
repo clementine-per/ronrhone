@@ -10,7 +10,7 @@ from django.utils import timezone
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption, BonSterilisation, \
     OuiNonVisiteChoice
-from gestion_association.models.animal import Animal, statuts_association
+from gestion_association.models.animal import Animal, statuts_association, StatutAnimal
 from gestion_association.models.famille import Famille, StatutAccueil, Accueil
 
 @login_required
@@ -88,6 +88,10 @@ def index(request):
         .filter(indisponibilite__date_debut__lte=interval_10).count()
     # Animaux à déplacer manuellement (accueils arrivant à terme)
     accueils_a_deplacer = Accueil.objects.filter(statut=StatutAccueil.A_DEPLACER.name).count()
+    # Animaux nekosable
+    nekosables = Animal.objects.filter(statut__in=(StatutAnimal.A_ADOPTER.name,StatutAnimal.ADOPTABLE.name)).\
+    filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
+    filter(nekosable=True).filter(~Q(fiv='NT')&~Q(felv='NT')).count()
 
 
     #Taux de remplissage

@@ -24,7 +24,7 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
                             <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> adoptions à clore</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> changements d'ICAD à effectuer</a></p>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-paw fa-2x text-gray-300"></i>
@@ -90,6 +90,7 @@
                         <p><a class="text-secondary" href= "{% url 'familles' %}?vide=NON&date_indispo_min={{today_str}}&date_indispo_max={{interval_10_str}}">
                             <strong> {{a_deplacer_10}} </strong> animaux à déplacer dans moins de 10 jours
                         </a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&vaccin_ok=OUI&sterilise=OUI&nekosable=OUI&fiv_felv=OUI"><strong>{{nekosables}}</strong> animaux nekosables</a></p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?a_deplacer=OUI"><strong>{{accueils_a_deplacer}}</strong> accueils arrivants à terme</a></p>
                     </div>
                     <div class="col-auto">

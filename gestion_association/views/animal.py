@@ -44,6 +44,7 @@ def search_animal(request):
         type_form = request.GET.get("type", "")
         sterilise_form = request.GET.get("sterilise", "")
         sans_fa_form = request.GET.get("sans_fa", "")
+        nekosable_form = request.GET.get("nekosable", "")
         statuts_form = request.GET.getlist("statuts","")
         date_naissance_min = request.GET.get("date_naissance_min", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
@@ -52,7 +53,11 @@ def search_animal(request):
         date_vermifuge_min = request.GET.get("date_vermifuge_min", "")
         date_vermifuge_max = request.GET.get("date_vermifuge_max", "")
         fiv_felv_form = request.GET.get("fiv_felv", "")
+        # Pas dans le formulaire uniquement critère d'url provenant du tableau de bord
+        vaccin_ok_url = request.GET.get("vaccin_ok", "")
 
+        if vaccin_ok_url:
+            animals = animals.filter(vaccin_ok=vaccin_ok_url)
         if nom_form:
             animals = animals.filter(nom__icontains=nom_form)
             form.fields["nom"].initial = nom_form
@@ -71,6 +76,12 @@ def search_animal(request):
                 animals = animals.filter(famille__isnull=True)
             if sans_fa_form == OuiNonChoice.NON.name:
                 animals = animals.filter(famille__isnull=False)
+        if nekosable_form:
+            form.fields["nekosable"].initial = nekosable_form
+            if nekosable_form == OuiNonChoice.OUI.name:
+                animals = animals.filter(nekosable=True)
+            if nekosable_form == OuiNonChoice.NON.name:
+                animals = animals.filter(nekosable=False)
         if statuts_form:
             form.fields["statuts"].initial = statuts_form
             animals = animals.filter(statut__in=statuts_form)

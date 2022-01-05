@@ -1,8 +1,9 @@
 {% extends "gestion_association/base.html" %}
+{% load static %}
 {% block content %}
 <h2>Modifier l'adoption de {{object.animal.nom}}</h2>
 <br/>
-<form method="post" action="" enctype="multipart/form-data">
+<form method="post" action="" id="adoptionForm" data-calcul-montant-url="{% url 'calcul_montant_restant'%}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
     {{ form.as_p }}
@@ -16,4 +17,8 @@
         </div>
     </div>
 </form>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/adoption.js' %}"></script>
 {% endblock %}

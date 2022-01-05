@@ -81,6 +81,14 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-2">
+		    		    {{ form.nekosable.label_tag }}
+                    </div>
+                    <div class="col-md-10">
+                        {{ form.nekosable }}
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
 		    		    {{ form.fiv_felv.label_tag }}
                     </div>
@@ -88,9 +96,10 @@
                         {{ form.fiv_felv }}
                     </div>
                 </div>
-                <div class="text-right">
-                    <a href="{% url 'animals' %}" class="btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
-                    <button class="btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                <div >
+                    <a href="{% url 'animals' %}" class="float-left btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
+                    <button class="float-right btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                    <br>
                 </div>
             </div>
         </form>
@@ -118,7 +127,11 @@
         {% for animal in animal_list %}
         <tr class="table-info">
             <td><a href= "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a></td>
-            <td>{{animal.get_statut_display}}</td>
+            <td>{{animal.get_statut_display}}
+                {% if animal.is_en_soin_justif %}
+                ( {{animal.commentaire_sante}} )
+                {% endif %}
+            </td>
             <td>{% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{animal.famille.personne}}</a>{% endif %}</td>
             <td>{{animal.date_naissance|default:" - "}}</td>
             <td>{{animal.identification}}</td>

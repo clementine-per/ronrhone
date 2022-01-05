@@ -199,6 +199,7 @@ class Animal(models.Model):
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
     groupe = models.ForeignKey(AnimalGroup, on_delete=models.CASCADE, blank=True, null=True)
     commentaire_animaux_lies = models.CharField(max_length=1000, blank=True)
+    nekosable = models.BooleanField(default=False, verbose_name="Nekosable")
     tranche_age = models.CharField(
         max_length=10,
         blank=True,
@@ -282,6 +283,9 @@ class Animal(models.Model):
 
     def is_sterilise(self):
         return self.sterilise == OuiNonChoice.OUI.name
+
+    def is_en_soin_justif(self):
+        return self.statut == StatutAnimal.SOIN.name and self.commentaire_sante
 
     def is_adoptable(self):
         return self.statut == StatutAnimal.ADOPTABLE.name or self.statut == StatutAnimal.A_ADOPTER.name
