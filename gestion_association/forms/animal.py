@@ -56,7 +56,6 @@ class AnimalSearchForm(Form):
     statuts = MultipleChoiceField(
         choices=[(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
-        initial=statuts_association,
         widget=SelectMultiple(attrs={'class':"selectpicker"})
     )
     nekosable = ChoiceField(
@@ -85,7 +84,6 @@ class AnimalCreateForm(ModelForm):
             "type_vaccin",
             "primo_vaccine",
             "vaccin_ok",
-            "date_dernier_vaccin",
             "date_prochain_vaccin",
             "fiv",
             "felv",
@@ -101,7 +99,6 @@ class AnimalCreateForm(ModelForm):
         self.fields['date_naissance'].widget.attrs['class'] = 'datePicker'
         self.fields['date_arrivee'].widget.attrs['class'] = 'datePicker'
         self.fields['date_sterilisation'].widget.attrs['class'] = 'datePicker'
-        self.fields['date_dernier_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
@@ -158,7 +155,6 @@ class AnimalSanteUpdateForm(ModelForm):
             "type_vaccin",
             "primo_vaccine",
             "vaccin_ok",
-            "date_dernier_vaccin",
             "date_prochain_vaccin",
             "fiv",
             "felv",
@@ -170,7 +166,6 @@ class AnimalSanteUpdateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AnimalSanteUpdateForm, self).__init__(*args, **kwargs)
         self.fields['date_sterilisation'].widget.attrs['class'] = 'datePicker'
-        self.fields['date_dernier_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'

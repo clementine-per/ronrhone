@@ -18,8 +18,11 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI&acompte_verse=OUI&montant_restant=0">
                             <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_max={{interval_5_weeks_ago_str}}">
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI">
                             <strong>{{adoption_post}}</strong> animaux attendant leur viste post adoption
+                        </a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?sterilise=NON&date_naissance_max={{interval_7_months_ago_str}}">
+                            <strong>{{adoption_ste}}</strong> animaux adoptés de plus de 7 mois non stérilisés
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
                             <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)

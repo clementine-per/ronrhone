@@ -130,8 +130,8 @@
                     <tbody>
                         {% for acc in famille.accueil_set.all %}
                         <tr class="table-info">
-                            <td>{{acc.date_debut}}</td>
-                            <td>{{acc.date_fin|default:" - "}}</td>
+                            <td>{{acc.date_debut|date:"d/m/Y"}}</td>
+                            <td>{{acc.date_fin|date:"d/m/Y"|default:" - "}}</td>
                             <td><a href = "{% url 'detail_animal' acc.animal.id %}"> {{acc.animal.nom}}</a><br> </td>
                             <td>{{acc.commentaire}} </td>
                             <td>{{acc.get_statut_display}} </td>

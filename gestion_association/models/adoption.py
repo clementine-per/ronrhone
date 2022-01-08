@@ -1,5 +1,6 @@
 from decimal import Decimal
 from enum import Enum
+from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.utils import timezone
@@ -84,6 +85,8 @@ class Adoption(models.Model):
             self.animal.save()
             self.adoptant.is_adoptante = True
             self.adoptant.save()
+            if not self.date_visite :
+                self.date_visite = self.date + relativedelta(months=2)
         # # Maj statut si adoption payée et retirer de la FA
         if self.visite_controle == OuiNonChoice.NON.name and self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
             self.animal.statut = StatutAnimal.ADOPTE.name

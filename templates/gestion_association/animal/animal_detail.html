@@ -97,7 +97,7 @@
                 {% if animal.get_other_adoptions %}
                 <div class="alert alert-info m-2" role="alert">
                     {% for adoption in animal.get_other_adoptions %}
-                    Adoption précédente par {{adoption.adoptant}} le {{adoption.date}} <br>
+                    Adoption précédente par {{adoption.adoptant}} le {{adoption.date|date:"d/m/Y"}} <br>
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -109,7 +109,7 @@
                         </a> <br>
                     </div>
                     <div class="col-sm-6">
-                        <strong> Date d'adoption </strong> : {{animal.get_latest_adoption.date|default:" - "}} <br>
+                        <strong> Date d'adoption </strong> : {{animal.get_latest_adoption.date|date:"d/m/Y"|default:" - "}} <br>
                     </div>
                 </div>
                 <div class="row">
@@ -177,26 +177,15 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Date dernier vaccin </strong> : {{animal.date_dernier_vaccin|default:" - "}} <br>
-                    </div>
-                    <div class="col-sm-6">
-                        <strong> Date prochain vaccin </strong> : {{animal.date_prochain_vaccin|default:" - "}} <br>
+                        <strong> Date prochain vaccin </strong> : {{animal.date_prochain_vaccin|date:"d/m/Y"|default:" - "}} <br>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <strong> Date du dernier vermifuge </strong> : {{animal.date_vermifuge|default:" - "}} <br>
+                    <div class="col-sm-6">
+                        <strong> Test FELV </strong> : {{animal.get_felv_display}} <br>
                     </div>
                     <div class="col">
                         <strong> Stérilisé </strong> : {{animal.get_sterilise_display}} <br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <strong> Date d'administration anti-parasite </strong> : {{animal.date_parasite|default:" - "}} <br>
-                    </div>
-                    <div class="col-sm-6">
-                        <strong> Test FELV </strong> : {{animal.get_felv_display}} <br>
                     </div>
                 </div>
                 <div class="row">
@@ -205,6 +194,14 @@
                     </div>
                     <div class="col-sm-6">
                         <strong> Test FIV </strong> : {{animal.get_fiv_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Date d'administration anti-parasite </strong> : {{animal.date_parasite|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                    <div class="col">
+                        <strong> Date du dernier vermifuge </strong> : {{animal.date_vermifuge|date:"d/m/Y"|default:" - "}} <br>
                     </div>
                 </div>
 

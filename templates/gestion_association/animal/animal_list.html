@@ -133,7 +133,7 @@
                 {% endif %}
             </td>
             <td>{% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{animal.famille.personne}}</a>{% endif %}</td>
-            <td>{{animal.date_naissance|default:" - "}}</td>
+            <td>{{animal.date_naissance|date:"d/m/Y"|default:" - "}}</td>
             <td>{{animal.identification}}</td>
             <td>{% if animal.lien_icad %}<a target="_blank" href= "{{animal.lien_icad}}"><i class="fas fa-link"></i></a>{% endif %}</td>
             <td>{{animal.get_sterilise_display}}</td>

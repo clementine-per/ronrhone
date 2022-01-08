@@ -124,7 +124,7 @@
                 {{adoption.animal.nom}}</a></td>
             <td class="text-center"><a href = "{% url 'detail_person' adoption.adoptant.id %}">
                 {{adoption.adoptant}}</a></td>
-            <td>{{adoption.date|default:""}}</td>
+            <td>{{adoption.date|date:"d/m/Y"|default:""}}</td>
             <td>{{adoption.animal.get_statut_display}}</td>
             <td>{{adoption.montant_restant|default:" - "}} €</td>
             <td>{{adoption.get_pre_visite_display}}</td>

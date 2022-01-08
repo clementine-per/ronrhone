@@ -65,6 +65,9 @@ def search_adoption(request):
         bon_utilise_form = request.GET.get("bon_utilise", "")
         # champ hors formulaire, uniquement parametre url depuis TDB
         acompte_verse = request.GET.get("acompte_verse", "")
+        sterilise = request.GET.get("sterilise", "")
+        date_visite_max = request.GET.get("date_visite_max", "")
+        date_naissance_max = request.GET.get("date_naissance_max", "")
 
         if montant_restant_form:
             form.fields["montant_restant"].initial = montant_restant_form
@@ -101,6 +104,12 @@ def search_adoption(request):
             adoptions = adoptions.filter(bon__utilise=bon_utilise_form)
         if acompte_verse:
             adoptions = adoptions.filter(acompte_verse=acompte_verse)
+        if sterilise:
+            adoptions = adoptions.filter(animal__sterilise=sterilise)
+        if date_visite_max:
+            adoptions = adoptions.filter(date_visite__lte=date_visite_max)
+        if date_naissance_max:
+            adoptions = adoptions.filter(animal__date_naissance__lte=date_naissance_max)
 
 
 

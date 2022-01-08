@@ -1,4 +1,3 @@
-import sys
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
@@ -23,10 +22,12 @@ def index(request):
     interval_10 = today + timedelta(days=10)
     interval_5_weeks_ago = today - timedelta(days=35)
     interval_5_months_ago = today - relativedelta(months=5)
+    interval_7_months_ago = today - relativedelta(months=7)
     # Valeurs str utilisées dans le template html
     today_str = today.strftime("%Y-%m-%d")
     interval_10_str = interval_10.strftime("%Y-%m-%d")
     interval_5_weeks_ago_str = interval_5_weeks_ago.strftime("%Y-%m-%d")
+    interval_7_months_ago_str = interval_7_months_ago.strftime("%Y-%m-%d")
 
     statuts_association_filter = ""
     for statut in statuts_association:
@@ -48,7 +49,7 @@ def index(request):
         .filter(acompte_verse=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0)).count()
     # Adoptions attendant leur visite de contrôle
     adoption_post = Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name)\
-        .filter(date__lte=interval_5_weeks_ago).count()
+        .filter(date_visite__lte=today).filter(animal__sterilise=OuiNonChoice.OUI.name).count()
     # Post visite à contrôler
     adoption_controle = Adoption.objects.\
         filter(visite_controle__in=[OuiNonVisiteChoice.ALIMENTAIRE.name,OuiNonVisiteChoice.VACCIN.name])\
@@ -56,6 +57,9 @@ def index(request):
     # Adoptions à clore
     adoption_over = Adoption.objects.filter(animal__statut='ADOPTE')\
         .filter(visite_controle=OuiNonChoice.OUI.name).count()
+    # Adoptions sans sterilisation
+    adoption_ste = Adoption.objects.filter(animal__sterilise=OuiNonChoice.NON.name) \
+        .filter(animal__date_naissance__lte=interval_7_months_ago).count()
 
 
     # Partie soins

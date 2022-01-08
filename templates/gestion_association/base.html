@@ -39,7 +39,7 @@
                     </li>
                     <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'animals' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'animals' %}">Animaux</a>
+                        <a class="nav-link" href="{% url 'animals' %}?statuts=A_ADOPTER&statuts=ADOPTION&statuts=ADOPTABLE&statuts=PEC&statuts=SOCIA&statuts=QUARANTAINE&statuts=SOIN&statuts=SEVRAGE">Animaux</a>
                     </li>
                     <li class="nav-item {% if selected == 'adoptions' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'adoptions' %}">Adoptions</a>
