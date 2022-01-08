@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django.template.defaultfilters import slugify
 
 
 # Enum utilisée pour l'écran de recherche
@@ -18,7 +19,7 @@ class Person(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
     prenom = models.CharField(max_length=30)
     nom = models.CharField(max_length=150)
-    nom_prenom_key = models.CharField(max_length=150, blank=True)
+    nom_prenom_key = models.CharField(max_length=150, blank=True, unique=True)
     email = models.EmailField(max_length=150)
     adresse = models.CharField(max_length=500)
     code_postal_regex = RegexValidator(
@@ -49,6 +50,11 @@ class Person(models.Model):
         blank=True,
         verbose_name="Information sur le rôle de cette bénévole au sein de l'association",
     )
+
+    def save(self, *args, **kwargs):
+        slug = slugify(self.prenom)+"."+self.nom
+        self.nom_prenom_key = slug.lower()
+        super(Person, self).save(*args, **kwargs)
 
     def get_adresse_complete(self):
         return f"{self.adresse} \n {self.code_postal} {self.ville}"

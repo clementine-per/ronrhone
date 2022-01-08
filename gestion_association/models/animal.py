@@ -112,7 +112,7 @@ class AnimalGroup(models.Model):
 
 class Animal(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise à jour", auto_now=True)
-    nom = models.CharField(max_length=150)
+    nom = models.CharField(max_length=150, unique=True)
     circonstances = models.CharField(max_length=150)
     date_naissance = models.DateField(verbose_name="Date de naissance", null=True, blank=True)
     date_arrivee = models.DateField(verbose_name="Date de prise en charge", null=True, blank=True)
