@@ -8,7 +8,7 @@
             <div class="card-header">
                 Recherche
             </div>
-		<form action = "{% url 'familles' %}" method="post">
+		<form action = "{% url 'familles' %}" method="post" autocomplete="off">
             <div class="card-body">
                 {%csrf_token %}
                 <div class="row">
@@ -17,6 +17,14 @@
                     </div>
                     <div class="col-sm-8">
                         {{ form.nom_personne }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.detail_places.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.detail_places }}
                     </div>
                 </div>
                 <div class="row">

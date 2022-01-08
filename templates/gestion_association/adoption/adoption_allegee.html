@@ -6,7 +6,8 @@
 <br>
 
 <form method="post" id="adoptionForm" data-calcul-montant-url="{% url 'calcul_montant_restant'%}"
-	  data-calcul-montant-sterilisation-url="{% url 'calcul_montant_sterilisation' animal.id %}" novalidate>
+	  data-calcul-montant-sterilisation-url="{% url 'calcul_montant_sterilisation' animal.id %}" novalidate
+autocomplete="off">
 	{% csrf_token %}
 	{% include 'gestion_association/adoption/adoption_base_form.html' %}
 	<div class="row">

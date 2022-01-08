@@ -79,10 +79,14 @@ def famille_list(request):
         date_indispo_min = request.GET.get("date_indispo_min", "")
         date_indispo_max = request.GET.get("date_indispo_max", "")
         a_deplacer = request.GET.get("a_deplacer", "")
+        detail_places_form = request.GET.get("detail_places", "")
 
         if nom_personne_form:
             famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
             form.fields["nom_personne"].initial = nom_personne_form
+        if detail_places_form:
+            famille_list = famille_list.filter(detail_places__icontains=detail_places_form)
+            form.fields["detail_places"].initial = detail_places_form
         if statut_form:
             famille_list = famille_list.filter(statut=statut_form)
             form.fields["statut"].initial = statut_form

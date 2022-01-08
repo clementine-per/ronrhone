@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form method="post" action="">
+<form method="post" action="" autocomplete="off">
     {% csrf_token %}
     {{ form.as_p }}
     <div class="row">

@@ -1,4 +1,5 @@
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
@@ -8,6 +9,8 @@ from django.utils.dateparse import parse_date
 from django.db.models import Q
 from django.views.generic import CreateView, UpdateView
 from rest_framework import viewsets
+from django.utils import timezone
+
 
 from gestion_association.forms import PreferenceForm
 from gestion_association.forms.animal import (
@@ -55,9 +58,19 @@ def search_animal(request):
         fiv_felv_form = request.GET.get("fiv_felv", "")
         # Pas dans le formulaire uniquement critère d'url provenant du tableau de bord
         vaccin_ok_url = request.GET.get("vaccin_ok", "")
+        identifie_url = request.GET.get("identifie", "")
+        soin_manquant_url = request.GET.get("soin_manquant", "")
 
         if vaccin_ok_url:
             animals = animals.filter(vaccin_ok=vaccin_ok_url)
+        if identifie_url and identifie_url == OuiNonChoice.OUI.name:
+            animals = animals.exclude(identification__exact="")
+        if soin_manquant_url:
+            today = timezone.now().date()
+            interval_5_months_ago = today - relativedelta(months=5)
+            animals = animals.filter(statut__in=statuts_association) \
+                .filter(Q(Q(sterilise=OuiNonChoice.NON.name)&Q(date_naissance__lte=interval_5_months_ago))| Q(vaccin_ok=OuiNonChoice.NON.name) | \
+                        Q(fiv='NT') | Q(felv='NT') | Q(identification__exact=''))
         if nom_form:
             animals = animals.filter(nom__icontains=nom_form)
             form.fields["nom"].initial = nom_form

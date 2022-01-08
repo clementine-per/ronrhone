@@ -8,7 +8,8 @@
 <h3> Informations de l'adoptant </h3>
 
 <form method="post" id="adoptionForm" data-calcul-montant-url="{% url 'calcul_montant_restant'%}"
-	  data-calcul-montant-sterilisation-url="{% url 'calcul_montant_sterilisation' animal.id %}" novalidate>
+	  data-calcul-montant-sterilisation-url="{% url 'calcul_montant_sterilisation' animal.id %}" novalidate
+autocomplete="off">
    {% csrf_token %}
    {{ person_form.as_p }}
    <br>

@@ -1,5 +1,6 @@
 import sys
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
@@ -21,6 +22,7 @@ def index(request):
     today = timezone.now().date()
     interval_10 = today + timedelta(days=10)
     interval_5_weeks_ago = today - timedelta(days=35)
+    interval_5_months_ago = today - relativedelta(months=5)
     # Valeurs str utilisées dans le template html
     today_str = today.strftime("%Y-%m-%d")
     interval_10_str = interval_10.strftime("%Y-%m-%d")
@@ -57,12 +59,12 @@ def index(request):
 
 
     # Partie soins
-    # Animaux à stériliser
-    sterilises = Animal.objects.filter(sterilise=OuiNonChoice.NON.name).filter(statut__in=statuts_association).count()
-    # Animaux en soin
+     # Animaux en soin
     soins = Animal.objects.filter(statut='SOIN').count()
-    #Animaux à tester (fiv/felv)
-    fiv_felv = Animal.objects.filter(statut__in=statuts_association).filter(Q(fiv='NT')|Q(felv='NT')).count()
+    # Animaux avec soin manquant
+    soins_manquants = Animal.objects.filter(statut__in=statuts_association)\
+        .filter(Q(Q(sterilise=OuiNonChoice.NON.name)&Q(date_naissance__lte=interval_5_months_ago))| Q(vaccin_ok=OuiNonChoice.NON.name)|\
+    Q(fiv='NT')| Q(felv='NT')|Q(identification__exact='')).count()
     # Bon de stérilisation à envoyer
     bon_a_envoyer = BonSterilisation.objects.filter(envoye=OuiNonChoice.NON.name).count()
     # Bon de stérilisation arrivant à expiation (10 jours)
@@ -89,10 +91,12 @@ def index(request):
     # Animaux à déplacer manuellement (accueils arrivant à terme)
     accueils_a_deplacer = Accueil.objects.filter(statut=StatutAccueil.A_DEPLACER.name).count()
     # Animaux nekosable
-    nekosables = Animal.objects.filter(statut__in=(StatutAnimal.A_ADOPTER.name,StatutAnimal.ADOPTABLE.name)).\
-    filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
-    filter(nekosable=True).filter(~Q(fiv='NT')&~Q(felv='NT')).count()
-
+    nekosables = Animal.objects.filter(statut__in=(StatutAnimal.A_ADOPTER.name, StatutAnimal.ADOPTABLE.name)). \
+        filter(nekosable=True)
+    nb_nekosables = nekosables.count()
+    # dont prêts = tous soins effectues
+    nb_nekosables_prets = nekosables.filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
+    filter(~Q(fiv='NT')&~Q(felv='NT')).exclude(identification__exact='').count()
 
     #Taux de remplissage
     familles_occupees =  Famille.objects.filter(animal__isnull=False).distinct().count()

@@ -26,6 +26,7 @@ class DateInput(DateInput):
 
 class FamilleSearchForm(Form):
     nom_personne = CharField(max_length=100, required=False, label="Nom de la personne")
+    detail_places = CharField(max_length=100, required=False, label="Accueils acceptés")
     statut = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in StatutFamille],
         widget=Select(),

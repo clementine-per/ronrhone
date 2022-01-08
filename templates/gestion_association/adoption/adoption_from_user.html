@@ -5,7 +5,7 @@
 <h1> Adoption par {{person.prenom}} {{person.nom}} </h1>
 <br>
 
-<form method="post" action="" novalidate>
+<form method="post" action="" novalidate autocomplete="off">
    {% csrf_token %}
    {% include 'gestion_association/adoption/adoption_base_form.html' %}
    <div class="row">

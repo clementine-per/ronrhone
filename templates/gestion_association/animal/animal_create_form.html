@@ -1,6 +1,6 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
-<form method="post" action="" enctype="multipart/form-data">
+<form method="post" action="" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     {{ animal_form.media }}
     {{ animal_form.as_p }}

@@ -3,7 +3,7 @@
 
 <h2>Modifier les informations générales de {{object.nom}}</h2>
 <br/>
-<form method="post" action="" enctype="multipart/form-data">
+<form method="post" action="" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     {{ form.media }}
     {{ form.as_p }}
