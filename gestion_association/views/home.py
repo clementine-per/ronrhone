@@ -58,7 +58,7 @@ def index(request):
     adoption_over = Adoption.objects.filter(animal__statut='ADOPTE')\
         .filter(visite_controle=OuiNonChoice.OUI.name).count()
     # Adoptions sans sterilisation
-    adoption_ste = Adoption.objects.filter(statut__in=(StatutAnimal.ADOPTION.name,StatutAnimal.ADOPTE_DEFINITIF.name, StatutAnimal.ADOPTE.name)).\
+    adoption_ste = Adoption.objects.filter(animal__statut__in=(StatutAnimal.ADOPTION.name,StatutAnimal.ADOPTE_DEFINITIF.name, StatutAnimal.ADOPTE.name)).\
         filter(animal__sterilise=OuiNonChoice.NON.name) \
         .filter(animal__date_naissance__lte=interval_7_months_ago).count()
 
