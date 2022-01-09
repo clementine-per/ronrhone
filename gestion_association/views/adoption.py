@@ -68,7 +68,10 @@ def search_adoption(request):
         sterilise = request.GET.get("sterilise", "")
         date_visite_max = request.GET.get("date_visite_max", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
+        statuts_url = request.GET.getlist("statuts", "")
 
+        if statuts_url:
+            adoptions = adoptions.filter(animal__statut__in=statuts_url)
         if montant_restant_form:
             form.fields["montant_restant"].initial = montant_restant_form
             adoptions = adoptions.filter(montant_restant__gt=int(montant_restant_form))
