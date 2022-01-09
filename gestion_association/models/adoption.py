@@ -85,7 +85,7 @@ class Adoption(models.Model):
             self.animal.save()
             self.adoptant.is_adoptante = True
             self.adoptant.save()
-            if not self.date_visite :
+            if not self.date_visite and self.date :
                 self.date_visite = self.date + relativedelta(months=2)
         # # Maj statut si adoption payée et retirer de la FA
         if self.visite_controle == OuiNonChoice.NON.name and self.pre_visite == OuiNonChoice.OUI.name and (not self.montant_restant or self.montant_restant == Decimal(0)):
