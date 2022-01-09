@@ -23,7 +23,7 @@
                         <strong> Type </strong> : {{animal.get_type_display}} <br>
                     </div>
                     <div class="col-sm-6">
-                        <strong> Date de naissance </strong> : {{animal.date_naissance|date:'d F Y'|default:" - "}} <br>
+                        <strong> Date de naissance </strong> : {{animal.date_naissance|date:"d/m/Y"|default:" - "}} <br>
                     </div>
                 </div>
                 <div class="row">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Date de prise en charge </strong> : {{animal.date_arrivee|date:'d F Y'|default:" - "}} <br>
+                        <strong> Date de prise en charge </strong> : {{animal.date_arrivee|date:"d/m/Y"|default:" - "}} <br>
                     </div>
                     <div class="col-sm-6">
                         <strong> Commentaire </strong> : {{animal.commentaire}} <br>
@@ -63,6 +63,14 @@
                         <br>
                     </div>
                 </div>
+                {% if animal.ancien_proprio %}
+                <div class="row">
+                    <div class="col">
+                        <strong> Ancien propriétaire </strong> : <a href = "{% url 'detail_person' animal.ancien_proprio.id %}">
+                        {{ animal.ancien_proprio }}</a>
+                    </div>
+                </div>
+                {% endif %}
 
                 {% if animal.is_adoptable %}
                 {% if not animal.get_latest_adoption %}
@@ -166,6 +174,9 @@
                     <div class="col">
                         <strong> Type de vaccin </strong> : {{animal.get_type_vaccin_display}} <br>
                     </div>
+                    <div class="col">
+                        <strong> Date prochain vaccin </strong> : {{animal.date_prochain_vaccin|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -177,24 +188,22 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Date prochain vaccin </strong> : {{animal.date_prochain_vaccin|date:"d/m/Y"|default:" - "}} <br>
+                        <strong> Test FELV </strong> : {{animal.get_felv_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Test FIV </strong> : {{animal.get_fiv_display}} <br>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        <strong> Test FELV </strong> : {{animal.get_felv_display}} <br>
-                    </div>
                     <div class="col">
                         <strong> Stérilisé </strong> : {{animal.get_sterilise_display}} <br>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col">
                         <strong> Commentaire santé </strong> : {{animal.commentaire_sante}} <br>
                     </div>
-                    <div class="col-sm-6">
-                        <strong> Test FIV </strong> : {{animal.get_fiv_display}} <br>
-                    </div>
+
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
@@ -254,4 +263,39 @@
         </div>
     </div>
 </div>
+{% if animal.accueil_set.all.count >= 1 %}
+<div class="row p-2">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Historique des accueils
+            </div>
+            <div class="table-responsive-sm p-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date de début</th>
+                            <th scope="col">Date de fin</th>
+                            <th scope="col">Famille</th>
+                            <th scope="col">Commentaire</th>
+                            <th scope="col">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for acc in animal.accueil_set.all %}
+                        <tr class="table-info">
+                            <td>{{acc.date_debut|date:"d/m/Y"}}</td>
+                            <td>{{acc.date_fin|date:"d/m/Y"|default:" - "}}</td>
+                            <td><a href = "{% url 'detail_famille' acc.famille.id %}"> {{acc.famille.personne}}</a><br> </td>
+                            <td>{{acc.commentaire}} </td>
+                            <td>{{acc.get_statut_display}} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

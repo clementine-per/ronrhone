@@ -13,6 +13,7 @@ from django.forms import (
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association, Parrainage
+from gestion_association.models.person import Person
 from gestion_association.widgets import TableSelectMultiple
 
 
@@ -92,6 +93,7 @@ class AnimalCreateForm(ModelForm):
             "commentaire_sante",
             "lien_icad",
             "nekosable",
+            "ancien_proprio",
         )
 
     def __init__(self, *args, **kwargs):
@@ -102,6 +104,7 @@ class AnimalCreateForm(ModelForm):
         self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
+        self.fields['ancien_proprio'].queryset = Person.objects.order_by('nom')
 
 
 class AnimalOtherInfosForm(ModelForm):
@@ -110,6 +113,7 @@ class AnimalOtherInfosForm(ModelForm):
     class Meta:
         model = Animal
         fields = ("tranche_age","commentaire_animaux_lies")
+
 
 class AnimalSelectForm(Form):
     animaux = ModelMultipleChoiceField(
@@ -136,12 +140,14 @@ class AnimalInfoUpdateForm(ModelForm):
             "statut",
             "lien_icad",
             "nekosable",
+            "ancien_proprio",
         )
 
     def __init__(self, *args, **kwargs):
         super(AnimalInfoUpdateForm, self).__init__(*args, **kwargs)
         self.fields['date_naissance'].widget.attrs['class'] = 'datePicker'
         self.fields['date_arrivee'].widget.attrs['class'] = 'datePicker'
+        self.fields['ancien_proprio'].queryset = Person.objects.order_by('nom')
 
 
 class AnimalSanteUpdateForm(ModelForm):

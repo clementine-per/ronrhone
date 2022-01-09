@@ -63,7 +63,8 @@ class Person(models.Model):
         return f"{self.prenom} {self.nom}"
 
     def has_role(self):
-        return self.is_famille or self.is_benevole or self.is_adoptante
+        return self.is_famille or self.is_benevole or self.is_adoptante \
+               or self.is_ancien_proprio or self.is_parrain or self.is_adherent
 
 
 class Adhesion(models.Model):

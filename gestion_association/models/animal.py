@@ -194,6 +194,14 @@ class Animal(models.Model):
         null=True,
         blank=True,
     )
+    ancien_proprio = models.ForeignKey(
+        Person,
+        verbose_name="Ancien propriétaire",
+        related_name="anciens_animaux",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
     commentaire = models.CharField(max_length=1000, blank=True)
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
@@ -229,6 +237,9 @@ class Animal(models.Model):
         if self.statut == StatutAnimal.SOCIA.name:
             self.preference.sociabilisation = OuiNonChoice.OUI.name
             self.preference.save()
+        if self.ancien_proprio:
+            self.ancien_proprio.is_ancien_proprio = True
+            self.ancien_proprio.save()
         return super(Animal, self).save(*args, **kwargs)
 
     def get_latest_adoption(self):

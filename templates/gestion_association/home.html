@@ -21,7 +21,8 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI">
                             <strong>{{adoption_post}}</strong> animaux attendant leur viste post adoption
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?sterilise=NON&date_naissance_max={{interval_7_months_ago_str}}">
+                        <p><a class="text-secondary"
+                              href= "{% url 'adoptions' %}?sterilise=NON&date_naissance_max={{interval_7_months_ago_str}}&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTE_DEFINITIF">
                             <strong>{{adoption_ste}}</strong> animaux adoptés de plus de 7 mois non stérilisés
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
