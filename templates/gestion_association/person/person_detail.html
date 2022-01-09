@@ -52,7 +52,7 @@
                 Rôles
             </div>
             <div class="card-body">
-                {% if person.is_famille %}
+                {% if person.is_famille and person.famille%}
                 <div class="role famille mb-3" >
                     Famille d'accueil : {{person.famille.get_statut_display}}
                     <a href= "{% url 'detail_famille' person.famille.id %}" class="close">
@@ -115,7 +115,7 @@
                 {% else %}
                 <a href= "{% url 'benevole_person' person.id %}"  class="btn btn-outline-info btn-block ">Déclarer bénévole</a>
                 {% endif %}
-                {% if not person.is_famille %}
+                {% if not person.is_famille or not person.famille %}
                 <a href= "{% url 'create_famille' person.id %}" class="btn btn-outline-info btn-block ">Déclarer famille d'accueil</a>
                 {% endif %}
                 <a href= "{% url 'create_parrainage' person.id %}" class="btn btn-outline-info btn-block ">Parrainage d'un animal</a>
