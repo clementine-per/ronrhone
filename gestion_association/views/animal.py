@@ -190,7 +190,7 @@ def update_preference(request, pk):
         animal_other_form = AnimalOtherInfosForm(instance=animal)
         animal_group_form = AnimalSelectForm()
         animal_group_form.fields['animaux'].queryset = Animal.objects.filter\
-            (statut__in=statuts_association).exclude(id=pk)
+            (statut__in=statuts_association).order_by('nom').exclude(id=pk)
 
     return render(request, "gestion_association/animal/preference_form.html", locals())
 

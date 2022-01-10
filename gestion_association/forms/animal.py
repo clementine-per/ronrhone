@@ -119,7 +119,7 @@ class AnimalSelectForm(Form):
     animaux = ModelMultipleChoiceField(
         required=False,
         widget=SelectMultiple(attrs={'class': "selectpicker"}),
-        queryset=Animal.objects.all(),
+        queryset=Animal.objects.order_by('nom'),
     )
 
 
