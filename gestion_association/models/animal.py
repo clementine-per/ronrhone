@@ -278,6 +278,10 @@ class Animal(models.Model):
             result += "FIV "
         if self.felv == OuiNonChoice.OUI.name:
             result += "FELV"
+        if self.fiv == TestResultChoice.NT.name or self.felv == TestResultChoice.NT.name:
+            return "A faire"
+        if self.fiv == TestResultChoice.NEGATIVE.name and self.felv == TestResultChoice.NEGATIVE.name:
+            return "OK"
         return result
 
     def get_animaux_lies_str(self):
