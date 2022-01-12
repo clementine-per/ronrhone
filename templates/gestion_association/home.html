@@ -16,7 +16,7 @@
                             <strong>{{adoption_previsite}}</strong> pré-visites à faire
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI&acompte_verse=OUI&montant_restant=0">
-                            <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet
+                            <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet pour montant total de <strong>{{adoption_paiement_montant.montant_restant__sum}} €</strong>
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI">
                             <strong>{{adoption_post}}</strong> animaux attendant leur viste post adoption

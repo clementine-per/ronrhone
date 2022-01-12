@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
 from django.utils import timezone
+from django.db.models import Sum
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption, BonSterilisation, \
@@ -45,8 +46,10 @@ def index(request):
     adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION') \
         .filter(pre_visite=OuiNonChoice.NON.name).filter(acompte_verse=OuiNonChoice.OUI.name).count()
     # Adoptions en attente de paiement complet
-    adoption_paiement = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite=OuiNonChoice.OUI.name) \
-        .filter(acompte_verse=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0)).count()
+    adoption_paiement_list = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite=OuiNonChoice.OUI.name) \
+        .filter(acompte_verse=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0))
+    adoption_paiement_montant = adoption_paiement_list.aggregate(Sum('montant_restant'))
+    adoption_paiement = adoption_paiement_list.count()
     # Adoptions attendant leur visite de contrôle
     adoption_post = Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name)\
         .filter(date_visite__lte=today).filter(animal__sterilise=OuiNonChoice.OUI.name).count()
