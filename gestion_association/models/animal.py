@@ -202,6 +202,11 @@ class Animal(models.Model):
         null=True,
         blank=True,
     )
+    inactif = models.BooleanField(
+        default=False,
+        verbose_name="Desactivé (Ne cocher que si vous ne souhaitez\
+                                           plus gérer cet animal dans l'application) ",
+    )
     commentaire = models.CharField(max_length=1000, blank=True)
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
@@ -274,10 +279,10 @@ class Animal(models.Model):
 
     def get_tests_str(self):
         result = ""
-        if self.fiv == OuiNonChoice.OUI.name:
-            result += "FIV "
-        if self.felv == OuiNonChoice.OUI.name:
-            result += "FELV"
+        if self.fiv == TestResultChoice.POSITIVE.name:
+            result += "FIV+ "
+        if self.felv == TestResultChoice.POSITIVE.name:
+            result += "FELV+"
         if self.fiv == TestResultChoice.NT.name or self.felv == TestResultChoice.NT.name:
             return "A faire"
         if self.fiv == TestResultChoice.NEGATIVE.name and self.felv == TestResultChoice.NEGATIVE.name:

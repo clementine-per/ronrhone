@@ -29,6 +29,7 @@ class PersonForm(ModelForm):
             "telephone",
             "profession",
             "commentaire",
+            "inactif",
         )
 
     def clean_ville(self):

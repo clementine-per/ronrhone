@@ -37,9 +37,9 @@ def index(request):
         statuts_association_filter += '&'
     # Partie adoptions
     # A proposer à l'adoption
-    a_proposer = Animal.objects.filter(statut='ADOPTABLE').count()
+    a_proposer = Animal.objects.filter(inactif=False).filter(statut='ADOPTABLE').count()
     #A l'adoption
-    a_l_adoption = Animal.objects.filter(statut='A_ADOPTER').count()
+    a_l_adoption = Animal.objects.filter(inactif=False).filter(statut='A_ADOPTER').count()
     # Acomptes
     acomptes = Adoption.objects.filter(acompte_verse=OuiNonChoice.NON.name).count()
     # Adoptions pré-visites
@@ -68,9 +68,9 @@ def index(request):
 
     # Partie soins
      # Animaux en soin
-    soins = Animal.objects.filter(statut='SOIN').count()
+    soins = Animal.objects.filter(inactif=False).filter(statut='SOIN').count()
     # Animaux avec soin manquant
-    soins_manquants = Animal.objects.filter(statut__in=statuts_association)\
+    soins_manquants = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association)\
         .filter(Q(Q(sterilise=OuiNonChoice.NON.name)&Q(date_naissance__lte=interval_5_months_ago))| Q(vaccin_ok=OuiNonChoice.NON.name)|\
     Q(fiv='NT')| Q(felv='NT')|Q(identification__exact='')).count()
     # Bon de stérilisation à envoyer
@@ -79,27 +79,27 @@ def index(request):
     bon_a_utilise = BonSterilisation.objects.filter(utilise=OuiNonChoice.NON.name).filter(date_max__gte=today)\
         .filter(date_max__lte=interval_10).count()
     # Vaccins à faire (10 jours)
-    vaccins = Animal.objects.filter(statut__in=statuts_association).filter(date_prochain_vaccin__gte=today)\
+    vaccins = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association).filter(date_prochain_vaccin__gte=today)\
         .filter(date_prochain_vaccin__lte=interval_10).count()
     # Vaccins dépassés
-    vaccins_retard = Animal.objects.filter(statut__in=statuts_association).filter(date_prochain_vaccin__lte=today) \
+    vaccins_retard = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association).filter(date_prochain_vaccin__lte=today) \
         .count()
     # Partie FA
     # Animaux en FA
-    en_famille = Animal.objects.filter(famille__isnull=False).count()
+    en_famille = Animal.objects.filter(inactif=False).filter(famille__isnull=False).count()
     # Familles disponibles
     disponibles = Famille.objects.filter(statut='DISPONIBLE').count()
     # Familles à visiter
     visites = Famille.objects.filter(statut='A_VISITER').count()
     # Animaux à placer
-    a_placer = Animal.objects.filter(famille__isnull=True).filter(statut__in=statuts_association).count()
+    a_placer = Animal.objects.filter(inactif=False).filter(famille__isnull=True).filter(statut__in=statuts_association).count()
     # Animaux à déplacer sous 10 jours
     a_deplacer_10 = Famille.objects.filter(animal__isnull=False).filter(indisponibilite__date_debut__gte=today)\
         .filter(indisponibilite__date_debut__lte=interval_10).count()
     # Animaux à déplacer manuellement (accueils arrivant à terme)
     accueils_a_deplacer = Accueil.objects.filter(statut=StatutAccueil.A_DEPLACER.name).count()
     # Animaux nekosable
-    nekosables = Animal.objects.filter(statut__in=(StatutAnimal.A_ADOPTER.name, StatutAnimal.ADOPTABLE.name)). \
+    nekosables = Animal.objects.filter(inactif=False).filter(statut__in=(StatutAnimal.A_ADOPTER.name, StatutAnimal.ADOPTABLE.name)). \
         filter(nekosable=True)
     nb_nekosables = nekosables.count()
     # dont prêts = tous soins effectues

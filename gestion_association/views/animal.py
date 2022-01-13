@@ -28,7 +28,7 @@ from gestion_association.serializers import AnimalSerializer
 
 @login_required()
 def search_animal(request):
-    animals = Animal.objects.all()
+    animals = Animal.objects.filter(inactif=False).all()
     selected = "animals"
     title = "Liste des animaux"
 
@@ -190,7 +190,7 @@ def update_preference(request, pk):
         animal_other_form = AnimalOtherInfosForm(instance=animal)
         animal_group_form = AnimalSelectForm()
         animal_group_form.fields['animaux'].queryset = Animal.objects.filter\
-            (statut__in=statuts_association).order_by('nom').exclude(id=pk)
+            (statut__in=statuts_association).filter(inactif=False).order_by('nom').exclude(id=pk)
 
     return render(request, "gestion_association/animal/preference_form.html", locals())
 
@@ -214,7 +214,7 @@ class UpdateSante(LoginRequiredMixin, UpdateView):
 
 
 class AnimalViewSet(viewsets.ModelViewSet):
-    queryset = Animal.objects.all()
+    queryset = Animal.objects.filter(inactif=False).all()
     serializer_class = AnimalSerializer
 
 

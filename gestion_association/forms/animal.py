@@ -104,7 +104,7 @@ class AnimalCreateForm(ModelForm):
         self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
-        self.fields['ancien_proprio'].queryset = Person.objects.order_by('nom')
+        self.fields['ancien_proprio'].queryset = Person.objects.filter(inactif=False).order_by('nom')
 
 
 class AnimalOtherInfosForm(ModelForm):
@@ -119,7 +119,7 @@ class AnimalSelectForm(Form):
     animaux = ModelMultipleChoiceField(
         required=False,
         widget=SelectMultiple(attrs={'class': "selectpicker"}),
-        queryset=Animal.objects.order_by('nom'),
+        queryset=Animal.objects.filter(inactif=False).order_by('nom'),
     )
 
 
@@ -141,13 +141,14 @@ class AnimalInfoUpdateForm(ModelForm):
             "lien_icad",
             "nekosable",
             "ancien_proprio",
+            "inactif",
         )
 
     def __init__(self, *args, **kwargs):
         super(AnimalInfoUpdateForm, self).__init__(*args, **kwargs)
         self.fields['date_naissance'].widget.attrs['class'] = 'datePicker'
         self.fields['date_arrivee'].widget.attrs['class'] = 'datePicker'
-        self.fields['ancien_proprio'].queryset = Person.objects.order_by('nom')
+        self.fields['ancien_proprio'].queryset = Person.objects.filter(inactif=False).order_by('nom')
 
 
 class AnimalSanteUpdateForm(ModelForm):
@@ -178,7 +179,7 @@ class AnimalSanteUpdateForm(ModelForm):
 
 class AnimalSelectForFaForm(Form):
     animaux = ModelMultipleChoiceField(
-        queryset=Animal.objects.filter(statut__in=statuts_association).filter(famille__isnull=True),
+        queryset=Animal.objects.filter(statut__in=statuts_association).filter(inactif=False).filter(famille__isnull=True),
         widget=TableSelectMultiple(
             item_attrs=[
                 'nom',
@@ -209,7 +210,7 @@ class ParrainageForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ParrainageForm, self).__init__(*args, **kwargs)
-        self.fields['animal'].queryset = Animal.objects.filter(statut__in=statuts_association)
+        self.fields['animal'].queryset = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association)
         self.fields['date_debut'].widget.attrs['class'] = 'datePicker'
         self.fields['date_fin'].widget.attrs['class'] = 'datePicker'
 
