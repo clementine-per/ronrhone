@@ -79,7 +79,7 @@ class Adoption(models.Model):
     )
 
     def __str__(self):
-        return "Adoption de " + self.animal.nom + " le " + self.date.strftime("%d/%m/%Y")
+        return "Adoption de " + self.animal.nom + " par " + str(self.adoptant)
 
     def save(self, *args, **kwargs):
         # Maj statut lors de la création de l'adoption
