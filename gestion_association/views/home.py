@@ -88,7 +88,15 @@ def index(request):
     # Animaux en FA
     en_famille = Animal.objects.filter(inactif=False).filter(famille__isnull=False).count()
     # Familles disponibles
-    disponibles = Famille.objects.filter(statut='DISPONIBLE').count()
+    disponibles = Famille.objects.filter(statut='DISPONIBLE').exclude(
+        indisponibilite__date_debut__lte=today,
+        indisponibilite__date_fin__gte=today,
+    ).count()
+    # Familles à nouveau disponibles
+    disponibles_again = Famille.objects.filter(statut='INDISPONIBLE').exclude(
+        indisponibilite__date_debut__lte=today,
+        indisponibilite__date_fin__gte=today,
+    ).count()
     # Familles à visiter
     visites = Famille.objects.filter(statut='A_VISITER').count()
     # Animaux à placer

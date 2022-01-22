@@ -175,6 +175,14 @@ class Indisponibilite(models.Model):
         result += self.date_fin.strftime("%d/%m/%Y")
         return result
 
+    def save(self, *args, **kwargs):
+        # Si date l'indisponibilité inclue la date du jour, passage au statut indispo
+        if self.date_fin >= timezone.now().date()\
+                and self.date_debut <= timezone.now().date():
+            self.famille.statut = StatutFamille.INDISPONIBLE.name
+            self.famille.save()
+        return super().save(*args, **kwargs)
+
 
 class Accueil(models.Model):
     date_debut = models.DateField(verbose_name="Date de début")
