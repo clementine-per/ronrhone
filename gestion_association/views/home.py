@@ -41,28 +41,28 @@ def index(request):
     #A l'adoption
     a_l_adoption = Animal.objects.filter(inactif=False).filter(statut='A_ADOPTER').count()
     # Acomptes
-    acomptes = Adoption.objects.filter(acompte_verse=OuiNonChoice.NON.name).count()
+    acomptes = Adoption.objects.filter(acompte_verse=OuiNonChoice.NON.name).filter(annule=False).count()
     # Adoptions pré-visites
-    adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION') \
+    adoption_previsite = Adoption.objects.filter(animal__statut='ADOPTION').filter(annule=False) \
         .filter(pre_visite=OuiNonChoice.NON.name).filter(acompte_verse=OuiNonChoice.OUI.name).count()
     # Adoptions en attente de paiement complet
     adoption_paiement_list = Adoption.objects.filter(animal__statut='ADOPTION').filter(pre_visite=OuiNonChoice.OUI.name) \
-        .filter(acompte_verse=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0))
+        .filter(acompte_verse=OuiNonChoice.OUI.name).filter(montant_restant__gt = Decimal(0)).filter(annule=False)
     adoption_paiement_montant = adoption_paiement_list.aggregate(Sum('montant_restant'))
     adoption_paiement = adoption_paiement_list.count()
     # Adoptions attendant leur visite de contrôle
-    adoption_post = Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name)\
+    adoption_post = Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name).filter(annule=False)\
         .filter(date_visite__lte=today).filter(animal__sterilise=OuiNonChoice.OUI.name).count()
     # Post visite à contrôler
-    adoption_controle = Adoption.objects.\
+    adoption_controle = Adoption.objects.filter(annule=False).\
         filter(visite_controle__in=[OuiNonVisiteChoice.ALIMENTAIRE.name,OuiNonVisiteChoice.VACCIN.name])\
     .count()
     # Adoptions à clore
-    adoption_over = Adoption.objects.filter(animal__statut='ADOPTE')\
+    adoption_over = Adoption.objects.filter(animal__statut='ADOPTE').filter(annule=False)\
         .filter(visite_controle=OuiNonChoice.OUI.name).count()
     # Adoptions sans sterilisation
     adoption_ste = Adoption.objects.filter(animal__statut__in=(StatutAnimal.ADOPTION.name,StatutAnimal.ADOPTE_DEFINITIF.name, StatutAnimal.ADOPTE.name)).\
-        filter(animal__sterilise=OuiNonChoice.NON.name) \
+        filter(animal__sterilise=OuiNonChoice.NON.name).filter(annule=False) \
         .filter(animal__date_naissance__lte=interval_7_months_ago).count()
 
 

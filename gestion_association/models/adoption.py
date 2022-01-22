@@ -78,14 +78,24 @@ class Adoption(models.Model):
         choices=[(tag.name, tag.value) for tag in OuiNonChoice],
     )
 
+    def __str__(self):
+        return "Adoption de " + self.animal.nom + " le " + self.date.strftime("%d/%m/%Y")
+
     def save(self, *args, **kwargs):
         # Maj statut lors de la création de l'adoption
         if self._state.adding:
+
+            # Annulation des adoptions précédentes
+            if self.animal.adoption_set and self.animal.adoption_set.all().count() > 1 :
+                for adoption in self.animal.adoption_set.all():
+                    adoption.annule = True
+                    adoption.save()
             self.animal.statut = StatutAnimal.ADOPTION.name
             self.animal.adoptant = self.adoptant
             self.animal.save()
             self.adoptant.is_adoptante = True
             self.adoptant.save()
+
             if not self.date_visite and self.date :
                 self.date_visite = self.date + relativedelta(months=2)
         # # Maj statut si adoption payée et retirer de la FA

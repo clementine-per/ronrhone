@@ -39,7 +39,7 @@ def index(request, pk):
 
 @login_required()
 def search_adoption(request):
-    adoptions = Adoption.objects.all()
+    adoptions = Adoption.objects.all().filter(annule=False)
     selected = "adoptions"
     title = "Liste des adoptions"
 
