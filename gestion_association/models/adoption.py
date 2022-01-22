@@ -1,3 +1,4 @@
+
 from decimal import Decimal
 from enum import Enum
 from dateutil.relativedelta import relativedelta
@@ -130,6 +131,13 @@ class BonSterilisation(models.Model):
         if self.date_utilisation:
             return result + "utilisé le " + self.date_utilisation.strftime("%d/%m/%Y")
         return result + "utilisé."
+
+    def save(self, *args, **kwargs):
+        # # Maj statut stérilisation si bon utilisé
+        if self.utilise == "OUI":
+            self.adoption.animal.sterilise = self.utilise
+            self.adoption.animal.save()
+        return super(BonSterilisation, self).save(*args, **kwargs)
 
 
 class TarifAdoption(models.Model):
