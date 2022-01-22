@@ -92,7 +92,7 @@ def search_animal(request):
         if nekosable_form:
             form.fields["nekosable"].initial = nekosable_form
             if nekosable_form == OuiNonChoice.OUI.name:
-                animals = animals.filter(nekosable=True)
+                animals = animals.filter(nekosable=True).exclude(famille__neko=True)
             if nekosable_form == OuiNonChoice.NON.name:
                 animals = animals.filter(nekosable=False)
         if statuts_form:

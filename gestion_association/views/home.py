@@ -100,7 +100,7 @@ def index(request):
     accueils_a_deplacer = Accueil.objects.filter(statut=StatutAccueil.A_DEPLACER.name).count()
     # Animaux nekosable
     nekosables = Animal.objects.filter(inactif=False).filter(statut__in=(StatutAnimal.A_ADOPTER.name, StatutAnimal.ADOPTABLE.name)). \
-        filter(nekosable=True)
+        filter(nekosable=True).exclude(famille__neko=True)
     nb_nekosables = nekosables.count()
     # dont prêts = tous soins effectues
     nb_nekosables_prets = nekosables.filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
