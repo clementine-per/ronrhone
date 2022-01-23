@@ -9,8 +9,8 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-3">Adoptions</div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE"><strong>{{a_proposer}}</strong> chats à mettre à l'adoption</a></p>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong> chats à l'adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE"><strong>{{a_proposer}}</strong>  à mettre à l'adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong>  à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?acompte_verse=NON"><strong>{{acomptes}}</strong> adoptions en attente d'acompte</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON&acompte_verse=OUI">
                             <strong>{{adoption_previsite}}</strong> pré-visites à faire
@@ -19,11 +19,11 @@
                             <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet pour montant total de <strong>{{adoption_paiement_montant.montant_restant__sum}} €</strong>
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI">
-                            <strong>{{adoption_post}}</strong> chats attendant leur viste post adoption
+                            <strong>{{adoption_post}}</strong>  attendant leur viste post adoption
                         </a></p>
                         <p><a class="text-secondary"
                               href= "{% url 'adoptions' %}?sterilise=NON&date_naissance_max={{interval_7_months_ago_str}}&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTE_DEFINITIF">
-                            <strong>{{adoption_ste}}</strong> chats adoptés de plus de 7 mois non stérilisés
+                            <strong>{{adoption_ste}}</strong>  adoptés de plus de 7 mois non stérilisés
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
                             <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)
@@ -45,15 +45,15 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-3">Santé</div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SOIN"><strong>{{soins}}</strong> chats en suivi santé rapproché</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SOIN"><strong>{{soins}}</strong>  en suivi santé rapproché</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}soin_manquant=OUI"><strong>{{soins_manquants}}
-                            </strong> chats pour lesquels un soin (tests, vaccin, stérilisation, identification) est manquant</a>
+                            </strong>  pour lesquels un soin (tests, vaccin, stérilisation, identification) est manquant</a>
                         </p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}date_prochain_vaccin_min={{today_str}}&date_prochain_vaccin_max={{interval_10_str}}">
-                            <strong>{{vaccins}}</strong> chats à vacciner dans les 10 jours
+                            <strong>{{vaccins}}</strong>  à vacciner dans les 10 jours
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}date_prochain_vaccin_max={{today_str}}">
-                            <strong>{{vaccins_retard}}</strong> chats avec un retard de vaccin
+                            <strong>{{vaccins_retard}}</strong>  avec un retard de vaccin
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?bon_envoye=NON"><strong>{{bon_a_envoyer}}</strong> bons de stérilisation à envoyer</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?bon_utilise=NON&date_expiration_min={{today_str}}&date_expiration_max={{interval_10_str}}">
@@ -88,20 +88,20 @@
                                 </div>
                             </div>
                         </div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=NON"><strong>{{en_famille}}</strong> chats actuellement en FA</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=NON"><strong>{{en_famille}}</strong>  actuellement en FA</a></p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?statut=DISPONIBLE&date_presence_min={{today_str}}&date_presence_max={{today_str}}">
                             <strong>{{disponibles}}</strong> FA disponibles</a>
                         </p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?statut=INDISPONIBLE&date_presence_min={{today_str}}&date_presence_max={{today_str}}">
                             <strong>{{disponibles_again}}</strong> FA à nouveau disponibles</a>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?statut=A_VISITER"><strong>{{visites}}</strong> FA à visiter</a></p>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=OUI"><strong>{{a_placer}}</strong> chats à placer</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=OUI"><strong>{{a_placer}}</strong>  à placer</a></p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?vide=NON&date_indispo_min={{today_str}}&date_indispo_max={{interval_10_str}}">
-                            <strong> {{a_deplacer_10}} </strong> chats à déplacer dans moins de 10 jours
+                            <strong> {{a_deplacer_10}} </strong>  à déplacer dans moins de 10 jours
                         </a></p>
                         <p><a class="text-secondary"
                               href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&nekosable=OUI">
-                            <strong>{{nb_nekosables}}</strong> chats nekosables</a> dont
+                            <strong>{{nb_nekosables}}</strong>  nekosables</a> dont
                             <a class="text-secondary"
                               href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&vaccin_ok=OUI&sterilise=OUI&nekosable=OUI&fiv_felv=OUI&identifie=OUI">
                                 <strong>{{nb_nekosables_prets}}</strong>
