@@ -6,6 +6,7 @@ from .models.animal import Animal
 from .models.famille import Famille
 from .models.person import Person
 from .views import adoption, animal, famille, home, person
+from .views.person import PersonAutocomplete
 
 urlpatterns = [
     path("", home.index, name="accueil"),
@@ -60,6 +61,11 @@ urlpatterns = [
             )
         ),
         name="detail_person",
+    ),
+    path(
+        "persons/autocomplete/",
+        login_required(PersonAutocomplete.as_view()),
+        name="person_autocomplete",
     ),
     # Adhésions
     path(

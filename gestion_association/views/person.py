@@ -1,3 +1,7 @@
+import sys
+
+from dal import autocomplete
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
@@ -144,3 +148,17 @@ def person_benevole_cancel(request, pk):
     personne.commentaire_benevole = ""
     personne.save()
     return redirect("detail_person", pk=pk)
+
+
+class PersonAutocomplete (autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Person.objects.none()
+
+        qs = Person.objects.all()
+
+        if self.q:
+            qs = qs.filter(nom__istartswith=self.q)
+
+        return qs

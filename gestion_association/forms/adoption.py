@@ -1,3 +1,5 @@
+from dal import autocomplete
+
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import ChoiceField, Form, ModelForm, Select, IntegerField, CharField, DateField, DateInput, \
     MultipleChoiceField, SelectMultiple
@@ -92,6 +94,9 @@ class AdoptionCreateForm(ModelForm):
             "personne_visite",
             "date_visite",
         )
+        widgets = {
+            'adoptant': autocomplete.ModelSelect2(url='person_autocomplete')
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

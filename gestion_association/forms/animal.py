@@ -1,3 +1,5 @@
+from dal import autocomplete
+
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import (
     CharField,
@@ -95,6 +97,10 @@ class AnimalCreateForm(ModelForm):
             "nekosable",
             "ancien_proprio",
         )
+        widgets = {
+            'ancien_proprio': autocomplete.ModelSelect2(url='person_autocomplete')
+        }
+
 
     def __init__(self, *args, **kwargs):
         super(AnimalCreateForm, self).__init__(*args, **kwargs)
@@ -143,6 +149,9 @@ class AnimalInfoUpdateForm(ModelForm):
             "ancien_proprio",
             "inactif",
         )
+        widgets = {
+            'ancien_proprio': autocomplete.ModelSelect2(url='person_autocomplete')
+        }
 
     def __init__(self, *args, **kwargs):
         super(AnimalInfoUpdateForm, self).__init__(*args, **kwargs)
