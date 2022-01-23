@@ -9,8 +9,8 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-3">Adoptions</div>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE"><strong>{{a_proposer}}</strong> animaux à mettre à l'adoption</a></p>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong> animaux à l'adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE"><strong>{{a_proposer}}</strong> chats à mettre à l'adoption</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong> chats à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?acompte_verse=NON"><strong>{{acomptes}}</strong> adoptions en attente d'acompte</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON&acompte_verse=OUI">
                             <strong>{{adoption_previsite}}</strong> pré-visites à faire
@@ -19,11 +19,11 @@
                             <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet pour montant total de <strong>{{adoption_paiement_montant.montant_restant__sum}} €</strong>
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI">
-                            <strong>{{adoption_post}}</strong> animaux attendant leur viste post adoption
+                            <strong>{{adoption_post}}</strong> chats attendant leur viste post adoption
                         </a></p>
                         <p><a class="text-secondary"
                               href= "{% url 'adoptions' %}?sterilise=NON&date_naissance_max={{interval_7_months_ago_str}}&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTE_DEFINITIF">
-                            <strong>{{adoption_ste}}</strong> animaux adoptés de plus de 7 mois non stérilisés
+                            <strong>{{adoption_ste}}</strong> chats adoptés de plus de 7 mois non stérilisés
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
                             <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)
