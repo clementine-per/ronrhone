@@ -16,7 +16,7 @@
     {% block css %}{% endblock %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ronrhone</title>
+    <title>Ronrhone Chats</title>
 </head>
 <body>
 <!-- Content Wrapper -->
@@ -25,7 +25,7 @@
     <div id="content">
         <!-- Navbar -->
         <nav class="navbar navbar-light" style="background-color: #349fcd;">
-            <a class="navbar-brand" href="{% url 'accueil' %}">Application de gestion ronrhône
+            <a class="navbar-brand" href="{% url 'accueil' %}">Gestion ronrhône Chats
             {% if title %}
             - <br> {{title}}
             {% endif %}</a>
@@ -45,7 +45,9 @@
                     </li>
                     <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'animals' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'animals' %}?statuts=A_ADOPTER&statuts=ADOPTION&statuts=ADOPTABLE&statuts=PEC&statuts=SOCIA&statuts=QUARANTAINE&statuts=SOIN&statuts=SEVRAGE">Animaux</a>
+                        <a class="nav-link"
+                           href="{% url 'animals' %}?statuts=A_ADOPTER&statuts=ADOPTION&statuts=ADOPTABLE&statuts=PEC&statuts=SOCIA&statuts=QUARANTAINE&statuts=SOIN&statuts=SEVRAGE">
+                            Chats</a>
                     </li>
                     <li class="nav-item {% if selected == 'adoptions' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'adoptions' %}">Adoptions</a>
