@@ -126,6 +126,11 @@ urlpatterns = [
         adoption.calcul_montant_sterilisation,
         name="calcul_montant_sterilisation",
     ),
+    path(
+        "adoption/cancel/<int:pk>/",
+        adoption.adoption_cancel,
+        name="cancel_adoption",
+    ),
     # Familles
     path("familles/create/<int:pk>/", famille.create_famille, name="create_famille"),
     path("familles/", famille.famille_list, name="familles"),

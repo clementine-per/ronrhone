@@ -342,3 +342,12 @@ def save_adoption(adoption, animal, person, show_form, bon_form):
             bon = bon_form.save(commit=False)
             bon.adoption = adoption
             bon.save()
+
+@login_required
+def adoption_cancel(request, pk):
+    adoption = Adoption.objects.get(id=pk)
+    adoption.annule = True
+    adoption.animal.statut = StatutAnimal.A_ADOPTER.name
+    adoption.save()
+    adoption.animal.save()
+    return redirect("detail_animal", pk=adoption.animal.id)

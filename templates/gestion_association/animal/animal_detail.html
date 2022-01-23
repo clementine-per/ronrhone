@@ -109,6 +109,15 @@
                     {% endfor %}
                 </div>
                 {% endif %}
+                {% if animal.get_latest_adoption.annule %}
+                <div class="alert alert-danger m-2" role="alert">
+                    Adoption annulée <br>
+                </div>
+                {% endif %}
+                {% if not animal.get_latest_adoption.annule %}
+                <a href= "{% url 'cancel_adoption' animal.get_latest_adoption.id %}"
+                   class="mt-3 float-right btn btn-outline-danger">Annuler cette adoption</a>
+                {% endif %}
                 <div class="row">
                     <div class="col-sm-6">
                         <strong> Adoptant </strong> :
