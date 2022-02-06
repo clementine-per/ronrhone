@@ -124,6 +124,7 @@ class Animal(models.Model):
         max_length=30,
         verbose_name="Type d'animal",
         choices=[(tag.name, tag.value) for tag in TypeChoice],
+        default="CHAT",
     )
     sterilise = models.CharField(
         max_length=3,

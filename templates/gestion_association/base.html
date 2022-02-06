@@ -52,6 +52,9 @@
                     <li class="nav-item {% if selected == 'adoptions' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'adoptions' %}">Adoptions</a>
                     </li>
+                    <li class="nav-item {% if selected == 'visites' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'visites' %}">Visites vétérinaires</a>
+                    </li>
                     <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'familles' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'familles' %}">Familles d'accueil</a>

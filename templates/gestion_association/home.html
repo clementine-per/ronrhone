@@ -100,10 +100,10 @@
                             <strong> {{a_deplacer_10}} </strong>  à déplacer dans moins de 10 jours
                         </a></p>
                         <p><a class="text-secondary"
-                              href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&nekosable=OUI">
+                              href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&statuts=QUARANTAINE&nekosable=OUI">
                             <strong>{{nb_nekosables}}</strong>  nekosables</a> dont
                             <a class="text-secondary"
-                              href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&vaccin_ok=OUI&sterilise=OUI&nekosable=OUI&fiv_felv=OUI&identifie=OUI">
+                              href= "{% url 'animals' %}?statuts=ADOPTABLE&statuts=A_ADOPTER&statuts=QUARANTAINE&vaccin_ok=OUI&sterilise=OUI&nekosable=OUI&fiv_felv=OUI&identifie=OUI">
                                 <strong>{{nb_nekosables_prets}}</strong>
                             avec tous les soins effectués.</a>
                         </p>

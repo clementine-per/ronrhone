@@ -20,7 +20,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Type </strong> : {{animal.get_type_display}} <br>
+                        <strong> Statut </strong> : {{animal.get_statut_display}} <br>
                     </div>
                     <div class="col-sm-6">
                         <strong> Date de naissance </strong> : {{animal.date_naissance|date:"d/m/Y"|default:" - "}} <br>
@@ -44,10 +44,13 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Statut </strong> : {{animal.get_statut_display}} <br>
+                        <strong> Famille d'accueil </strong> :  {% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{ animal.famille.personne }}</a> {% endif %} <br>
                     </div>
                     <div class="col-sm-6">
-                        <strong> Famille d'accueil </strong> :  {% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{ animal.famille.personne }}</a> {% endif %} <br>
+                        <strong> Nekosable </strong> :
+                        {% if animal.nekosable %} Oui
+                        {% else %} Non {% endif %}
+                        <br>
                     </div>
                 </div>
                 <div class="row">
@@ -56,12 +59,7 @@
                         {{animal.lien_icad}}
                     </a>{% endif %} <br>
                     </div>
-                    <div class="col-sm-6">
-                        <strong> Nekosable </strong> :
-                        {% if animal.nekosable %} Oui
-                        {% else %} Non {% endif %}
-                        <br>
-                    </div>
+
                 </div>
                 {% if animal.ancien_proprio %}
                 <div class="row">
@@ -224,7 +222,42 @@
                 </div>
 
             </div>
+            {% if animal.visites.all.count >= 1 %}
+            <div class="table-responsive-sm p-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type de visite</th>
+                            <th scope="col">Véterinaire</th>
+                            <th scope="col">Commentaire</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vis in animal.visites.all %}
+                        <tr class="table-info">
+                            <td>{{vis.date|date:"d/m/Y"}}</td>
+                            <td>{{vis.get_type_visite_display}}</td>
+                            <td>{{vis.veterinaire}} </td>
+                            <td>{{vis.commentaire}} </td>
+                            <td>
+                                <a href= "{% url 'update_visite' vis.id %}" >
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <div class="text-right">
+            <a href= "{% url 'create_visite_animal' animal.id %}" class="m-2 float-right btn btn-info">
+                Déclarer une visite vétérinaire</a>
+            </div>
         </div>
+
     </div>
 </div>
 <div class="row p-4">

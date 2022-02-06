@@ -1,0 +1,86 @@
+{% extends "gestion_association/base.html" %}
+{% load tag %}
+{% block content %}
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Recherche
+            </div>
+		<form action = "{% url 'visites' %}" method="post">
+            <div class="card-body">
+                {%csrf_token %}
+                <div class="row">
+                    <div class="col-sm-2">
+                        {{ form.veterinaire.label_tag }}
+                    </div>
+                    <div class="col-sm-10">
+                        {{ form.veterinaire }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+		    		    {{ form.type_visite.label_tag }}
+                    </div>
+                    <div class="col-md-10">
+                        {{ form.type_visite }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.date_min.label_tag }} {{ form.date_min }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.date_max.label_tag }} {{ form.date_max }}
+                    </div>
+		        </div>
+                <div class="text-right">
+                    <a href="{% url 'visites' %}" class="float-left btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
+                    <button class="btn btn-info" type="submit"> <i class="float-right fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                    <br>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{{nb_results}} résultat(s)
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th >Date de la visite vétérinaire</th>
+                <th >Raison de la visite</th>
+                <th>Vétérinaire</th>
+                <th >Montant de la visite</th>
+                <th >Animaux concernés</th>
+            </tr>
+        </thead>
+        {% for visite in visites %}
+        <tr class="table-info">
+            <td>{{visite.date}}</td>
+            <td>{{visite.get_type_visite_display}}</td>
+            <td>{{visite.veterinaire}}</td>
+            <td>{{visite.montant|default:" - "}}</td>
+            <td>{% for animal in visite.animaux.all %}<a href = "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a><br>{% endfor %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        {% if visites.has_previous %}
+        <a href="?{% param_replace page=visites.previous_page_number%}">Précédente</a> -
+        {% endif %}
+
+        <span class="current">
+            Page {{ visites.number }} sur {{ visites.paginator.num_pages }}
+        </span>
+        {% if visites.has_next %}
+        - <a href="?{% param_replace page=visites.next_page_number%}">Suivante</a>
+        {% endif %}
+    </div>
+    <div class="text-right">
+        <a href= "{% url 'create_visite' %}" class="btn btn-info">Renseigner une visite véterinaire</a>
+    </div>
+</div>
+
+{% endblock %}

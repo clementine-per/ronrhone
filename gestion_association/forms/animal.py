@@ -25,11 +25,6 @@ class DateInput(DateInput):
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
     identification = CharField(max_length=100, required=False, label="Numéro d'identification")
-    type = ChoiceField(
-        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in TypeChoice],
-        widget=Select(),
-        required=False,
-    )
     sterilise = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),
@@ -75,7 +70,6 @@ class AnimalCreateForm(ModelForm):
         fields = (
             "nom",
             "sexe",
-            "type",
             "date_naissance",
             "identification",
             "circonstances",
@@ -137,7 +131,6 @@ class AnimalInfoUpdateForm(ModelForm):
         fields = (
             "nom",
             "sexe",
-            "type",
             "date_naissance",
             "identification",
             "circonstances",

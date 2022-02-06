@@ -5,7 +5,7 @@ from django.views.generic import DetailView
 from .models.animal import Animal
 from .models.famille import Famille
 from .models.person import Person
-from .views import adoption, animal, famille, home, person
+from .views import adoption, animal, famille, home, person, visite_medicale
 from .views.person import PersonAutocomplete
 
 urlpatterns = [
@@ -200,6 +200,15 @@ urlpatterns = [
         famille.select_animal_form,
         name="famille_select_animal",
     ),
+    # Visites veterinaires
+    path(
+        "visites/",
+        visite_medicale.visite_medicale_list,
+        name="visites",
+    ),
+    path("visites/create", visite_medicale.CreateVisiteMedicale.as_view(), name="create_visite"),
+    path("visites/update/<int:pk>/", visite_medicale.UpdateVisiteMedicale.as_view(), name="update_visite"),
+    path("visites/create_animal/<int:pk>/", visite_medicale.create_visite_from_animal, name="create_visite_animal"),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
 ]

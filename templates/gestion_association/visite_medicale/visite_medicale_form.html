@@ -1,0 +1,21 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="row">
+        <div class="col">
+            {% if animal %}
+            <a href = "{% url 'detail_animal' animal.id %}"  class="btn btn-secondary">Annuler</a>
+   		    {% else %}
+   			<a href = "{% url 'visites' %}"  class="btn btn-secondary">Annuler</a>
+   		    {% endif %}
+   	</div>
+   	<div class="col">
+   		<input class="btn btn-info" type="submit" />
+   	</div>
+   </div>
+</form>
+{% endblock %}
