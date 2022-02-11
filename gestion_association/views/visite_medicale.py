@@ -41,7 +41,7 @@ def visite_medicale_list(request):
             form.fields["date_max"].initial = date_max_form
             visite_list = visite_list.filter(date__lte=date_max_form)
     # Pagination : 10 éléments par page
-    paginator = Paginator(visite_list.order_by("-date_mise_a_jour"), 10)
+    paginator = Paginator(visite_list.order_by("-date"), 10)
     nb_results = visite_list.count()
     try:
         page = request.GET.get("page")

@@ -230,6 +230,7 @@
                             <th scope="col">Date</th>
                             <th scope="col">Type de visite</th>
                             <th scope="col">Véterinaire</th>
+                            <th>Montant</th>
                             <th scope="col">Commentaire</th>
                             <th></th>
                         </tr>
@@ -240,6 +241,7 @@
                             <td>{{vis.date|date:"d/m/Y"}}</td>
                             <td>{{vis.get_type_visite_display}}</td>
                             <td>{{vis.veterinaire}} </td>
+                            <td>{{vis.montant|default:"-"}} </td>
                             <td>{{vis.commentaire}} </td>
                             <td>
                                 <a href= "{% url 'update_visite' vis.id %}" >

@@ -21,6 +21,8 @@ class TypeVisiteVetoChoice(Enum):
     PACK_TC = "Identification, primo vaccination TC, Tests FIV/FELV"
     PACK_TCL = "Identification, primo vaccination TCL, Tests FIV/FELV"
     AUTRE = "Autre"
+    CHIRURGIE = "Chirurgie"
+    URGENCE = "Urgence"
 
 
 class VisiteMedicale(models.Model):
@@ -39,6 +41,9 @@ class VisiteMedicale(models.Model):
         verbose_name="Montant", max_digits=7, decimal_places=2, blank=True, null=True
     )
     animaux = models.ManyToManyField("Animal", related_name="visites")
+
+    class Meta:
+        ordering = ["-date"]
 
     def __str__(self):
         return f"Visite {self.type_visite} le {self.date} chez {self.veterinaire}"
