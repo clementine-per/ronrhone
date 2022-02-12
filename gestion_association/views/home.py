@@ -86,7 +86,7 @@ def index(request):
         .count()
     # Partie FA
     # Animaux en FA
-    en_famille = Animal.objects.filter(inactif=False).filter(famille__isnull=False).count()
+    en_famille = Animal.objects.filter(statut__in=statuts_association).filter(inactif=False).filter(famille__isnull=False).count()
     # Familles disponibles
     disponibles = Famille.objects.filter(statut='DISPONIBLE').exclude(
         indisponibilite__date_debut__lte=today,

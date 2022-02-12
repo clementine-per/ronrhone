@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice, TypeChoice
-from gestion_association.models.famille import Famille
+from gestion_association.models.famille import Famille, StatutAccueil
 from gestion_association.models.person import Person
 
 
@@ -246,6 +246,18 @@ class Animal(models.Model):
         if self.ancien_proprio:
             self.ancien_proprio.is_ancien_proprio = True
             self.ancien_proprio.save()
+            # # Maj statut si adoption payée et retirer de la FA
+        if self.statut in (StatutAnimal.DECEDE.name, StatutAnimal.RENDU.name,
+                           StatutAnimal.PERDU.name, StatutAnimal.RELACHE.name) :
+            if self.famille:
+                famille = self.famille
+                for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(
+                        animal__pk=self.id).all():
+                    accueil.date_fin = timezone.now().date()
+                    accueil.statut = StatutAccueil.TERMINE.name
+                    accueil.save()
+                self.famille = None
+                self.save()
         return super(Animal, self).save(*args, **kwargs)
 
     def get_latest_adoption(self):

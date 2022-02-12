@@ -20,6 +20,8 @@ class TypeVisiteVetoChoice(Enum):
     CONSULT = "Consultation"
     PACK_TC = "Identification, primo vaccination TC, Tests FIV/FELV"
     PACK_TCL = "Identification, primo vaccination TCL, Tests FIV/FELV"
+    PACK_STE_TC = "Stérilisation, Identification, primo vaccination TC, Tests FIV/FELV"
+    PACK_STE_TCL = "Stérilisation, Identification, primo vaccination TCL, Tests FIV/FELV"
     AUTRE = "Autre"
     CHIRURGIE = "Chirurgie"
     URGENCE = "Urgence"
