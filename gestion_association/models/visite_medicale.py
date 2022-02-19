@@ -62,19 +62,22 @@ def visite_medicale_save_action(sender, instance, **kwargs):
             TypeVisiteVetoChoice.STE.name,
             TypeVisiteVetoChoice.PACK_TC.name,
             TypeVisiteVetoChoice.PACK_TCL.name,
+            TypeVisiteVetoChoice.PACK_STE_TCL.name,
+            TypeVisiteVetoChoice.PACK_STE_TC.name,
     ):
         for animal in instance.animaux.all():
-            if instance.type_visite == TypeVisiteVetoChoice.STE.name:
+            if instance.type_visite in (TypeVisiteVetoChoice.STE.name,TypeVisiteVetoChoice.PACK_STE_TCL.name,
+                                        TypeVisiteVetoChoice.PACK_STE_TC.name) :
                 animal.sterilise = OuiNonChoice.OUI.name
                 animal.date_sterilisation = instance.date
             elif instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
-                                          TypeVisiteVetoChoice.PACK_TC.name) :
+                                          TypeVisiteVetoChoice.PACK_TC.name, TypeVisiteVetoChoice.PACK_STE_TC.name) :
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.type_vaccin = TypeVaccinChoice.TC.name
                 animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
             elif instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
-                                          TypeVisiteVetoChoice.PACK_TCL.name) :
+                                          TypeVisiteVetoChoice.PACK_TCL.name, TypeVisiteVetoChoice.PACK_STE_TCL.name) :
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)

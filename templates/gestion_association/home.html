@@ -59,6 +59,9 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?bon_utilise=NON&date_expiration_min={{today_str}}&date_expiration_max={{interval_10_str}}">
                             <strong>{{bon_a_utilise}}</strong> bons de stérilisation à utiliser dans les 10 jours
                         </a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SEVRAGE&date_naissance_max={{interval_2_and_half_month_ago_str}}">
+                            <strong>{{fin_sevrage}}</strong> chatons en fin de sevrage</a></p>
+
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-heartbeat fa-2x text-gray-300"></i>

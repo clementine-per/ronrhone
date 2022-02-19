@@ -1,3 +1,4 @@
+import sys
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
@@ -84,6 +85,12 @@ def index(request):
     # Vaccins dépassés
     vaccins_retard = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association).filter(date_prochain_vaccin__lte=today) \
         .count()
+    # Chatons en fin de sevrage
+    interval_2_and_half_month_ago = today - relativedelta(months=2) - timedelta(days=15)
+    interval_2_and_half_month_ago_str = interval_2_and_half_month_ago.strftime("%Y-%m-%d")
+    fin_sevrage = Animal.objects.filter(inactif=False).filter(statut='SEVRAGE').\
+        filter(date_naissance__lte=interval_2_and_half_month_ago).count()
+
     # Partie FA
     # Animaux en FA
     en_famille = Animal.objects.filter(statut__in=statuts_association).filter(inactif=False).filter(famille__isnull=False).count()
@@ -115,10 +122,11 @@ def index(request):
     filter(~Q(fiv='NT')&~Q(felv='NT')).exclude(identification__exact='').count()
 
     #Taux de remplissage
-    familles_occupees =  Famille.objects.filter(animal__isnull=False).distinct().count()
-    total_familles = Famille.objects.filter(statut__in=('DISPONIBLE','INDISPONIBLE','OCCUPE')).count()
-    if total_familles > 0:
-        taux_remplissage = int((familles_occupees/total_familles) * 100)
+    places_disponibles =  Famille.objects.filter(statut='DISPONIBLE').aggregate(Sum('nb_places'))
+    print(places_disponibles)
+    sys.stdout.flush()
+    if en_famille > 0:
+        taux_remplissage = int((en_famille/(en_famille+places_disponibles['nb_places__sum'])) * 100)
 
     return render(request, "gestion_association/home.html", locals())
 
