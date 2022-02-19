@@ -123,8 +123,6 @@ def index(request):
 
     #Taux de remplissage
     places_disponibles =  Famille.objects.filter(statut='DISPONIBLE').aggregate(Sum('nb_places'))
-    print(places_disponibles)
-    sys.stdout.flush()
     if en_famille > 0:
         taux_remplissage = int((en_famille/(en_famille+places_disponibles['nb_places__sum'])) * 100)
 
