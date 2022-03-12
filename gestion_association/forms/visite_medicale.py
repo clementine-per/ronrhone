@@ -1,7 +1,7 @@
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import Form, CharField, ChoiceField, Select, ModelForm, DateField, DateInput
 
-from gestion_association.models.animal import Animal, statuts_association
+from gestion_association.models.animal import Animal, StatutAnimal
 from gestion_association.models.visite_medicale import TypeVisiteVetoChoice, VisiteMedicale
 
 
@@ -22,6 +22,17 @@ class VisiteMedicaleSearchForm(Form):
     )
     date_max = DateField(label=" et le ", required=False, widget=DateInput())
 
+statuts_association_adopte = [
+    StatutAnimal.A_ADOPTER.name,
+    StatutAnimal.ADOPTION.name,
+    StatutAnimal.ADOPTE.name,
+    StatutAnimal.ADOPTABLE.name,
+    StatutAnimal.PEC.name,
+    StatutAnimal.SOCIA.name,
+    StatutAnimal.QUARANTAINE.name,
+    StatutAnimal.SOIN.name,
+    StatutAnimal.SEVRAGE.name,
+]
 
 class VisiteMedicaleForm(ModelForm):
     # Pour mettre les champs obligatoires en gras
@@ -40,4 +51,4 @@ class VisiteMedicaleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(VisiteMedicaleForm, self).__init__(*args, **kwargs)
         self.fields['date'].widget.attrs['class'] = 'datePicker'
-        self.fields['animaux'].queryset = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association).order_by('nom')
+        self.fields['animaux'].queryset = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association_adopte).order_by('nom')

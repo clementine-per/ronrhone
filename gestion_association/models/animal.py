@@ -44,7 +44,6 @@ class StatutAnimal(Enum):
 
 
 statuts_association = [
-    StatutAnimal.ADOPTE.name,
     StatutAnimal.A_ADOPTER.name,
     StatutAnimal.ADOPTION.name,
     StatutAnimal.ADOPTABLE.name,
