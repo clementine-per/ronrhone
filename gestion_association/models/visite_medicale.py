@@ -1,3 +1,5 @@
+import sys
+
 from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.db.models.signals import m2m_changed
@@ -54,6 +56,8 @@ class VisiteMedicale(models.Model):
 @receiver(m2m_changed, sender=VisiteMedicale.animaux.through)
 def visite_medicale_save_action(sender, instance, **kwargs):
     # Instance est une visite médicale
+    print(instance)
+    sys.stdout.flush()
     if instance.type_visite in (
             TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
             TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
@@ -66,29 +70,31 @@ def visite_medicale_save_action(sender, instance, **kwargs):
             TypeVisiteVetoChoice.PACK_STE_TC.name,
     ):
         for animal in instance.animaux.all():
+            print(animal)
+            sys.stdout.flush()
             if instance.type_visite in (TypeVisiteVetoChoice.STE.name,TypeVisiteVetoChoice.PACK_STE_TCL.name,
                                         TypeVisiteVetoChoice.PACK_STE_TC.name) :
                 animal.sterilise = OuiNonChoice.OUI.name
                 animal.date_sterilisation = instance.date
-            elif instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
+            if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
                                           TypeVisiteVetoChoice.PACK_TC.name, TypeVisiteVetoChoice.PACK_STE_TC.name) :
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.type_vaccin = TypeVaccinChoice.TC.name
                 animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
-            elif instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
+            if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
                                           TypeVisiteVetoChoice.PACK_TCL.name, TypeVisiteVetoChoice.PACK_STE_TCL.name) :
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
                 animal.type_vaccin = TypeVaccinChoice.TCL.name
-            elif instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TC.name :
+            if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TC.name :
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.vaccin_ok = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.type_vaccin = TypeVaccinChoice.TC.name
                 animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
-            elif instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name:
+            if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name:
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.vaccin_ok = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
