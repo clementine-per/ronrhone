@@ -58,6 +58,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-8">
+                        {{ form.date_arrivee_min.label_tag }} {{ form.date_arrivee_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_arrivee_max.label_tag }} {{ form.date_arrivee_max }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
                         {{ form.date_prochain_vaccin_min.label_tag }} {{ form.date_prochain_vaccin_min }}
                     </div>
                     <div class="col-md-4">
@@ -113,6 +121,7 @@
             <th scope="col">Tests</th>
             <th scope="col">Vacciné</th>
             <th scope="col">Montant adoption</th>
+            <th scope="col">Prise en charge</th>
         </tr>
         </thead>
         <tbody>
@@ -132,6 +141,7 @@
             <td>{{animal.get_tests_str}}</td>
             <td>{{animal.get_vaccin_str}}</td>
             <td>{{animal.get_latest_adoption.montant|default:" - "}}</td>
+            <td>{{animal.date_arrivee|date:"d/m/Y"|default:" - "}}</td>
         </tr>
         {% endfor %}
         </tbody>

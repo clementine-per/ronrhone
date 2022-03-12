@@ -40,6 +40,10 @@ class AnimalSearchForm(Form):
         label="Date de naissance entre le", required=False, widget=DateInput()
     )
     date_naissance_max = DateField(label=" et le ", required=False, widget=DateInput())
+    date_arrivee_min = DateField(
+        label="Date de prise en charge entre le", required=False, widget=DateInput()
+    )
+    date_arrivee_max = DateField(label=" et le ", required=False, widget=DateInput())
     date_prochain_vaccin_min = DateField(
         label="Date du prochain vaccin entre le",
         required=False,

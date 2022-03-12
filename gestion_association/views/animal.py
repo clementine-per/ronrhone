@@ -50,6 +50,8 @@ def search_animal(request):
         statuts_form = request.GET.getlist("statuts","")
         date_naissance_min = request.GET.get("date_naissance_min", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
+        date_arrivee_min = request.GET.get("date_arrivee_min", "")
+        date_arrivee_max = request.GET.get("date_arrivee_max", "")
         date_prochain_vaccin_min = request.GET.get("date_prochain_vaccin_min", "")
         date_prochain_vaccin_max = request.GET.get("date_prochain_vaccin_max", "")
         date_vermifuge_min = request.GET.get("date_vermifuge_min", "")
@@ -100,6 +102,12 @@ def search_animal(request):
         if date_naissance_max:
             form.fields["date_naissance_max"].initial = date_naissance_max
             animals = animals.filter(date_naissance__lte=parse_date(date_naissance_max))
+        if date_arrivee_min:
+            form.fields["date_arrivee_min"].initial = date_arrivee_min
+            animals = animals.filter(date_arrivee__gte=parse_date(date_arrivee_min))
+        if date_arrivee_max:
+            form.fields["date_arrivee_max"].initial = date_arrivee_max
+            animals = animals.filter(date_arrivee__lte=parse_date(date_arrivee_max))
         if date_prochain_vaccin_min:
             form.fields["date_prochain_vaccin_min"].initial = date_prochain_vaccin_min
             animals = animals.filter(date_prochain_vaccin__gte=parse_date(date_prochain_vaccin_min))
