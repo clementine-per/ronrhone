@@ -32,6 +32,14 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
+                        {{ form.perimetre.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.perimetre }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
 		    		    {{ form.statuts.label_tag }}
                     </div>
                     <div class="col-sm-8">
@@ -127,7 +135,7 @@
         <tbody>
         {% for animal in animal_list %}
         <tr class="table-info">
-            <td><a href= "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a></td>
+            <td><i class="fa fa-circle {{animal.perimetre}}"></i><a href= "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a></td>
             <td>{{animal.get_statut_display}}
                 {% if animal.is_en_soin_justif %}
                 ( {{animal.commentaire_sante}} )

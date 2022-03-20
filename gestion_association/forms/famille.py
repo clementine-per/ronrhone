@@ -15,7 +15,7 @@ from django.forms import (
 )
 from django.utils import timezone
 
-from gestion_association.models import OuiNonChoice
+from gestion_association.models import OuiNonChoice, PerimetreChoice
 from gestion_association.models.animal import Animal
 from gestion_association.models.famille import Accueil, Famille, Indisponibilite, StatutFamille
 
@@ -27,6 +27,12 @@ class DateInput(DateInput):
 class FamilleSearchForm(Form):
     nom_personne = CharField(max_length=100, required=False, label="Nom de la personne")
     detail_places = CharField(max_length=100, required=False, label="Accueils acceptés")
+    perimetre = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in PerimetreChoice],
+        widget=Select(),
+        required=False,
+        label="Périmètre de gestion"
+    )
     statut = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in StatutFamille],
         widget=Select(),
@@ -60,6 +66,7 @@ class FamilleCreateForm(ModelForm):
         fields = (
             "type_animal",
             "commentaire",
+            "perimetre",
             "taille_logement",
             "autres_animaux",
             "nb_places",
@@ -76,7 +83,7 @@ class FamilleMainUpdateForm(ModelForm):
     required_css_class = 'required'
     class Meta:
         model = Famille
-        fields = ("type_animal", "statut", "niveau", "commentaire")
+        fields = ("type_animal", "statut","perimetre", "niveau", "commentaire")
 
 
 class FamilleAccueilUpdateForm(ModelForm):

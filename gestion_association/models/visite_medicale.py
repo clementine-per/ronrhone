@@ -1,5 +1,3 @@
-import sys
-
 from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.db.models.signals import m2m_changed
@@ -56,8 +54,6 @@ class VisiteMedicale(models.Model):
 @receiver(m2m_changed, sender=VisiteMedicale.animaux.through)
 def visite_medicale_save_action(sender, instance, **kwargs):
     # Instance est une visite médicale
-    print(instance)
-    sys.stdout.flush()
     if instance.type_visite in (
             TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
             TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
@@ -70,8 +66,6 @@ def visite_medicale_save_action(sender, instance, **kwargs):
             TypeVisiteVetoChoice.PACK_STE_TC.name,
     ):
         for animal in instance.animaux.all():
-            print(animal)
-            sys.stdout.flush()
             if instance.type_visite in (TypeVisiteVetoChoice.STE.name,TypeVisiteVetoChoice.PACK_STE_TCL.name,
                                         TypeVisiteVetoChoice.PACK_STE_TC.name) :
                 animal.sterilise = OuiNonChoice.OUI.name

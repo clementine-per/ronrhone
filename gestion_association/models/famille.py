@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 
-from gestion_association.models import OuiNonChoice, TypeChoice
+from gestion_association.models import OuiNonChoice, TypeChoice, PerimetreChoice
 from gestion_association.models.person import Person
 
 
@@ -82,6 +82,12 @@ class Famille(models.Model):
     neko = models.BooleanField(
         default=False,
         verbose_name="Il s'agit du café des chats (Neko)",
+    )
+    perimetre = models.CharField(
+        max_length=30,
+        default="UN",
+        verbose_name="Périmètre de gestion",
+        choices=[(tag.name, tag.value) for tag in PerimetreChoice],
     )
 
     def get_nb_places_str(self):

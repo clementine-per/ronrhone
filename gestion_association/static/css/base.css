@@ -66,6 +66,14 @@ i.INACTIVE{
     color:#e6331c;
 }
 
+i.UN{
+    color:#0066cc;
+}
+
+i.DEUX{
+    color:#6d3498;
+}
+
 /* Affichage des erreurs de formulaire */
 ul.errorlist {
     margin: 0;

@@ -21,6 +21,14 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
+                        {{ form.perimetre.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.perimetre }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
                         {{ form.detail_places.label_tag }}
                     </div>
                     <div class="col-sm-8">
@@ -105,7 +113,8 @@
         <tbody>
         {% for famille in famille_list %}
         <tr class="table-info">
-            <td class="text-center"><a href = "{% url 'detail_famille' famille.id %}"><i class="fa fa-house-user"></i></a></td>
+            <td class="text-center"><a href = "{% url 'detail_famille' famille.id %}">
+                <i class="fa fa-house-user {{famille.perimetre}}"></i></a></td>
             <td><i class="fa fa-circle {{famille.statut}}"></i> {{famille.get_statut_display}}</td>
             <td>{{famille.personne}}</td>
             <td>{{famille.get_nb_places_str}}</td>

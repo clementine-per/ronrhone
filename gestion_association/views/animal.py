@@ -45,6 +45,7 @@ def search_animal(request):
         nom_form = request.GET.get("nom", "")
         identification_form = request.GET.get("identification", "")
         sterilise_form = request.GET.get("sterilise", "")
+        perimetre_form = request.GET.get("perimetre", "")
         sans_fa_form = request.GET.get("sans_fa", "")
         nekosable_form = request.GET.get("nekosable", "")
         statuts_form = request.GET.getlist("statuts","")
@@ -81,6 +82,9 @@ def search_animal(request):
         if sterilise_form:
             animals = animals.filter(sterilise=sterilise_form)
             form.fields["sterilise"].initial = sterilise_form
+        if perimetre_form:
+            animals = animals.filter(perimetre=perimetre_form)
+            form.fields["perimetre"].initial = perimetre_form
         if sans_fa_form:
             form.fields["sans_fa"].initial = sans_fa_form
             if sans_fa_form == OuiNonChoice.OUI.name:

@@ -44,7 +44,12 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <strong> Famille d'accueil </strong> :  {% if animal.famille %}<a href = "{% url 'detail_famille' animal.famille.id %}">{{ animal.famille.personne }}</a> {% endif %} <br>
+                        <strong> Périmètre de gestion </strong> :  {{ animal.get_perimetre_display }}<br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Famille d'accueil </strong> :  {% if animal.famille %}
+                        <a href = "{% url 'detail_famille' animal.famille.id %}">{{ animal.famille.personne }}
+                        </a> {% endif %} <br>
                     </div>
                     <div class="col-sm-6">
                         <strong> Nekosable </strong> :

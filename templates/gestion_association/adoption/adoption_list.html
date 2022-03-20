@@ -120,7 +120,8 @@
         <tbody>
         {% for adoption in adoption_list %}
         <tr class="table-info">
-            <td class="text-center"><a href = "{% url 'detail_animal' adoption.animal.id %}">
+            <td class="text-center"><i class="fa fa-circle {{adoption.animal.perimetre}}"></i>
+                <a href = "{% url 'detail_animal' adoption.animal.id %}">
                 {{adoption.animal.nom}}</a></td>
             <td class="text-center"><a href = "{% url 'detail_person' adoption.adoptant.id %}">
                 {{adoption.adoptant}}</a></td>

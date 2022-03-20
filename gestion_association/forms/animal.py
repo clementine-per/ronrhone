@@ -13,8 +13,8 @@ from django.forms import (
     Select,
     SelectMultiple)
 
-from gestion_association.models import OuiNonChoice
-from gestion_association.models.animal import Animal, StatutAnimal, TypeChoice, statuts_association, Parrainage
+from gestion_association.models import OuiNonChoice, PerimetreChoice
+from gestion_association.models.animal import Animal, StatutAnimal, statuts_association, Parrainage
 from gestion_association.models.person import Person
 from gestion_association.widgets import TableSelectMultiple
 
@@ -25,6 +25,12 @@ class DateInput(DateInput):
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
     identification = CharField(max_length=100, required=False, label="Numéro d'identification")
+    perimetre = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in PerimetreChoice],
+        widget=Select(),
+        required=False,
+        label="Périmètre de gestion"
+    )
     sterilise = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),
@@ -76,6 +82,7 @@ class AnimalCreateForm(ModelForm):
             "sexe",
             "date_naissance",
             "identification",
+            "perimetre",
             "circonstances",
             "date_arrivee",
             "commentaire",
@@ -137,6 +144,7 @@ class AnimalInfoUpdateForm(ModelForm):
             "sexe",
             "date_naissance",
             "identification",
+            "perimetre",
             "circonstances",
             "date_arrivee",
             "commentaire",

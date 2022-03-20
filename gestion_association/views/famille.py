@@ -71,6 +71,7 @@ def famille_list(request):
         nom_personne_form = request.GET.get("nom_personne", "")
         places_dispos_form = request.GET.get("places_dispos", "")
         quarantaine_form = request.GET.get("quarantaine", "")
+        perimetre_form = request.GET.get("perimetre", "")
         exterieur_form = request.GET.get("exterieur", "")
         statut_form = request.GET.get("statut", "")
         vide_form = request.GET.get("vide", "")
@@ -87,6 +88,9 @@ def famille_list(request):
         if detail_places_form:
             famille_list = famille_list.filter(detail_places__icontains=detail_places_form)
             form.fields["detail_places"].initial = detail_places_form
+        if perimetre_form:
+            famille_list = famille_list.filter(perimetre=perimetre_form)
+            form.fields["perimetre"].initial = perimetre_form
         if statut_form:
             famille_list = famille_list.filter(statut=statut_form)
             form.fields["statut"].initial = statut_form
