@@ -90,6 +90,12 @@ class Famille(models.Model):
         choices=[(tag.name, tag.value) for tag in PerimetreChoice],
     )
 
+    def save(self, *args, **kwargs):
+        for animal in self.animal_set.all():
+            animal.perimetre = self.perimetre
+            animal.save()
+        return super().save(*args, **kwargs)
+
     def get_nb_places_str(self):
         count = self.nb_places
         if self.animal_set:
@@ -221,6 +227,7 @@ class Accueil(models.Model):
                     accueil.famille.save()
             #On change la FA de l'animal
             self.animal.famille = self.famille
+            self.animal.perimetre = self.famille.perimetre
             self.animal.save()
             #On passe le statut FA à occupé
             self.famille.statut = StatutFamille.OCCUPE.name
