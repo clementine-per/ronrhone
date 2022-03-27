@@ -49,6 +49,10 @@
                            href="{% url 'animals' %}?statuts=A_ADOPTER&statuts=ADOPTION&statuts=ADOPTABLE&statuts=PEC&statuts=SOCIA&statuts=QUARANTAINE&statuts=SOIN&statuts=SEVRAGE">
                             Chats</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create_animal' %}">
+                            <i class="fa fa-plus "> Ajouter un chat </i></a>
+                    </li>
                     <li class="nav-item {% if selected == 'adoptions' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'adoptions' %}">Adoptions</a>
                     </li>
@@ -61,6 +65,10 @@
                     </li>
                     <li class="nav-item {% if selected == 'persons' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'persons' %}">Personnes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create_person' %}">
+                            <i class="fa fa-plus "> Ajouter une personne </i></a>
                     </li>
                     <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'parametrage' %}active{% endif %}">

@@ -5,6 +5,9 @@
         <div class="card">
             <div class="card-header">
                 Informations générales
+                <a href= "{% url 'create_animal' %}?animal={{animal.id}}">
+                    <i title="Dupliquer" class="fas fa-clone"></i>
+                </a>
                 <a href= "{% url 'update_information' animal.id %}" class="close">
                         <i class="fas fa-pen"></i>
                 </a>

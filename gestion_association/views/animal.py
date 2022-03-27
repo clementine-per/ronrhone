@@ -155,7 +155,27 @@ def create_animal(request):
     else:
         animal_form = AnimalCreateForm()
         preference_form = PreferenceForm()
-        preference_form.fields['quarantaine'].initial = OuiNonChoice.OUI.value
+        id_animal = request.GET.get("animal", "")
+        if id_animal:
+            animal_to_copy = Animal.objects.get(id=id_animal)
+            animal_form.fields["date_naissance"].initial = animal_to_copy.date_naissance
+            animal_form.fields["circonstances"].initial = animal_to_copy.circonstances
+            animal_form.fields["date_arrivee"].initial = animal_to_copy.date_arrivee
+            animal_form.fields["statut"].initial = animal_to_copy.statut
+            animal_form.fields["sterilise"].initial = animal_to_copy.sterilise
+            animal_form.fields["date_sterilisation"].initial = animal_to_copy.date_sterilisation
+            animal_form.fields["type_vaccin"].initial = animal_to_copy.type_vaccin
+            animal_form.fields["primo_vaccine"].initial = animal_to_copy.primo_vaccine
+            animal_form.fields["fiv"].initial = animal_to_copy.fiv
+            animal_form.fields["felv"].initial = animal_to_copy.felv
+            animal_form.fields["commentaire_sante"].initial = animal_to_copy.commentaire_sante
+            animal_form.fields["ancien_proprio"].initial = animal_to_copy.ancien_proprio
+            preference_form.fields["sociabilisation"].initial = animal_to_copy.preference.sociabilisation
+            preference_form.fields["exterieur"].initial = animal_to_copy.preference.exterieur
+            preference_form.fields["quarantaine"].initial = animal_to_copy.preference.quarantaine
+            preference_form.fields["biberonnage"].initial = animal_to_copy.preference.biberonnage
+        else :
+            preference_form.fields['quarantaine'].initial = OuiNonChoice.OUI.value
     return render(request, "gestion_association/animal/animal_create_form.html", locals())
 
 
