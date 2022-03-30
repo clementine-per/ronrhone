@@ -119,7 +119,7 @@ class AccueilForm(ModelForm):
 
     class Meta:
         model = Accueil
-        fields = ("date_debut","date_fin","commentaire")
+        fields = ("date_debut","date_fin","statut","commentaire")
 
     def __init__(self, *args, **kwargs):
         super(AccueilForm, self).__init__(*args, **kwargs)

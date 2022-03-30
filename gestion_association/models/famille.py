@@ -242,8 +242,5 @@ class Accueil(models.Model):
                 if not self.famille.accueil_set.filter(statut__in=[StatutAccueil.A_DEPLACER.name,StatutAccueil.EN_COURS.name]).exclude(id = self.id):
                     self.famille.statut = StatutFamille.DISPONIBLE.name
                     self.famille.save()
-            # Si date de fin dans le futur, l'animal est à déplacer
-            if self.date_fin and self.date_fin > timezone.now().date():
-                self.statut = StatutAccueil.A_DEPLACER.name
 
         return super().save(*args, **kwargs)
