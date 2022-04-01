@@ -229,19 +229,19 @@ class Animal(models.Model):
     famille = models.ForeignKey(Famille, on_delete=models.PROTECT, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self._state.adding:
-            # Déterminer la tranche d'age à partir de la date de naissance
-            if self.date_naissance:
-                today = timezone.now().date()
-                twelve_months = today - timedelta(days=12 * 30)
-                senior = today - timedelta(days=30 * 12 * 10)
-                date_naissance = self.date_naissance
-                if date_naissance > twelve_months:
-                    self.tranche_age = TrancheAge.ENFANT.name
-                elif date_naissance > senior:
-                    self.tranche_age = TrancheAge.ADULTE.name
-                else:
-                    self.tranche_age = TrancheAge.SENIOR.name
+
+        # Déterminer la tranche d'age à partir de la date de naissance
+        if self.date_naissance:
+            today = timezone.now().date()
+            twelve_months = today - timedelta(days=12 * 30)
+            senior = today - timedelta(days=30 * 12 * 10)
+            date_naissance = self.date_naissance
+            if date_naissance > twelve_months:
+                self.tranche_age = TrancheAge.ENFANT.name
+            elif date_naissance > senior:
+                self.tranche_age = TrancheAge.ADULTE.name
+            else:
+                self.tranche_age = TrancheAge.SENIOR.name
         # Mise à jour des préférences en fonction du statut
         if self.statut == StatutAnimal.QUARANTAINE.name:
             self.preference.quarantaine = OuiNonChoice.OUI.name
