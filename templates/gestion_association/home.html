@@ -61,6 +61,8 @@
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SEVRAGE&date_naissance_max={{interval_2_and_half_month_ago_str}}">
                             <strong>{{fin_sevrage}}</strong> chatons en fin de sevrage</a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=QUARANTAINE&date_arrivee_max={{interval_15_ago_str}}">
+                            <strong>{{fin_quarantaine}}</strong> fins de quarantaine</a></p>
 
                     </div>
                     <div class="col-auto">

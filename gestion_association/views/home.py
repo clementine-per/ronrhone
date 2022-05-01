@@ -22,12 +22,14 @@ def index(request):
 
     today = timezone.now().date()
     interval_10 = today + timedelta(days=10)
+    interval_15_ago = today - timedelta(days=15)
     interval_5_weeks_ago = today - timedelta(days=35)
     interval_5_months_ago = today - relativedelta(months=5)
     interval_7_months_ago = today - relativedelta(months=7)
     # Valeurs str utilisées dans le template html
     today_str = today.strftime("%Y-%m-%d")
     interval_10_str = interval_10.strftime("%Y-%m-%d")
+    interval_15_ago_str = interval_15_ago.strftime("%Y-%m-%d")
     interval_5_weeks_ago_str = interval_5_weeks_ago.strftime("%Y-%m-%d")
     interval_7_months_ago_str = interval_7_months_ago.strftime("%Y-%m-%d")
 
@@ -90,6 +92,9 @@ def index(request):
     interval_2_and_half_month_ago_str = interval_2_and_half_month_ago.strftime("%Y-%m-%d")
     fin_sevrage = Animal.objects.filter(inactif=False).filter(statut='SEVRAGE').\
         filter(date_naissance__lte=interval_2_and_half_month_ago).count()
+    # Fin de quarantaine
+    fin_quarantaine = Animal.objects.filter(inactif=False).filter(statut='QUARANTAINE').\
+        filter(date_arrivee__lte=interval_15_ago).count()
 
     # Partie FA
     # Animaux en FA
