@@ -129,7 +129,10 @@ def index(request):
     #Taux de remplissage
     places_disponibles =  Famille.objects.filter(statut='DISPONIBLE').aggregate(Sum('nb_places'))
     if en_famille > 0:
-        taux_remplissage = int((en_famille/(en_famille+places_disponibles['nb_places__sum'])) * 100)
+        if places_disponibles['nb_places__sum']:
+            taux_remplissage = int((en_famille/(en_famille+places_disponibles['nb_places__sum'])) * 100)
+        else:
+            taux_remplissage = 100
 
     return render(request, "gestion_association/home.html", locals())
 
