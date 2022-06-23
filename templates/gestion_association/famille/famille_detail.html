@@ -31,7 +31,7 @@
                 <strong> Type d'animaux accueillis </strong> : {{famille.get_type_animal_display}} <br>
                 <strong> Commentaire </strong> : {{famille.commentaire}} <br>
                 <hr />
-                <strong> Animaux accueillis au total </strong> : {{famille.nb_animaux_historique |default:" 0 "}} <br>
+                <strong> Animaux accueillis au total </strong> : {{famille.accueil_set.count}} <br>
                 <strong> Animaux accueillis en ce moment </strong> : {% for animal in famille.animal_set.all %}
                 <a href = "{% url 'detail_animal' animal.id %}"> {{animal.nom}}</a>, {% endfor %} <br>
                 <hr />
