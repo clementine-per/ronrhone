@@ -179,6 +179,7 @@
                             <th scope="col">Date de fin</th>
                             <th scope="col">Animal</th>
                             <th scope="col">Type de paiement</th>
+                            <th scope="col">Montant parrainages</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -189,6 +190,7 @@
                             <td>{{parrainage.date_fin|default:" - "}}</td>
                             <td><a href = "{% url 'detail_animal' parrainage.animal.id %}"> {{parrainage.animal.nom}}</a><br> </td>
                             <td>{{parrainage.get_type_paiement_display}} </td>
+                            <td>{{parrainage.montant}} </td>
                             <td>
                                 <a href= "{% url 'update_parrainage' parrainage.id %}" >
                                     <i class="fas fa-pen"></i>

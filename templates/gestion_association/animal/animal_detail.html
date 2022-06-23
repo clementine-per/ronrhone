@@ -349,5 +349,40 @@
         </div>
     </div>
 </div>
+{% if animal.parrainage_set.all.count >= 1 %}
+<div class="row p-2">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Parrainages
+            </div>
+            <div class="table-responsive-sm p-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Parrain</th>
+                            <th scope="col">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for parrainage in animal.parrainage_set.all %}
+                        <tr class="table-info">
+                            <td>{{parrainage.personne}}</td>
+                            <td>{{parrainage.montant}} </td>
+                            <td>
+                                <a href= "{% url 'update_parrainage' parrainage.id %}" >
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endif %}
 {% endblock %}

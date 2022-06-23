@@ -47,6 +47,7 @@
             <th scope="col">Rôle(s)</th>
             <th scope="col">Adresse</th>
             <th scope="col">Téléphone</th>
+            <th scope="col">Montant parrainages</th>
         </tr>
         </thead>
         <tbody>
@@ -76,6 +77,7 @@
             </td>
             <td>{{person.get_adresse_complete}}</td>
             <td>{{person.telephone}}</td>
+            <td>{{person.get_montant_total}}</td>
         </tr>
         {% endfor %}
         </tbody>
