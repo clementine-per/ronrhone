@@ -113,6 +113,9 @@
                             avec tous les soins effectués.</a>
                         </p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?a_deplacer=OUI"><strong>{{accueils_a_deplacer}}</strong> accueils arrivants à terme</a></p>
+                        <p><a class="text-secondary" href= "{% url 'persons' %}?date_parrainage_min={{interval_10_ago_str}}&date_parrainage_max={{interval_10_str}}">
+                            <strong> {{date_parrainage_10}} </strong>  parrainages arrivant à terme
+                        </a></p>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-home fa-2x text-gray-300"></i>
