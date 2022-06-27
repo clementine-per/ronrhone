@@ -59,6 +59,12 @@ class Person(models.Model):
     def get_adresse_complete(self):
         return f"{self.adresse} \n {self.code_postal} {self.ville}"
 
+    def get_montant_total(self):
+        montant_total = 0
+        for parrainage in self.parrainage_set.all():
+            montant_total += parrainage.montant
+        return f"{montant_total}"
+
     def __str__(self):
         return f"{self.prenom} {self.nom}"
 

@@ -14,6 +14,8 @@ from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisa
     OuiNonVisiteChoice
 from gestion_association.models.animal import Animal, statuts_association, StatutAnimal
 from gestion_association.models.famille import Famille, StatutAccueil, Accueil
+from gestion_association.models.person import Person
+
 
 @login_required
 def index(request):
@@ -22,6 +24,7 @@ def index(request):
 
     today = timezone.now().date()
     interval_10 = today + timedelta(days=10)
+    interval_10_ago = today - timedelta(days=10)
     interval_15_ago = today - timedelta(days=15)
     interval_5_weeks_ago = today - timedelta(days=35)
     interval_5_months_ago = today - relativedelta(months=5)
@@ -29,6 +32,7 @@ def index(request):
     # Valeurs str utilisées dans le template html
     today_str = today.strftime("%Y-%m-%d")
     interval_10_str = interval_10.strftime("%Y-%m-%d")
+    interval_10_ago_str = interval_10_ago.strftime("%Y-%m-%d")
     interval_15_ago_str = interval_15_ago.strftime("%Y-%m-%d")
     interval_5_weeks_ago_str = interval_5_weeks_ago.strftime("%Y-%m-%d")
     interval_7_months_ago_str = interval_7_months_ago.strftime("%Y-%m-%d")
@@ -67,6 +71,11 @@ def index(request):
     adoption_ste = Adoption.objects.filter(animal__statut__in=(StatutAnimal.ADOPTION.name,StatutAnimal.ADOPTE_DEFINITIF.name, StatutAnimal.ADOPTE.name)).\
         filter(animal__sterilise=OuiNonChoice.NON.name).filter(annule=False) \
         .filter(animal__date_naissance__lte=interval_7_months_ago).count()
+
+    # Partie Personnes
+        # Parrainages
+    date_parrainage_10 = Person.objects.filter(parrainage__date_fin__gte=interval_10_ago) \
+        .filter(parrainage__date_fin__lte=interval_10).count()
 
 
     # Partie soins

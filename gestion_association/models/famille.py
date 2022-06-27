@@ -209,6 +209,9 @@ class Accueil(models.Model):
         choices=[(tag.name, tag.value) for tag in StatutAccueil],
     )
 
+    class Meta:
+        ordering = ['-date_debut']
+
     def is_termine(self):
         return self.statut == StatutAccueil.TERMINE.name
 

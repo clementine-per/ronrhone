@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
+from django.utils.dateparse import parse_date
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm, AdhesionForm
@@ -110,6 +111,8 @@ def person_list(request):
         form = PersonSearchForm()
         nom_form = request.GET.get("nom", "")
         type_person_form = request.GET.get("type_person", "")
+        date_parrainage_min = request.GET.get("date_parrainage_min", "")
+        date_parrainage_max = request.GET.get("date_parrainage_max", "")
         if type_person_form:
             form.fields["type_person"].initial = type_person_form
             if type_person_form == "ADOPTANTE":
@@ -124,7 +127,11 @@ def person_list(request):
                 person_list = person_list.filter(is_famille=True)
             if type_person_form == "BENEVOLE":
                 person_list = person_list.filter(is_benevole=True)
-        if nom_form:
+        if date_parrainage_min:
+            person_list = person_list.filter(parrainage__date_fin__gte=parse_date(date_parrainage_min))
+        if date_parrainage_max:
+            person_list = person_list.filter(parrainage__date_fin__lte=parse_date(date_parrainage_max))
+    if nom_form:
             form.fields["nom"].initial = nom_form
             person_list = person_list.filter(nom__icontains=nom_form)
     # Pagination : 10 éléments par page
