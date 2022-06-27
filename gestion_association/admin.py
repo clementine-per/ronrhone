@@ -15,6 +15,7 @@ from gestion_association.models.adoption import (
 from gestion_association.models.animal import Animal, Preference
 from gestion_association.models.famille import Accueil, Famille, Indisponibilite
 from gestion_association.models.person import Person, Adhesion
+from gestion_association.models.visite_medicale import VisiteMedicale
 
 
 class PersonResource(ModelResource):
@@ -195,6 +196,10 @@ class BonSterilisationAdmin(ImportExportModelAdmin):
 
 @admin.register(Indisponibilite)
 class IndisponibiliteAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(VisiteMedicale)
+class VisiteMedicaleAdmin(ImportExportModelAdmin):
     pass
 
 @admin.register(Adhesion)
