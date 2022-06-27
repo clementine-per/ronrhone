@@ -11,6 +11,7 @@ from django.utils.dateparse import parse_date
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm, AdhesionForm
+from gestion_association.models.animal import Parrainage
 from gestion_association.models.person import Person, Adhesion
 
 
@@ -127,10 +128,11 @@ def person_list(request):
                 person_list = person_list.filter(is_famille=True)
             if type_person_form == "BENEVOLE":
                 person_list = person_list.filter(is_benevole=True)
-        if date_parrainage_min:
-            person_list = person_list.filter(parrainage__date_fin__gte=parse_date(date_parrainage_min))
-        if date_parrainage_max:
-            person_list = person_list.filter(parrainage__date_fin__lte=parse_date(date_parrainage_max))
+        # Le filtre parrainage a toujours deux dates
+        if date_parrainage_min and date_parrainage_max:
+            parrainages = Parrainage.objects.filter(date_fin__gte=parse_date(date_parrainage_min))\
+                .filter(date_fin__lte=parse_date(date_parrainage_max))
+            person_list = person_list.filter(parrainage__in=parrainages)
     if nom_form:
             form.fields["nom"].initial = nom_form
             person_list = person_list.filter(nom__icontains=nom_form)

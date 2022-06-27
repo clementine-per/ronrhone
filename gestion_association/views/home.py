@@ -12,7 +12,7 @@ from django.db.models import Sum
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisation, Adoption, BonSterilisation, \
     OuiNonVisiteChoice
-from gestion_association.models.animal import Animal, statuts_association, StatutAnimal
+from gestion_association.models.animal import Animal, statuts_association, StatutAnimal, Parrainage
 from gestion_association.models.famille import Famille, StatutAccueil, Accueil
 from gestion_association.models.person import Person
 
@@ -74,8 +74,8 @@ def index(request):
 
     # Partie Personnes
         # Parrainages
-    date_parrainage_10 = Person.objects.filter(parrainage__date_fin__gte=interval_10_ago) \
-        .filter(parrainage__date_fin__lte=interval_10).count()
+    parrainages = Parrainage.objects.filter(date_fin__gte=interval_10_ago).filter(date_fin__lte=interval_10)
+    date_parrainage_10 = Person.objects.filter(parrainage__in=parrainages).count()
 
 
     # Partie soins
