@@ -332,7 +332,8 @@ class Animal(models.Model):
     def get_montant_veto_total(self):
         montant_total = 0
         for vis in self.visites.all():
-            montant_total += vis.montant
+            if vis.montant != None:
+                montant_total += vis.montant
         return f"{montant_total}"
 
 
