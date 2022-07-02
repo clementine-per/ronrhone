@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
+from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView
@@ -43,6 +44,7 @@ def visite_medicale_list(request):
     # Pagination : 10 éléments par page
     paginator = Paginator(visite_list.order_by("-date"), 10)
     nb_results = visite_list.count()
+    montant_total = visite_list.aggregate(montant_total=Sum('montant'))
     try:
         page = request.GET.get("page")
         if not page:
