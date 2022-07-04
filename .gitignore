@@ -5,3 +5,4 @@ ronrhone/Lib/*
 *.cfg
 migrations
 .idea
+static/*
