@@ -1,0 +1,99 @@
+div .role {
+    border-style:solid;
+    padding-left:10px;
+    padding-right:10px;
+}
+div .famille{
+    color:#46d246;
+    background-color:#e6ffcc;
+    border-color: #46d246;
+}
+
+div .benevole{
+    color:#ff9900;
+    background-color:#fff3e6;
+    border-color: #ff9900;}
+
+div .ancien{
+    color:#D32A05;
+    background-color:#F5A796;
+    border-color: #D32A05;}
+
+div .adoptant{
+    color:#bf00ff;
+    background-color:#f3e6ff;
+    border-color: #bf00ff;}
+
+.form-check-input {
+    position: relative;
+    margin-top: .3rem;
+    margin-left: 0;
+}
+
+ul,li {
+    list-style-type: none;
+}
+
+input[type=text], select {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+th,td {
+  text-align: center;
+}
+
+th {
+  background-color: #17a2b8;
+  color: white;
+}
+
+label.required { font-weight: bold; }
+
+i.DISPONIBLE{
+    color:#398a21;
+}
+
+i.INDISPONIBLE, i.OCCUPE, i.A_VISITER{
+    color:#eda426;
+}
+
+i.INACTIVE{
+    color:#e6331c;
+}
+
+i.UN{
+    color:#0066cc;
+}
+
+i.DEUX{
+    color:#6d3498;
+}
+
+i.fa-clone{
+    color: #17a2b8;
+    font-size: 1.5em;
+    padding: 0 0.5em;
+}
+
+/* Affichage des erreurs de formulaire */
+ul.errorlist {
+    margin: 0;
+    padding: 0;
+}
+.errorlist li {
+    border: 1px solid red;
+    color: red;
+    background: rgba(255, 0, 0, 0.15);
+    list-style-position: inside;
+    display: block;
+    font-size: 1.2em;
+    margin: 0 0 3px;
+    padding: 4px 5px;
+    text-align: center;
+    border-radius: 3px;
+}

@@ -5,7 +5,7 @@ from django.views.generic import DetailView
 from .models.animal import Animal
 from .models.famille import Famille
 from .models.person import Person
-from .views import adoption, animal, famille, home, person, visite_medicale
+from .views import adoption, animal, famille, home, person, visite_medicale, generation
 from .views.person import PersonAutocomplete
 
 urlpatterns = [
@@ -211,4 +211,6 @@ urlpatterns = [
     path("visites/create_animal/<int:pk>/", visite_medicale.create_visite_from_animal, name="create_visite_animal"),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
+    # Génération contrat
+    path("animals/contrat/<int:pk>/", generation.generate_contract, name="generer_contrat")
 ]

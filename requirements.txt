@@ -6,3 +6,5 @@ django-cors-headers==3.7.0
 djangorestframework
 mysqlclient
 python-dateutil
+reportlab==3.6.2
+PyPDF2
