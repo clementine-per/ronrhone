@@ -71,7 +71,7 @@ def generation_reglement(p, difference, couleur_ronrhone, spaceStyle):
                         ,style=spaceStyle)
     para.wrap(17 * cm, 15 * cm)
     para.drawOn(p, 2.25 * cm, 9.5 * cm + difference * cm)
-    p.drawImage(settings.STATIC_ROOT + "/img/RIB.png",
+    p.drawImage(settings.STATIC_ROOT + "/img/RIB.PNG",
                 0.75 * cm, 1 * cm + difference * cm, width=19.5 * cm, height=8 * cm, mask="auto")
 
 @login_required
@@ -83,10 +83,10 @@ def generate_contract(request, pk):
     temp_file = tempfile.NamedTemporaryFile()
     p = canvas.Canvas(temp_file)
     #logo en-tete
-    p.drawImage(settings.STATIC_ROOT + "/img/logo.png",
+    p.drawImage(settings.STATIC_ROOT + "/img/logo.PNG",
                 0.75 * cm, 23.25 * cm, width=5.5 * cm, height=5.5 * cm, mask="auto")
     # Type de contrat, en haut à droite
-    p.drawImage(settings.STATIC_ROOT + "/img/entete.png",
+    p.drawImage(settings.STATIC_ROOT + "/img/entete.PNG",
                 14 * cm, 27.5 * cm, width=15 * cm, height=2.5 * cm, mask="auto")
     p.setFont("Times-Italic", 0.5 * cm)
     if is_enfant:
