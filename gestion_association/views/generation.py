@@ -5,6 +5,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
+from dateutil.relativedelta import relativedelta
 
 from gestion_association.models.animal import Animal, TrancheAge
 from ronrhone import settings
@@ -17,6 +18,54 @@ def pieds_page(p, nb_page):
     p.setFillColor('#000000')
     p.drawString(20 * cm, 0.2 * cm, str(nb_page) + "/9")
 
+def generation_reglement(p, difference, couleur_ronrhone, spaceStyle):
+    # le paramètre "difference" arrange la position que doit avoir le contenu en fonction de s'il s'agit
+    # d'un chaton ou d'un chat adulte
+    # On redéfini le style 2 dans la fonction pour ajuster le texte
+    style2 = ParagraphStyle(name="Style", textColor=couleur_ronrhone, fontSize=0.7 * cm, borderWidth=1, \
+                            borderColor=couleur_ronrhone,
+                            # haut , droite, bas, gauche
+                            borderPadding=(0.01 * cm, 3.51 * cm, 0.5 * cm, 7.39 * cm))
+    para = Paragraph("{} <br/>" \
+                     .format("Règlement")
+                     , style=style2)
+    para.wrap(7 * cm, 15 * cm)
+    para.drawOn(p, 9 * cm, 17 * cm + difference * cm)
+    p.circle(2.5 * cm, 15.9 * cm + difference * cm, 2.5, fill=True)
+    para = Paragraph("<font face='times-bold' size=14><u>PayPal</u> : </font><br/> \
+                        <font face='helvetica-oblique' size=14 color='#2d8dfd'>ronrhone69@gmail.com </font><br/> \
+                        <font face='helvetica-oblique' size=14>(Attention, frais de 7€ obligatoires) </font>", style=spaceStyle)
+    para.wrap(14 * cm, 15 * cm)
+    para.drawOn(p, 3 * cm, 14.5 * cm + difference * cm)
+    p.circle(2.5 * cm, 13.95 * cm + difference * cm, 2.5, fill=True)
+    para = Paragraph("<font face='times-bold' size=14>Lydia : </font> \
+                            <font face='helvetica-oblique' size=14 color='#2d8dfd'>06. 64. 62. 32. 07.</font>")
+    para.wrap(14 * cm, 15 * cm)
+    para.drawOn(p, 3 * cm, 13.85 * cm + difference * cm)
+    p.circle(2.5 * cm, 12.95 * cm + difference * cm, 2.5, fill=True)
+    para = Paragraph("<font face='times-bold' size=14>Virement : </font>")
+    para.wrap(14 * cm, 15 * cm)
+    para.drawOn(p, 3 * cm, 12.85 * cm + difference * cm)
+    p.setFont("Times-Bold", 0.45 * cm)
+    p.setFillColor("red")
+    p.drawString(11.6 * cm, 15.75 * cm + difference * cm, "Nous refusons le paiement par chèque !")
+    p.setFont("Times-Bold", 0.55 * cm)
+    p.drawString(11.1 * cm, 15 * cm + difference * cm, "Le restant dû devra être réglé sous 3")
+    p.drawString(11.6 * cm, 14.5 * cm + difference * cm, "jours suivants la signature de ce")
+    p.drawString(10.7 * cm, 14 * cm + difference * cm, "contrat, et l'animal devra être récupéré")
+    p.drawString(10.8 * cm, 13.5 * cm + difference * cm, "au maximum 7 jours après la réception")
+    p.drawString(10.9 * cm, 13 * cm + difference * cm, "du virement, sans quoi ce contrat sera")
+    p.drawString(11.5 * cm, 12.5 * cm + difference * cm, "caduc et l'adoption annulée, sans")
+    p.drawString(13.5 * cm, 12 * cm + difference * cm, "remboursement.")
+    para = Paragraph("<font face='times-roman' size=14 color='red'>Merci d’indiquer le motif </font> \
+                        <font face='times-bold' size=15 color='red'>« ADOPTION [NOM DE L’ANIMAL] »</font> \
+                        <font face='times-roman' size=14 color='red'>, faute de quoi, 48h de \
+                        carence dans le processus d’adoption seront mises en place afin de recouper les infos.</font>"
+                        ,style=spaceStyle)
+    para.wrap(17 * cm, 15 * cm)
+    para.drawOn(p, 2.25 * cm, 9.5 * cm + difference * cm)
+    p.drawImage(settings.STATIC_ROOT + "/img/RIB.png",
+                0.75 * cm, 1 * cm + difference * cm, width=19.5 * cm, height=8 * cm, mask="auto")
 
 @login_required
 def generate_contract(request, pk):
@@ -169,13 +218,111 @@ def generate_contract(request, pk):
     p.showPage()
 
     #Page 2
+    # Bullet de début de paragraphe
+    p.circle(3.5 * cm, 28.55 * cm, 2.5, fill=True)
+    p.drawString(4 * cm, 28.4 * cm, "Le prochain rappel de vaccin de " + animal.nom + " est à faire :")
+    # Case à cocher ronde
+    p.circle(5 * cm, 27.6 * cm, 4)
+    if animal.date_prochain_vaccin:
+        prochain_vaccin = animal.date_prochain_vaccin.strftime("%d/%m/%Y")
+    else:
+        prochain_vaccin = "??/??/??"
+    p.drawString(5.5 * cm, 27.5 * cm, "peu de temps avant le " + prochain_vaccin + ".")
+    p.circle(5 * cm, 26.95 * cm, 4)
+    # TODO : Mettre les bonnes dates !
+    p.drawString(5.5 * cm, 26.85 * cm, "entre le " + prochain_vaccin + " et le " + prochain_vaccin + ".")
+    # On ne peut pas faire autrement qu'avec les paragraphes pour souligner du texte optimalement
+    para = Paragraph("<font face='times-bold' size=14><u> {} </u></font> <br/>" \
+                     .format("Attention, ce rappel sera à votre charge !"))
+    para.wrap(14 * cm, 15 * cm)
+    para.drawOn(p, 3.75 * cm, 26.3 * cm)
+
+    # Style de paragraphes avec un espace entre les lignes
+    spaceStyle = ParagraphStyle(name='spaceStyle', leading=17)
+
+    # On anticipe le pieds de page à cause des conditions qui prennent sur plus d'une page
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
-    # Changement de page
-    p.showPage()
+    # Dans le cas d'un chaton
+    if is_enfant:
+        p.circle(3.5 * cm, 25.45 * cm, 2.5, fill=True)
+        para = Paragraph("<font face='helvetica' size=12> {} </font> \
+            <font face='times-bolditalic' size=14><u> {} </u></font> <br/> \
+            <font face='helvetica' size=12> {} </font>" \
+                         .format("La stérilisation du chaton devra être effectuée ", "OBLIGATOIREMENT", "avant ses 7 mois, soit :"))
+        para.wrap(14 * cm, 15 * cm)
+        para.drawOn(p, 4 * cm, 25 * cm)
+        para = Paragraph(
+            "<font face='helvetica' size=12> - </font><font face='helvetica-oblique' size=12> \
+            <u> {} </u></font><font face='helvetica' size=12> {} </font> <br/> \
+            <font face='helvetica' size=12> {} </font> <br/> <font face='helvetica' size=12> - </font> \
+            <font face='helvetica-oblique' size=12><u> {} </u></font> \
+            <font face='helvetica' size=12> {} </font>" \
+            .format("Chez un de nos vétérinaires partenaires ",
+                    "grâce à un bon de stérilisation",
+                    "(d’une valeur de 45€ pour un mâle et 80€ pour une femelle).",
+                    "Par vos propres moyens", ", chez le vétérinaire de votre choix."), style=spaceStyle)
+        para.wrap(14 * cm, 15 * cm)
+        para.drawOn(p, 4 * cm, 23 * cm)
+        p.circle(3.5 * cm, 22.5 * cm, 2.5, fill=True)
+        para = Paragraph("<font face='helvetica' size=12>Un chèque de caution d’un montant de \
+            <font color=red>150€</font> sera demandé à l’adoption <br/> \
+            et restitué à réception d’un certificat de stérilisation. </font>")
+        para.wrap(14 * cm, 15 * cm)
+        para.drawOn(p, 4 * cm, 22 * cm)
+        p.circle(3.5 * cm, 21.4 * cm, 2.5, fill=True)
+        para = Paragraph("<font face='helvetica' size=12>Si l’Association ne reçoit pas de certificat de stérilisation avant <br/> \
+                    l’anniversaire des 7 mois du chaton, soit le {}, elle se réserve le<br/> \
+                    droit de récupérer le chaton sans remboursement d’aucun frais engagé \
+                    par l’adoptant et d’encaisser le chèque de caution éventuel</font>" \
+                         .format((animal.date_naissance + relativedelta(months=7)).strftime("%d/%m/%Y")))
+        para.wrap(14 * cm, 15 * cm)
+        para.drawOn(p, 4 * cm, 20 * cm)
+        p.circle(3.5 * cm, 19 * cm, 2.5, fill=True)
+        para = Paragraph("<font face='helvetica' size=12>Environ deux mois après l’adoption, l’Association prendra rendez-vous <br/> \
+                    avec vous pour une visite de contrôle, effectuée par un membre de <br/> \
+                    l’Association. </font>")
+        para.wrap(14 * cm, 15 * cm)
+        para.drawOn(p, 4 * cm, 18 * cm)
+
+        # La suite est la même sur les deux modèles mais pas au même endroit, donc on définit une méthode
+        generation_reglement(p, 0, couleur_ronrhone, spaceStyle)
+
+        # Changement de page
+        p.showPage()
+        # Redéfinition de la différence
+        # TODO : Vraie différence
+        #difference = 1
+
+    # Si c'est un chat adulte
+    else:
+        style3 = ParagraphStyle(name="Style", textColor=couleur_ronrhone, fontSize=0.7 * cm, borderWidth=1, \
+                                borderColor=couleur_ronrhone,
+                                # haut , droite, bas, gauche
+                                borderPadding=(0.01 * cm, 0.05 * cm, 0.5 * cm, 4.95 * cm))
+        para = Paragraph("{} <br/>" \
+                         .format("Pièces à joindre au contrat")
+                         , style=style3)
+        para.wrap(13 * cm, 15 * cm)
+        para.drawOn(p, 6.5 * cm, 25.5 * cm)
+        p.setFont("Helvetica", 0.5 * cm)
+        p.drawString(3 * cm, 24 * cm, "✓ Photocopie de votre pièce d'identité")
+        p.drawString(3 * cm, 23.3 * cm, "✓ Photocopie d'un justificatif de domicile de moins de 3 mois")
+        generation_reglement(p, 5, couleur_ronrhone, spaceStyle)
+
+        # Redéfinition de la différence
+        # TODO : Vraie différence
+        #difference = 1
+
+        # TODO :Génération de la fin de la page
+
+        # Changement de page
+        p.showPage()
 
     # Page 3
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
@@ -183,6 +330,7 @@ def generate_contract(request, pk):
     p.showPage()
 
     # Page 4
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
@@ -190,6 +338,7 @@ def generate_contract(request, pk):
     p.showPage()
 
     # Page 5
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
@@ -197,6 +346,7 @@ def generate_contract(request, pk):
     p.showPage()
 
     # Page 6
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
@@ -204,13 +354,15 @@ def generate_contract(request, pk):
     p.showPage()
 
     # Page 7
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
     # Changement de page
     p.showPage()
 
-    # Page 8
+    # Page
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
@@ -218,6 +370,7 @@ def generate_contract(request, pk):
     p.showPage()
 
     # Page 9
+    # pieds de page
     nb_page += 1
     pieds_page(p, nb_page)
 
