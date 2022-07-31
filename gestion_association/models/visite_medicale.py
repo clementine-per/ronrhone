@@ -51,8 +51,10 @@ class VisiteMedicale(models.Model):
         return f"Visite {self.type_visite} le {self.date} chez {self.veterinaire}"
 
     def get_montant_par_animal(self):
-        nb_animaux = self.animaux.count()
-        return self.montant/nb_animaux
+        if self.montant:
+            nb_animaux = self.animaux.count()
+            return self.montant/nb_animaux
+        return None
 
 
 @receiver(m2m_changed, sender=VisiteMedicale.animaux.through)

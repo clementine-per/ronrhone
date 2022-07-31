@@ -1,0 +1,65 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+
+
+<form method="post" action="">
+    {% csrf_token %}
+    {{ visite_form.as_p }}
+    {{ tests_form.as_p }}
+    <div class="row">
+        <div class="col">
+   			<a href = "{% url 'visites' %}"  class="btn btn-secondary">Annuler</a>
+   	</div>
+   	<div class="col">
+   		<input class="btn btn-info" type="submit" />
+   	</div>
+   </div>
+</form>
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var value = $("select#id_type_visite").val();
+
+  var fields = $(
+    'input[name="fiv"], input[name="felv"],\
+    select[name="fiv"], select[name="felv"],\
+					label[for="id_fiv"], label[for="id_felv"]'
+  );
+  switch (value) {
+    case "TESTS":
+    case "PACK_TC":
+    case "PACK_TCL":
+    case "PACK_STE_TC":
+    case "PACK_STE_TCL":
+      fields.show();
+      break;
+    default:
+      fields.hide();
+      break;
+  }
+});
+
+$("select#id_type_visite").change(function () {
+  var value = $(this).val();
+  var fields = $(
+    'input[name="fiv"], input[name="felv"],\
+    select[name="fiv"], select[name="felv"],\
+					label[for="id_fiv"], label[for="id_felv"]'
+  );
+  switch (value) {
+    case "TESTS":
+    case "PACK_TC":
+    case "PACK_TCL":
+    case "PACK_STE_TC":
+    case "PACK_STE_TCL":
+      fields.show();
+      break;
+    default:
+      fields.hide();
+      break;
+  }
+});
+</script>
+{% endblock %}
