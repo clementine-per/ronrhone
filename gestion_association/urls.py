@@ -206,7 +206,7 @@ urlpatterns = [
         visite_medicale.visite_medicale_list,
         name="visites",
     ),
-    path("visites/create", visite_medicale.CreateVisiteMedicale.as_view(), name="create_visite"),
+    path("visites/create", visite_medicale.create_visite_medicale, name="create_visite"),
     path("visites/update/<int:pk>/", visite_medicale.UpdateVisiteMedicale.as_view(), name="update_visite"),
     path("visites/create_animal/<int:pk>/", visite_medicale.create_visite_from_animal, name="create_visite_animal"),
     # Paramétrages

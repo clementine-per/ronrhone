@@ -1,6 +1,7 @@
 import sys
 from decimal import Decimal
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
@@ -154,6 +155,8 @@ def adoption_complete(request, pk):
         show_bon_form = ShowBonForm(initial={"show": "NON"})
         adoption_form = AdoptionCreateFormNoAdoptant()
         bon_form = BonSterilisationForm()
+        # Par défaut date d'expiration du bon = les 7 mois du chat
+        bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
         montant_adoption = get_montant_adoption(animal)
         if montant_adoption:
             adoption_form.fields["montant"].initial = montant_adoption
@@ -181,6 +184,8 @@ def adoption_allegee(request, pk):
         adoption_form = AdoptionCreateForm()
         show_bon_form = ShowBonForm(initial={"show": "NON"})
         bon_form = BonSterilisationForm()
+        # Par défaut date d'expiration du bon = les 7 mois du chat
+        bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
         montant_adoption = get_montant_adoption(animal)
         if montant_adoption:
             adoption_form.fields["montant"].initial = montant_adoption
@@ -231,6 +236,7 @@ class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
 @login_required
 def create_bon_sterilisation(request, pk):
     adoption = Adoption.objects.get(id=pk)
+    animal = adoption.animal
     title = "Ajout d'un bon de stérilisation"
     if request.method == "POST":
         form = BonSterilisationForm(data=request.POST)
@@ -243,6 +249,8 @@ def create_bon_sterilisation(request, pk):
 
     else:
         form = BonSterilisationForm()
+        # Par défaut date d'expiration du bon = les 7 mois du chat
+        form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
 
     return render(request, "gestion_association/adoption/bon_form.html", locals())
 

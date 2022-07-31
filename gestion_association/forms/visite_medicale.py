@@ -1,7 +1,7 @@
 from django.db.models import BLANK_CHOICE_DASH
 from django.forms import Form, CharField, ChoiceField, Select, ModelForm, DateField, DateInput
 
-from gestion_association.models.animal import Animal, StatutAnimal
+from gestion_association.models.animal import Animal, StatutAnimal, TestResultChoice
 from gestion_association.models.visite_medicale import TypeVisiteVetoChoice, VisiteMedicale
 
 
@@ -51,4 +51,17 @@ class VisiteMedicaleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(VisiteMedicaleForm, self).__init__(*args, **kwargs)
         self.fields['date'].widget.attrs['class'] = 'datePicker'
-        self.fields['animaux'].queryset = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association_adopte).order_by('nom')
+        self.fields['animaux'].queryset = Animal.objects.filter(inactif=False).\
+            filter(statut__in=statuts_association_adopte).order_by('nom')
+
+
+class TestResultsForm(Form):
+    # Formulaire indiquant les résultats FIV/FELV en cas de visite médicale incluant ces tests
+    fiv = ChoiceField(
+        choices=[(tag.name, tag.value) for tag in TestResultChoice],
+        label="Résultat test FIV",
+    )
+    felv = ChoiceField(
+        choices=[(tag.name, tag.value) for tag in TestResultChoice],
+        label="Résultat test FELV",
+    )

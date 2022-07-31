@@ -50,6 +50,12 @@ class VisiteMedicale(models.Model):
     def __str__(self):
         return f"Visite {self.type_visite} le {self.date} chez {self.veterinaire}"
 
+    def get_montant_par_animal(self):
+        if self.montant:
+            nb_animaux = self.animaux.count()
+            return self.montant/nb_animaux
+        return None
+
 
 @receiver(m2m_changed, sender=VisiteMedicale.animaux.through)
 def visite_medicale_save_action(sender, instance, **kwargs):

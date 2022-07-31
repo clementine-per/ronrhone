@@ -86,7 +86,8 @@ def index(request):
         .filter(Q(Q(sterilise=OuiNonChoice.NON.name)&Q(date_naissance__lte=interval_5_months_ago))| Q(vaccin_ok=OuiNonChoice.NON.name)|\
     Q(fiv='NT')| Q(felv='NT')|Q(identification__exact='')).count()
     # Bon de stérilisation à envoyer
-    bon_a_envoyer = BonSterilisation.objects.filter(envoye=OuiNonChoice.NON.name).count()
+    bon_a_envoyer = BonSterilisation.objects.filter(envoye=OuiNonChoice.NON.name)\
+        .filter(adoption__annule=False).count()
     # Bon de stérilisation arrivant à expiation (10 jours)
     bon_a_utilise = BonSterilisation.objects.filter(utilise=OuiNonChoice.NON.name).filter(date_max__gte=today)\
         .filter(date_max__lte=interval_10).count()
