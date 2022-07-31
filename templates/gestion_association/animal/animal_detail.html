@@ -92,8 +92,9 @@
                     </a>
                     {% endif %}
                 {% endif %}
+                {% if animal.get_latest_adoption %}
                 <a href= "{% url 'generer_contrat' animal.id %}" class="mt-3 float-right btn btn-outline-info">Générer le contrat</a>
-
+                {% endif %}
             </div>
         </div>
     </div>

@@ -1,3 +1,9 @@
+import io
+import tempfile
+from datetime import timedelta
+from io import StringIO
+
+import PyPDF2
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from reportlab.lib import colors
@@ -7,6 +13,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 from dateutil.relativedelta import relativedelta
 
+from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, TrancheAge
 from ronrhone import settings
 
@@ -72,11 +79,9 @@ def generate_contract(request, pk):
     nb_page = 0
     animal = Animal.objects.get(pk=pk)
     is_enfant = animal.tranche_age == TrancheAge.ENFANT.name
-    couleur_ronrhone = "#2d8dfd"
-    # Create the HttpResponse object
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Contrat_{}_{}.pdf"'.format(animal.nom, animal.id)
-    p = canvas.Canvas(response)
+    couleur_ronrhone = "#00bfff"
+    temp_file = tempfile.NamedTemporaryFile()
+    p = canvas.Canvas(temp_file)
     #logo en-tete
     p.drawImage(settings.STATIC_ROOT + "/img/logo.png",
                 0.75 * cm, 23.25 * cm, width=5.5 * cm, height=5.5 * cm, mask="auto")
@@ -115,8 +120,7 @@ def generate_contract(request, pk):
     p.setFont("Times-Bold", 0.5 * cm)
     p.drawString(2 * cm, 21.3 * cm, "Nom : " + animal.adoptant.nom)
     p.drawString(11 * cm, 21.3 * cm, "Prénom : " + animal.adoptant.prenom)
-    p.drawString(2 * cm, 20.5 * cm, "Date de naissance : " + "00/00/0000")
-    p.drawString(11 * cm, 20.5 * cm, "Téléphone : " + animal.adoptant.telephone)
+    p.drawString(2 * cm, 20.5 * cm, "Téléphone : " + animal.adoptant.telephone)
     p.drawString(2 * cm, 19.7 * cm, "Adresse postale : " + animal.adoptant.adresse)
     p.drawString(2 * cm, 18.9 * cm, "Code Postal : " + animal.adoptant.code_postal)
     p.drawString(6.75 * cm, 18.9 * cm, "Ville : " + animal.adoptant.ville)
@@ -221,16 +225,25 @@ def generate_contract(request, pk):
     # Bullet de début de paragraphe
     p.circle(3.5 * cm, 28.55 * cm, 2.5, fill=True)
     p.drawString(4 * cm, 28.4 * cm, "Le prochain rappel de vaccin de " + animal.nom + " est à faire :")
-    # Case à cocher ronde
-    p.circle(5 * cm, 27.6 * cm, 4)
+    # Determiner la date du prochain vaccin
     if animal.date_prochain_vaccin:
-        prochain_vaccin = animal.date_prochain_vaccin.strftime("%d/%m/%Y")
+        prochain_vaccin = animal.date_prochain_vaccin
+        prochain_vaccin_str = prochain_vaccin.strftime("%d/%m/%Y")
+    elif animal.date_dernier_vaccin:
+        if animal.vaccin_ok == OuiNonChoice.OUI.name:
+            prochain_vaccin = animal.date_dernier_vaccin + relativedelta(years=1)
+        else :
+            prochain_vaccin = animal.date_dernier_vaccin + relativedelta(months=1)
+        prochain_vaccin_str = prochain_vaccin.strftime("%d/%m/%Y")
     else:
-        prochain_vaccin = "??/??/??"
-    p.drawString(5.5 * cm, 27.5 * cm, "peu de temps avant le " + prochain_vaccin + ".")
-    p.circle(5 * cm, 26.95 * cm, 4)
-    # TODO : Mettre les bonnes dates !
-    p.drawString(5.5 * cm, 26.85 * cm, "entre le " + prochain_vaccin + " et le " + prochain_vaccin + ".")
+        prochain_vaccin_str = "__/__/__"
+    if animal.vaccin_ok == OuiNonChoice.OUI.name:
+        p.drawString(5.5 * cm, 27.5 * cm, "peu de temps avant le " +
+                     prochain_vaccin_str + ".")
+    else:
+        vaccin_delai = prochain_vaccin + relativedelta(days=7)
+        p.drawString(5.5 * cm, 27.5 * cm, "entre le " + prochain_vaccin_str +
+                     " et le " + vaccin_delai.strftime("%d/%m/%Y") + ".")
     # On ne peut pas faire autrement qu'avec les paragraphes pour souligner du texte optimalement
     para = Paragraph("<font face='times-bold' size=14><u> {} </u></font> <br/>" \
                      .format("Attention, ce rappel sera à votre charge !"))
@@ -290,8 +303,6 @@ def generate_contract(request, pk):
         # La suite est la même sur les deux modèles mais pas au même endroit, donc on définit une méthode
         generation_reglement(p, 0, couleur_ronrhone, spaceStyle)
 
-        # Changement de page
-        p.showPage()
         # Redéfinition de la différence
         # TODO : Vraie différence
         #difference = 1
@@ -318,62 +329,36 @@ def generate_contract(request, pk):
 
         # TODO :Génération de la fin de la page
 
-        # Changement de page
-        p.showPage()
-
-    # Page 3
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
-
-    # Changement de page
     p.showPage()
-
-    # Page 4
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
-
-    # Changement de page
-    p.showPage()
-
-    # Page 5
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
-
-    # Changement de page
-    p.showPage()
-
-    # Page 6
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
-
-    # Changement de page
-    p.showPage()
-
-    # Page 7
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
-
-    # Changement de page
-    p.showPage()
-
-    # Page
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
-
-    # Changement de page
-    p.showPage()
-
-    # Page 9
-    # pieds de page
-    nb_page += 1
-    pieds_page(p, nb_page)
 
     # Finalisation
     p.save()
+
+    # Merge entre la partie écrite ci-dessus et les pages pdf fixes à ajouter à la suite
+    if is_enfant:
+        contrat_fixe = open(settings.STATIC_ROOT + "/pdf/contrat_chaton.pdf", 'rb')
+    else:
+        contrat_fixe = open(settings.STATIC_ROOT + "/pdf/contrat_adulte.pdf", 'rb')
+    # Fichier temporaire contenant le contenu généré
+    pdf1Reader = PyPDF2.PdfFileReader(temp_file)
+    pdf2Reader = PyPDF2.PdfFileReader(contrat_fixe)
+    pdfWriter = PyPDF2.PdfFileWriter()
+    for pageNum in range(pdf1Reader.numPages):
+        pageObj = pdf1Reader.getPage(pageNum)
+        pdfWriter.addPage(pageObj)
+    for pageNum in range(pdf2Reader.numPages):
+        pageObj = pdf2Reader.getPage(pageNum)
+        pdfWriter.addPage(pageObj)
+    pdfOutputFile = tempfile.NamedTemporaryFile()
+    pdfWriter.write(pdfOutputFile)
+    pdfOutputFile.flush()
+    pdfOutputFile.seek(0)
+    content = pdfOutputFile.read()
+    contrat_fixe.close()
+    pdfOutputFile.close()
+
+    # Create the HttpResponse object
+    response = HttpResponse(content, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Contrat_{}_{}.pdf"'.format(animal.nom, animal.id)
+
     return response
