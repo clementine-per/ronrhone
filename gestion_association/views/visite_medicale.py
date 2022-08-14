@@ -113,6 +113,11 @@ def create_visite_from_animal(request, pk):
     else:
         visite_form = VisiteMedicaleForm()
         tests_form = TestResultsForm()
+        if animal.get_animaux_lies():
+            animals_queryset = animal.get_animaux_lies() | Animal.objects.filter(id=pk)
+        else:
+            animals_queryset = Animal.objects.filter(id=pk)
+        visite_form.fields["animaux"].queryset = animals_queryset
         visite_form.fields["animaux"].initial = animal
 
     return render(request, "gestion_association/visite_medicale/visite_medicale_create_form.html", locals())

@@ -21,6 +21,7 @@ from gestion_association.forms.adoption import (
     ShowBonForm,
     AdoptionSearchForm)
 from gestion_association.forms.person import PersonForm
+from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import (
     Adoption,
     BonSterilisation,
@@ -146,9 +147,12 @@ def adoption_complete(request, pk):
             person = person_form.save()
             adoption = adoption_form.save(commit=False)
 
-            save_adoption(adoption, animal, person, show_bon_form, bon_form)
+            bon = save_adoption(adoption, animal, person, show_bon_form, bon_form)
 
-            return redirect("detail_animal", pk=animal.id)
+            if bon and bon.utilise == OuiNonChoice.OUI.name:
+                return redirect("create_visite_animal", pk=animal.id)
+            else:
+                return redirect("detail_animal", pk=animal.id)
 
     else:
         person_form = PersonForm()
@@ -176,9 +180,12 @@ def adoption_allegee(request, pk):
         if adoption_form.is_valid():
 
             adoption = adoption_form.save(commit=False)
-            save_adoption(adoption, animal, adoption.adoptant, show_bon_form, bon_form)
+            bon = save_adoption(adoption, animal, adoption.adoptant, show_bon_form, bon_form)
 
-            return redirect("detail_animal", pk=animal.id)
+            if bon and bon.utilise == OuiNonChoice.OUI.name:
+                return redirect("create_visite_animal", pk=animal.id)
+            else:
+                return redirect("detail_animal", pk=animal.id)
 
     else:
         adoption_form = AdoptionCreateForm()
@@ -204,9 +211,11 @@ def adoption_from_user(request, pk):
         bon_form = BonSterilisationForm(data=request.POST)
         if adoption_form.is_valid():
             adoption = adoption_form.save(commit=False)
-            save_adoption(adoption, adoption.animal, person, show_bon_form, bon_form)
-
-            return redirect("detail_animal", pk=adoption.animal.id)
+            bon = save_adoption(adoption, adoption.animal, person, show_bon_form, bon_form)
+            if bon and bon.utilise == OuiNonChoice.OUI.name:
+                return redirect("create_visite_animal", pk=adoption.animal.id)
+            else:
+                return redirect("detail_animal", pk=adoption.animal.id)
 
     else:
         adoption_form = AdoptionFromUserForm()
@@ -231,7 +240,10 @@ class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
     template_name = "gestion_association/adoption/bon_form.html"
 
     def get_success_url(self):
-        return reverse_lazy("detail_animal", kwargs={"pk": self.object.adoption.animal.id})
+        if self.object.utilise == OuiNonChoice.OUI.name:
+            return reverse_lazy("create_visite_animal", kwargs={"pk": self.object.adoption.animal.id})
+        else:
+            return reverse_lazy("detail_animal", kwargs={"pk": self.object.adoption.animal.id})
 
 @login_required
 def create_bon_sterilisation(request, pk):
@@ -245,7 +257,10 @@ def create_bon_sterilisation(request, pk):
             bon.adoption = adoption
             bon.save()
             adoption.save()
-            return redirect("detail_animal", pk=adoption.animal.id)
+            if bon and bon.utilise == OuiNonChoice.OUI.name:
+                return redirect("create_visite_animal", pk=animal.id)
+            else:
+                return redirect("detail_animal", pk=animal.id)
 
     else:
         form = BonSterilisationForm()
@@ -350,6 +365,8 @@ def save_adoption(adoption, animal, person, show_form, bon_form):
             bon = bon_form.save(commit=False)
             bon.adoption = adoption
             bon.save()
+            # On a besoin de cette info pour la redirection
+            return bon
 
 @login_required
 def adoption_cancel(request, pk):
