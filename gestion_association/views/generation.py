@@ -296,6 +296,10 @@ def infos_pensionnaire(p, animal, is_enfant):
 
 
 def info_tarifs_chatons(p, animal):
+    if animal.vaccin_ok == OuiNonChoice.OUI.name:
+        vaccination = "- Vaccination à jour"
+    else:
+        vaccination = "- Primo vaccination"
     elements = [["Les frais d'adoption sont de " + str(animal.get_latest_adoption().montant) + " euros.", ''],
                 ["(majoration de ", '20€ pour une primo-vaccination leucose,'],
                 ["", '40€ pour une vaccination leucose à jour).'],
@@ -304,7 +308,7 @@ def info_tarifs_chatons(p, animal):
                 ["qui incluent les prestations suivantes : ", ''],
                 ["", '- Identification par puce électronique'],
                 ["", '- Test FIV / FeLV'],
-                ["", '- Primo vaccination'],
+                ["", vaccination],
                 ["", '- Anti-parasitaires'],
                 ["", '- Certificat de bonne santé']]
     tableau = Table(elements, colWidths=[2.75 * cm, 14.25 * cm])
