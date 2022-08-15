@@ -268,7 +268,7 @@ def infos_personnelles(p, animal):
     p.setFont("Helvetica", 0.5 * cm)
     p.drawString(3 * cm, 16.3 * cm, "Je m'engage à transmettre ce contrat d'adoption à la Fondation Capellino,")
     p.drawString(2 * cm, 15.65 * cm, "afin de permettre à l'Association Ron'Rhône d'obtenir le don associé,")
-    p.drawString(2 * cm, 15.0 * cm, "sur ce lien https://www.almonature.com/fr/companion-animal-for-life/ ")
+    p.drawString(2 * cm, 15.0 * cm, "sur ce lien https://pages.almonature.com/fr/adopt-me-europe ")
     p.drawString(2 * cm, 14.35 * cm, "Si je ne souhaite pas transmettre les coordonnées, ")
     p.drawString(2 * cm, 13.7 * cm, "je m'engage à envoyer ce contrat en masquant celles-ci.")
 
