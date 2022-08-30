@@ -9,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
 from gestion_association.forms.visite_medicale import VisiteMedicaleSearchForm, VisiteMedicaleForm, TestResultsForm
-from gestion_association.models.animal import Animal
+from gestion_association.models.animal import Animal, TestResultChoice
 from gestion_association.models.visite_medicale import VisiteMedicale
 
 
@@ -67,10 +67,12 @@ def create_visite_medicale(request):
 
             visite = visite_form.save()
             if tests_form.is_valid():
-                for animal in visite.animaux.all():
-                    animal.fiv = tests_form.cleaned_data['fiv']
-                    animal.felv = tests_form.cleaned_data['felv']
-                    animal.save()
+                if tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name and \
+                        tests_form.cleaned_data['felv'] != TestResultChoice.NT.name:
+                    for animal in visite.animaux.all():
+                        animal.fiv = tests_form.cleaned_data['fiv']
+                        animal.felv = tests_form.cleaned_data['felv']
+                        animal.save()
 
             return redirect("visites")
 
@@ -104,10 +106,12 @@ def create_visite_from_animal(request, pk):
         if visite_form.is_valid():
             visite = visite_form.save()
             if tests_form.is_valid():
-                for animal in visite.animaux.all():
-                    animal.fiv = tests_form.cleaned_data['fiv']
-                    animal.felv = tests_form.cleaned_data['felv']
-                    animal.save()
+                if tests_form.cleaned_data['fiv']!=TestResultChoice.NT.name and\
+                        tests_form.cleaned_data['felv']!=TestResultChoice.NT.name:
+                    for animal in visite.animaux.all():
+                        animal.fiv = tests_form.cleaned_data['fiv']
+                        animal.felv = tests_form.cleaned_data['felv']
+                        animal.save()
             return redirect("detail_animal", pk=animal.id)
 
     else:
