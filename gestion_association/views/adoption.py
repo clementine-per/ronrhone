@@ -28,7 +28,7 @@ from gestion_association.models.adoption import (
     TarifAdoption,
     TarifBonSterilisation,
 )
-from gestion_association.models.animal import Animal, StatutAnimal
+from gestion_association.models.animal import Animal, StatutAnimal, TypeVaccinChoice
 from gestion_association.models.person import Person
 
 
@@ -284,8 +284,17 @@ def get_montant_adoption(animal):
     )
 
     tarif_applicable = preselection_tarifs.first()
+
+    # Ajout des suppléments leucose (20 euros par dose)
+    ajout_vaccin_leucose = Decimal(0)
+    if animal.type_vaccin == TypeVaccinChoice.TCL.name:
+        if animal.vaccin_ok == OuiNonChoice.OUI.name:
+            ajout_vaccin_leucose = Decimal(40)
+        elif animal.primo_vaccine == OuiNonChoice.OUI.name:
+            ajout_vaccin_leucose = Decimal(20)
+
     if tarif_applicable :
-        return tarif_applicable.montant
+        return tarif_applicable.montant + ajout_vaccin_leucose
     return None
 
 
