@@ -19,13 +19,13 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
         model = Adoption
         fields = (
             "date",
-            "acompte_verse",
-            "montant",
-            "montant_restant",
             "pre_visite",
             "visite_controle",
             "personne_visite",
             "date_visite",
+            "acompte_verse",
+            "montant",
+            "montant_restant",
         )
 
     def __init__(self, *args, **kwargs):
@@ -85,14 +85,14 @@ class AdoptionCreateForm(ModelForm):
         model = Adoption
         fields = (
             "date",
-            "acompte_verse",
             "adoptant",
-            "montant",
-            "montant_restant",
             "pre_visite",
             "visite_controle",
             "personne_visite",
             "date_visite",
+            "acompte_verse",
+            "montant",
+            "montant_restant",
         )
         widgets = {
             'adoptant': autocomplete.ModelSelect2(url='person_autocomplete')
@@ -111,14 +111,14 @@ class AdoptionFromUserForm(ModelForm):
         model = Adoption
         fields = (
             "date",
-            "acompte_verse",
             "animal",
-            "montant",
-            "montant_restant",
             "pre_visite",
             "visite_controle",
             "personne_visite",
             "date_visite",
+            "acompte_verse",
+            "montant",
+            "montant_restant",
         )
 
     def __init__(self, *args, **kwargs):
@@ -134,13 +134,13 @@ class AdoptionUpdateForm(ModelForm):
         model = Adoption
         fields = (
             "date",
-            "acompte_verse",
-            "montant",
-            "montant_restant",
             "pre_visite",
             "visite_controle",
             "personne_visite",
             "date_visite",
+            "acompte_verse",
+            "montant",
+            "montant_restant",
         )
 
     def __init__(self, *args, **kwargs):
