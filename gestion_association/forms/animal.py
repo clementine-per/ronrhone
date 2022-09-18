@@ -218,14 +218,23 @@ class ParrainageForm(ModelForm):
             "date_debut",
             "date_fin",
             "animal",
+            "date_nouvelles",
             "type_paiement",
             "montant"
         )
 
     def __init__(self, *args, **kwargs):
         super(ParrainageForm, self).__init__(*args, **kwargs)
-        self.fields['animal'].queryset = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association)
+        queryset = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association)
+        try:
+            animal = self.instance.animal
+        except Parrainage._meta.model.animal.RelatedObjectDoesNotExist:
+            animal = None
+        if animal:
+            queryset = queryset | Animal.objects.filter(id=animal.pk)
+        self.fields['animal'].queryset = queryset
         self.fields['date_debut'].widget.attrs['class'] = 'datePicker'
         self.fields['date_fin'].widget.attrs['class'] = 'datePicker'
+        self.fields['date_nouvelles'].widget.attrs['class'] = 'datePicker'
 
 
