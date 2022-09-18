@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     "import_export",
     "corsheaders",
     "gestion_association",
+    "dal",
+    "dal_select2"
+
 ]
 
 MIDDLEWARE = [
