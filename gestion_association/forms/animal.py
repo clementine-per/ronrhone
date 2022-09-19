@@ -101,6 +101,7 @@ class AnimalCreateForm(ModelForm):
             "lien_icad",
             "nekosable",
             "ancien_proprio",
+            "contact",
         )
         widgets = {
             'ancien_proprio': autocomplete.ModelSelect2(url='person_autocomplete')
@@ -152,6 +153,7 @@ class AnimalInfoUpdateForm(ModelForm):
             "lien_icad",
             "nekosable",
             "ancien_proprio",
+            "contact",
             "inactif",
         )
         widgets = {

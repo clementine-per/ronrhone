@@ -77,6 +77,11 @@
                     </div>
                 </div>
                 {% endif %}
+                <div class="row">
+                    <div class="col">
+                        <strong> Contact prise en charge </strong> : {{animal.contact}}
+                    </div>
+                </div>
 
                 {% if animal.is_adoptable %}
                 {% if not animal.get_latest_adoption %}

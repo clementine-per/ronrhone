@@ -209,6 +209,7 @@ class Animal(models.Model):
                                            plus gérer cet animal dans l'application) ",
     )
     commentaire = models.CharField(max_length=1000, blank=True)
+    contact = models.CharField(max_length=500, blank=True, verbose_name="Contact prise en charge")
     commentaire_sante = models.CharField(max_length=1000, blank=True)
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
     groupe = models.ForeignKey(AnimalGroup, on_delete=models.CASCADE, blank=True, null=True)
