@@ -25,6 +25,7 @@ class DateInput(DateInput):
 
 
 class FamilleSearchForm(Form):
+    prenom_personne = CharField(max_length=100, required=False, label="Prénom de la personne")
     nom_personne = CharField(max_length=100, required=False, label="Nom de la personne")
     detail_places = CharField(max_length=100, required=False, label="Accueils acceptés")
     perimetre = ChoiceField(

@@ -68,6 +68,7 @@ def famille_list(request):
             return redirect(url)
     else:
         form = FamilleSearchForm()
+        prenom_personne_form = request.GET.get("prenom_personne", "")
         nom_personne_form = request.GET.get("nom_personne", "")
         places_dispos_form = request.GET.get("places_dispos", "")
         quarantaine_form = request.GET.get("quarantaine", "")
@@ -82,6 +83,9 @@ def famille_list(request):
         a_deplacer = request.GET.get("a_deplacer", "")
         detail_places_form = request.GET.get("detail_places", "")
 
+        if prenom_personne_form:
+            famille_list = famille_list.filter(personne__prenom__icontains=prenom_personne_form)
+            form.fields["prenom_personne"].initial = prenom_personne_form
         if nom_personne_form:
             famille_list = famille_list.filter(personne__nom__icontains=nom_personne_form)
             form.fields["nom_personne"].initial = nom_personne_form

@@ -13,6 +13,14 @@
                 {%csrf_token %}
                 <div class="row">
                     <div class="col-sm-4">
+                        {{ form.prenom_personne.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.prenom_personne }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
                         {{ form.nom_personne.label_tag }}
                     </div>
                     <div class="col-sm-8">

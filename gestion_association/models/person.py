@@ -62,7 +62,8 @@ class Person(models.Model):
     def get_montant_total(self):
         montant_total = 0
         for parrainage in self.parrainage_set.all():
-            montant_total += parrainage.montant
+            if parrainage.montant:
+                montant_total += parrainage.montant
         return f"{montant_total}"
 
     def __str__(self):
