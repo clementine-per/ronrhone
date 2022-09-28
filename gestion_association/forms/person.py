@@ -1,6 +1,7 @@
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import CharField, ChoiceField, Form, ModelForm, Select
+from django.forms import CharField, ChoiceField, Form, ModelForm, Select, DateField
 
+from gestion_association.forms import DateInput
 from gestion_association.models.person import Person, TypePersonChoice, Adhesion
 
 
@@ -12,6 +13,10 @@ class PersonSearchForm(Form):
         required=False,
         label="Rôle personne",
     )
+    date_adhesion_min = DateField(
+        label="Date de dernière adhésion entre le", required=False, widget=DateInput()
+    )
+    date_adhesion_max = DateField(label=" et le ", required=False, widget=DateInput())
 
 
 class PersonForm(ModelForm):

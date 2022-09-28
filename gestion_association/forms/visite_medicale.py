@@ -1,12 +1,9 @@
 from django.db.models import BLANK_CHOICE_DASH
-from django.forms import Form, CharField, ChoiceField, Select, ModelForm, DateField, DateInput
+from django.forms import Form, CharField, ChoiceField, Select, ModelForm, DateField
 
+from gestion_association.forms import DateInput
 from gestion_association.models.animal import Animal, StatutAnimal, TestResultChoice
 from gestion_association.models.visite_medicale import TypeVisiteVetoChoice, VisiteMedicale
-
-
-class DateInput(DateInput):
-    input_type = "date"
 
 
 class VisiteMedicaleSearchForm(Form):

@@ -26,6 +26,14 @@
                         {{ form.type_person }}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_adhesion_min.label_tag }} {{ form.date_adhesion_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_adhesion_max.label_tag }} {{ form.date_adhesion_max }}
+                    </div>
+                </div>
 
                 <div class="text-right">
                     <a href="{% url 'persons' %}" class="float-left btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>

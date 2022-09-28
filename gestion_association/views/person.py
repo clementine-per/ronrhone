@@ -5,6 +5,7 @@ from dal import autocomplete
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
+from django.db.models import Max
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.dateparse import parse_date
@@ -114,6 +115,8 @@ def person_list(request):
         type_person_form = request.GET.get("type_person", "")
         date_parrainage_min = request.GET.get("date_parrainage_min", "")
         date_parrainage_max = request.GET.get("date_parrainage_max", "")
+        date_adhesion_min = request.GET.get("date_adhesion_min", "")
+        date_adhesion_max = request.GET.get("date_adhesion_max", "")
         if type_person_form:
             form.fields["type_person"].initial = type_person_form
             if type_person_form == "ADOPTANTE":
@@ -136,6 +139,16 @@ def person_list(request):
     if nom_form:
             form.fields["nom"].initial = nom_form
             person_list = person_list.filter(nom__icontains=nom_form)
+    if date_adhesion_min or date_adhesion_max:
+        adhesions = Adhesion.objects.values('personne').annotate(max_date=Max('date'))
+        if date_adhesion_min:
+            form.fields["date_adhesion_min"].initial = date_adhesion_min
+            adhesions = adhesions.filter(max_date__gte=date_adhesion_min)
+        if date_adhesion_max:
+            form.fields["date_adhesion_max"].initial = date_adhesion_max
+            adhesions = adhesions.filter(max_date__lte=date_adhesion_max)
+        adhesion_ids = [ad['personne'] for ad in adhesions.values('personne')]
+        person_list = person_list.filter(pk__in=adhesion_ids)
     # Pagination : 10 éléments par page
     paginator = Paginator(person_list.order_by("-date_mise_a_jour"), 10)
     nb_results = person_list.count()

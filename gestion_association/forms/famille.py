@@ -5,7 +5,6 @@ from django.forms import (
     CheckboxSelectMultiple,
     ChoiceField,
     DateField,
-    DateInput,
     Form,
     IntegerField,
     ModelChoiceField,
@@ -15,14 +14,10 @@ from django.forms import (
 )
 from django.utils import timezone
 
+from gestion_association.forms import DateInput
 from gestion_association.models import OuiNonChoice, PerimetreChoice
 from gestion_association.models.animal import Animal
 from gestion_association.models.famille import Accueil, Famille, Indisponibilite, StatutFamille
-
-
-class DateInput(DateInput):
-    input_type = "date"
-
 
 class FamilleSearchForm(Form):
     prenom_personne = CharField(max_length=100, required=False, label="Prénom de la personne")

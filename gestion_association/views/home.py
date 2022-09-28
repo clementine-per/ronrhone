@@ -1,10 +1,9 @@
-import sys
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Sum
@@ -14,7 +13,7 @@ from gestion_association.models.adoption import TarifAdoption, TarifBonSterilisa
     OuiNonVisiteChoice
 from gestion_association.models.animal import Animal, statuts_association, StatutAnimal, Parrainage
 from gestion_association.models.famille import Famille, StatutAccueil, Accueil
-from gestion_association.models.person import Person
+from gestion_association.models.person import Person, Adhesion
 
 
 @login_required
@@ -135,7 +134,13 @@ def index(request):
     # dont prêts = tous soins effectues
     nb_nekosables_prets = nekosables.filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
     filter(~Q(fiv='NT')&~Q(felv='NT')).exclude(identification__exact='').count()
-
+    # Adhésion arrivant à échéance (qui ont entre 11 et 12 mois)
+    interval_11_months_ago = today - relativedelta(months=11)
+    interval_12_months_ago = today - relativedelta(months=12)
+    interval_11_months_ago_str = interval_11_months_ago.strftime("%Y-%m-%d")
+    interval_12_months_ago_str = interval_12_months_ago.strftime("%Y-%m-%d")
+    adhesions_a_renouveler = Adhesion.objects.values('personne').annotate(max_date=Max('date')).filter(max_date__lte=interval_11_months_ago). \
+        filter(max_date__gte=interval_12_months_ago).count()
 
     #Taux de remplissage
     places_disponibles =  Famille.objects.filter(statut='DISPONIBLE').aggregate(Sum('nb_places'))

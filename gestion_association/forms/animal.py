@@ -5,7 +5,6 @@ from django.forms import (
     CharField,
     ChoiceField,
     DateField,
-    DateInput,
     Form,
     ModelForm,
     ModelMultipleChoiceField,
@@ -13,14 +12,11 @@ from django.forms import (
     Select,
     SelectMultiple)
 
+from gestion_association.forms import DateInput
 from gestion_association.models import OuiNonChoice, PerimetreChoice
 from gestion_association.models.animal import Animal, StatutAnimal, statuts_association, Parrainage
 from gestion_association.models.person import Person
 from gestion_association.widgets import TableSelectMultiple
-
-
-class DateInput(DateInput):
-    input_type = "date"
 
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
