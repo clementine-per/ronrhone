@@ -90,7 +90,7 @@ def index(request):
         .filter(adoption__annule=False).count()
     # Bon de stérilisation arrivant à expiation (10 jours)
     bon_a_utilise = BonSterilisation.objects.filter(utilise=OuiNonChoice.NON.name).filter(date_max__gte=today)\
-        .filter(date_max__lte=interval_10).count()
+        .filter(adoption__annule=False).filter(date_max__lte=interval_10).count()
     # Vaccins à faire (10 jours)
     vaccins = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association).filter(date_prochain_vaccin__gte=today)\
         .filter(date_prochain_vaccin__lte=interval_10).count()
@@ -135,6 +135,7 @@ def index(request):
     # dont prêts = tous soins effectues
     nb_nekosables_prets = nekosables.filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
     filter(~Q(fiv='NT')&~Q(felv='NT')).exclude(identification__exact='').count()
+
 
     #Taux de remplissage
     places_disponibles =  Famille.objects.filter(statut='DISPONIBLE').aggregate(Sum('nb_places'))
