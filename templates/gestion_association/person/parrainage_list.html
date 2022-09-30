@@ -1,0 +1,105 @@
+{% extends "gestion_association/base.html" %}
+{% load tag %}
+{% block content %}
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Recherche
+            </div>
+		<form action = "{% url 'parrainages' %}" method="post">
+            <div class="card-body">
+                {%csrf_token %}
+                <div class="row">
+                    <div class="col-sm-2">
+                        {{ form.nom_personne.label_tag }}
+                    </div>
+                    <div class="col-sm-10">
+                        {{ form.nom_personne }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+		    		    {{ form.nom_animal.label_tag }}
+                    </div>
+                    <div class="col-md-10">
+                        {{ form.nom_animal }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_debut_min.label_tag }} {{ form.date_debut_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_debut_max.label_tag }} {{ form.date_debut_max }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_fin_min.label_tag }} {{ form.date_fin_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_fin_max.label_tag }} {{ form.date_fin_max }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_nouvelles_min.label_tag }} {{ form.date_nouvelles_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_nouvelles_max.label_tag }} {{ form.date_nouvelles_max }}
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <a href="{% url 'parrainages' %}" class="float-left btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
+                    <button class="btn btn-info" type="submit"> <i class="float-right fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                    <br>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{{nb_results}} résultat(s)
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th >Personne</th>
+                <th >Email</th>
+                <th >Animal parrainé</th>
+                <th>Date de début</th>
+                <th >Date de fin</th>
+                <th >Date nouvelles</th>
+                <th >Montant</th>
+            </tr>
+        </thead>
+        {% for parrainage in parrainages %}
+        <tr class="table-info">
+            <td><a href = "{% url 'detail_person' parrainage.personne.id %}">
+                {{parrainage.personne}}</a></td>
+            <td>{{parrainage.personne.email}}</td>
+            <td><a href = "{% url 'detail_animal' parrainage.animal.id %}">
+                {{parrainage.animal}}</a></td>
+            <td>{{parrainage.date_debut|date:"d/m/Y"|default:" - "}}</td>
+            <td>{{parrainage.date_fin|date:"d/m/Y"|default:" - "}}</td>
+            <td>{{parrainage.date_nouvelles|date:"d/m/Y"|default:" - "}}</td>
+            <td>{{parrainage.montant|default:" - "}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        {% if parrainages.has_previous %}
+        <a href="?{% param_replace page=parrainages.previous_page_number%}">Précédente</a> -
+        {% endif %}
+
+        <span class="current">
+            Page {{ parrainages.number }} sur {{ parrainages.paginator.num_pages }}
+        </span>
+        {% if parrainages.has_next %}
+        - <a href="?{% param_replace page=parrainages.next_page_number%}">Suivante</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -70,6 +70,9 @@
                         <a class="nav-link" href="{% url 'create_person' %}">
                             <i class="fa fa-plus "> Ajouter une personne </i></a>
                     </li>
+                    <li class="nav-item {% if selected == 'parrainages' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'parrainages' %}">Parrainages</a>
+                    </li>
                     <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'parametrage' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'parametrage' %}">Paramétrage</a>

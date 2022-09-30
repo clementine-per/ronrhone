@@ -11,7 +11,8 @@ from django.urls import reverse_lazy, reverse
 from django.utils.dateparse import parse_date
 from django.views.generic import CreateView, UpdateView
 
-from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm, AdhesionForm
+from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSearchForm, AdhesionForm, \
+    ParrainageSearchForm
 from gestion_association.models.animal import Parrainage
 from gestion_association.models.person import Person, Adhesion
 
@@ -184,3 +185,62 @@ class PersonAutocomplete (autocomplete.Select2QuerySetView):
             qs = qs.filter(nom__istartswith=self.q)
 
         return qs
+
+@login_required
+def parrainage_list(request):
+    title = "Liste des parrainages"
+    selected = "parrainages"
+    parrainage_list = Parrainage.objects.all()
+    if request.method == "POST":
+        form = ParrainageSearchForm(request.POST)
+        if form.is_valid():
+            base_url = reverse('parrainages')
+            query_string = form.data.urlencode()
+            url = '{}?{}'.format(base_url, query_string)
+            return redirect(url)
+    else:
+        form = ParrainageSearchForm()
+        nom_personne = request.GET.get("nom_personne", "")
+        nom_animal = request.GET.get("nom_animal", "")
+        date_debut_min = request.GET.get("date_debut_min", "")
+        date_debut_max = request.GET.get("date_debut_max", "")
+        date_fin_min = request.GET.get("date_fin_min", "")
+        date_fin_max = request.GET.get("date_fin_max", "")
+        date_nouvelles_min = request.GET.get("date_nouvelles_min", "")
+        date_nouvelles_max = request.GET.get("date_nouvelles_max", "")
+    if nom_personne:
+            form.fields["nom_personne"].initial = nom_personne
+            parrainage_list = parrainage_list.filter(personne__nom__icontains=nom_personne)
+    if nom_animal:
+        form.fields["nom_animal"].initial = nom_animal
+        parrainage_list = parrainage_list.filter(animal__nom__icontains=nom_animal)
+    if date_debut_min:
+        form.fields["date_debut_min"].initial = date_debut_min
+        parrainage_list = parrainage_list.filter(date_debut__gte=parse_date(date_debut_min))
+    if date_debut_max:
+        form.fields["date_debut_max"].initial = date_debut_max
+        parrainage_list = parrainage_list.filter(date_debut__lte=parse_date(date_debut_max))
+    if date_fin_min:
+        form.fields["date_fin_min"].initial = date_fin_min
+        parrainage_list = parrainage_list.filter(date_fin__gte=parse_date(date_fin_min))
+    if date_fin_max:
+        form.fields["date_fin_max"].initial = date_fin_max
+        parrainage_list = parrainage_list.filter(date_fin__lte=parse_date(date_fin_max))
+    if date_nouvelles_min:
+        form.fields["date_nouvelles_min"].initial = date_nouvelles_min
+        parrainage_list = parrainage_list.filter(date_nouvelles__gte=parse_date(date_nouvelles_min))
+    if date_nouvelles_max:
+        form.fields["date_nouvelles_max"].initial = date_nouvelles_max
+        parrainage_list = parrainage_list.filter(date_nouvelles__lte=parse_date(date_nouvelles_max))
+    # Pagination : 10 éléments par page
+    paginator = Paginator(parrainage_list, 10)
+    nb_results = parrainage_list.count()
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        parrainages = paginator.page(page)
+    except EmptyPage:
+        # Si on dépasse la limite de pages, on prend la dernière
+        parrainages = paginator.page(paginator.num_pages())
+    return render(request, "gestion_association/person/parrainage_list.html", locals())

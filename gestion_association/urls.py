@@ -79,6 +79,7 @@ urlpatterns = [
         name="create_adhesion",
     ),
     # Parrainages
+    path("persons/parrainage", person.parrainage_list, name="parrainages"),
     path(
         "persons/parrainage/update/<int:pk>/",
         animal.UpdateParrainage.as_view(),

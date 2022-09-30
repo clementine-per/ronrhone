@@ -60,3 +60,21 @@ class AdhesionForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['date'].widget.attrs['class'] = 'datePicker'
+
+
+class ParrainageSearchForm(Form):
+    nom_personne = CharField(max_length=150, required=False, label="Nom du parrain")
+    nom_animal = CharField(max_length=150, required=False, label="Nom de l'animal")
+    date_debut_min = DateField(
+        label="Date de début du parrainage entre le", required=False, widget=DateInput()
+    )
+    date_debut_max = DateField(label=" et le ", required=False, widget=DateInput())
+    date_fin_min = DateField(
+        label="Date de fin du parrainage entre le", required=False, widget=DateInput()
+    )
+    date_fin_max = DateField(label=" et le ", required=False, widget=DateInput())
+    date_nouvelles_min = DateField(
+        label="Date des dernières nouvelles données entre le", required=False, widget=DateInput()
+    )
+    date_nouvelles_max = DateField(label=" et le ", required=False, widget=DateInput())
+

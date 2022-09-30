@@ -355,3 +355,6 @@ class Parrainage(models.Model):
         decimal_places=2, blank=True, null=True
     )
     date_nouvelles = models.DateField(verbose_name="Date des dernières nouvelles données", blank=True, null=True)
+
+    class Meta:
+        ordering = ['-date_debut']
