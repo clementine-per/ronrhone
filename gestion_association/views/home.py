@@ -35,6 +35,7 @@ def index(request):
     interval_15_ago_str = interval_15_ago.strftime("%Y-%m-%d")
     interval_5_weeks_ago_str = interval_5_weeks_ago.strftime("%Y-%m-%d")
     interval_7_months_ago_str = interval_7_months_ago.strftime("%Y-%m-%d")
+    interval_5_months_ago_str = interval_5_months_ago.strftime("%Y-%m-%d")
 
     statuts_association_filter = ""
     for statut in statuts_association:
@@ -93,10 +94,9 @@ def index(request):
     # Partie soins
      # Animaux en soin
     soins = Animal.objects.filter(inactif=False).filter(statut='SOIN').count()
-    # Animaux avec soin manquant
-    soins_manquants = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association)\
-        .filter(Q(Q(sterilise=OuiNonChoice.NON.name)&Q(date_naissance__lte=interval_5_months_ago))| Q(vaccin_ok=OuiNonChoice.NON.name)|\
-    Q(fiv='NT')| Q(felv='NT')|Q(identification__exact='')).count()
+    # Animaux à stériliser
+    a_steriliser = Animal.objects.filter(inactif=False).filter(statut__in=statuts_association)\
+        .filter(sterilise=OuiNonChoice.NON.name).filter(date_naissance__lte=interval_5_months_ago).count()
     # Bon de stérilisation à envoyer
     bon_a_envoyer = BonSterilisation.objects.filter(envoye=OuiNonChoice.NON.name)\
         .filter(adoption__annule=False).count()

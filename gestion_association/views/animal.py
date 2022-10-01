@@ -61,18 +61,11 @@ def search_animal(request):
         # Pas dans le formulaire uniquement critère d'url provenant du tableau de bord
         vaccin_ok_url = request.GET.get("vaccin_ok", "")
         identifie_url = request.GET.get("identifie", "")
-        soin_manquant_url = request.GET.get("soin_manquant", "")
 
         if vaccin_ok_url:
             animals = animals.filter(vaccin_ok=vaccin_ok_url)
         if identifie_url and identifie_url == OuiNonChoice.OUI.name:
             animals = animals.exclude(identification__exact="")
-        if soin_manquant_url:
-            today = timezone.now().date()
-            interval_5_months_ago = today - relativedelta(months=5)
-            animals = animals.filter(statut__in=statuts_association) \
-                .filter(Q(Q(sterilise=OuiNonChoice.NON.name)&Q(date_naissance__lte=interval_5_months_ago))| Q(vaccin_ok=OuiNonChoice.NON.name) | \
-                        Q(fiv='NT') | Q(felv='NT') | Q(identification__exact=''))
         if nom_form:
             animals = animals.filter(nom__icontains=nom_form)
             form.fields["nom"].initial = nom_form
