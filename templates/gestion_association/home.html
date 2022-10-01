@@ -146,11 +146,15 @@
                 </div>
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <p><a class="text-secondary" href= "{% url 'persons' %}?date_parrainage_min={{interval_10_ago_str}}&date_parrainage_max={{interval_10_str}}">
+                        <p><a class="text-secondary" href= "{% url 'parrainages' %}?date_fin_min={{interval_10_ago_str}}&date_fin_max={{interval_10_str}}">
                             <strong> {{date_parrainage_10}} </strong>  parrains avec au moins un parrainage arrivant à terme
                         </a></p>
                          <p><a class="text-secondary" href= "{% url 'persons' %}?date_adhesion_min={{interval_12_months_ago_str}}&date_adhesion_max={{interval_11_months_ago_str}}">
                             <strong> {{adhesions_a_renouveler}} </strong>  adhésions à renouveler ce mois-ci
+                        </a></p>
+                        <p><a class="text-secondary"
+                              href= "{% url 'parrainages' %}?date_nouvelles_max={{interval_1_months_ago_str}}&date_fin_min={{today_str}}&date_debut_max={{today_str}}">
+                            <strong> {{nouvelles_parrain}} </strong>  nouvelles à donner à des parrains
                         </a></p>
                     </div>
                 </div>

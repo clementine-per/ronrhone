@@ -71,10 +71,23 @@ def index(request):
         filter(animal__sterilise=OuiNonChoice.NON.name).filter(annule=False) \
         .filter(animal__date_naissance__lte=interval_7_months_ago).count()
 
-    # Partie Personnes
+    # Partie Association
         # Parrainages
     parrainages = Parrainage.objects.filter(date_fin__gte=interval_10_ago).filter(date_fin__lte=interval_10)
     date_parrainage_10 = Person.objects.filter(parrainage__in=parrainages).count()
+    # Adhésion arrivant à échéance (qui ont entre 11 et 12 mois)
+    interval_11_months_ago = today - relativedelta(months=11)
+    interval_12_months_ago = today - relativedelta(months=12)
+    interval_11_months_ago_str = interval_11_months_ago.strftime("%Y-%m-%d")
+    interval_12_months_ago_str = interval_12_months_ago.strftime("%Y-%m-%d")
+    adhesions_a_renouveler = Adhesion.objects.values('personne').annotate(max_date=Max('date')).filter(
+        max_date__lte=interval_11_months_ago). \
+        filter(max_date__gte=interval_12_months_ago).count()
+    # Nouvelles parrain à donner
+    interval_1_months_ago = today - relativedelta(months=1)
+    interval_1_months_ago_str = interval_1_months_ago.strftime("%Y-%m-%d")
+    nouvelles_parrain = Parrainage.objects.filter(date_fin__gte=today).filter(date_debut__lte=today).\
+        filter(date_nouvelles__lte=interval_1_months_ago).count()
 
 
     # Partie soins
@@ -134,13 +147,6 @@ def index(request):
     # dont prêts = tous soins effectues
     nb_nekosables_prets = nekosables.filter(sterilise=OuiNonChoice.OUI.name).filter(vaccin_ok=OuiNonChoice.OUI.name).\
     filter(~Q(fiv='NT')&~Q(felv='NT')).exclude(identification__exact='').count()
-    # Adhésion arrivant à échéance (qui ont entre 11 et 12 mois)
-    interval_11_months_ago = today - relativedelta(months=11)
-    interval_12_months_ago = today - relativedelta(months=12)
-    interval_11_months_ago_str = interval_11_months_ago.strftime("%Y-%m-%d")
-    interval_12_months_ago_str = interval_12_months_ago.strftime("%Y-%m-%d")
-    adhesions_a_renouveler = Adhesion.objects.values('personne').annotate(max_date=Max('date')).filter(max_date__lte=interval_11_months_ago). \
-        filter(max_date__gte=interval_12_months_ago).count()
 
     #Taux de remplissage
     places_disponibles =  Famille.objects.filter(statut='DISPONIBLE').aggregate(Sum('nb_places'))
