@@ -54,6 +54,7 @@
                 <th>Vétérinaire</th>
                 <th >Montant de la visite</th>
                 <th >Animaux concernés</th>
+                <th></th>
             </tr>
         </thead>
         {% for visite in visites %}
@@ -63,6 +64,10 @@
             <td>{{visite.veterinaire}}</td>
             <td>{{visite.montant|default:" - "}}</td>
             <td>{% for animal in visite.animaux.all %}<a href = "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a><br>{% endfor %}</td>
+            <td><a onclick="return confirm('Etes vous sûr(e) de vouloir supprimer cette visite vétérinaire pour tous les animaux concernés?');"
+                       href= "{% url 'delete_visite' visite.id %}">
+                        <i class="fas fa-trash"></i>
+                    </a></td>
         </tr>
         {% endfor %}
     </table>

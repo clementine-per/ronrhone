@@ -125,3 +125,10 @@ def create_visite_from_animal(request, pk):
         visite_form.fields["animaux"].initial = animal
 
     return render(request, "gestion_association/visite_medicale/visite_medicale_create_form.html", locals())
+
+
+@login_required
+def delete_visite(request, pk):
+    visite = VisiteMedicale.objects.get(id=pk)
+    visite.delete()
+    return redirect("visites")

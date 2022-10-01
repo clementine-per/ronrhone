@@ -215,6 +215,11 @@ urlpatterns = [
     path("visites/create", visite_medicale.create_visite_medicale, name="create_visite"),
     path("visites/update/<int:pk>/", visite_medicale.UpdateVisiteMedicale.as_view(), name="update_visite"),
     path("visites/create_animal/<int:pk>/", visite_medicale.create_visite_from_animal, name="create_visite_animal"),
+    path(
+        "visites/delete/<int:pk>/",
+        visite_medicale.delete_visite,
+        name="delete_visite",
+    ),
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
     # Génération contrat
