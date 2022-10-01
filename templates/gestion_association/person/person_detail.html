@@ -93,8 +93,14 @@
                 {% endif %}
                 {% if person.is_adoptante %}
                 <div class="role adoptant mb-3">Adoptant :
-                    {% for animal in person.animal_set.all %}
-                    <a href= "{% url 'detail_animal' animal.id %}"><br/>{{animal.nom}}</a>
+                    {% for adoption in person.adoption_set.all %}
+                    {% if adoption.annule %}
+                    <del>
+                    {% endif %}
+                    <a href= "{% url 'detail_animal' adoption.animal.id %}"><br/>{{adoption.animal.nom}}</a>
+                    {% if adoption.annule %}
+                    </del>
+                    {% endif %}
                     {% endfor %}
                 </div>
                 {% endif %}
