@@ -170,8 +170,13 @@
                 {% if animal.get_latest_adoption.bon %}
                 <div class="alert alert-info m-2" role="alert">
                     {{ animal.get_latest_adoption.bon }}
-                    <a href= "{% url 'update_bon' animal.get_latest_adoption.bon.id %}" class="close">
+                    <a href= "{% url 'update_bon' animal.get_latest_adoption.bon.id %}"
+                       class="close pl-4">
                         <i class="fas fa-pen"></i>
+                    </a>
+                    <a onclick="return confirm('Etes vous sûr(e) de vouloir supprimer ce bon de stérilisation?');"
+                       href= "{% url 'delete_bon' animal.get_latest_adoption.bon.id %}" class="close">
+                        <i class="fas fa-trash"></i>
                     </a>
                 </div>
                 {% else %}

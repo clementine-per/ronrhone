@@ -377,6 +377,7 @@ def save_adoption(adoption, animal, person, show_form, bon_form):
             # On a besoin de cette info pour la redirection
             return bon
 
+
 @login_required
 def adoption_cancel(request, pk):
     adoption = Adoption.objects.get(id=pk)
@@ -385,3 +386,11 @@ def adoption_cancel(request, pk):
     adoption.save()
     adoption.animal.save()
     return redirect("detail_animal", pk=adoption.animal.id)
+
+
+@login_required
+def delete_bon(request, pk):
+    bon = BonSterilisation.objects.get(id=pk)
+    animal = bon.adoption.animal
+    bon.delete()
+    return redirect("detail_animal", pk=animal.id)
