@@ -20,11 +20,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 SECRET_KEY = "cj(z*-78tybv(n+pi)01c7u&kw2ab_3(*52l#d^u$j00y7e=iw"
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["192.168.0.250", "localhost"]
-
 
 # Application definition
 
@@ -38,6 +33,8 @@ INSTALLED_APPS = [
     "import_export",
     "corsheaders",
     "gestion_association",
+    "dal",
+    "dal_select2",
 ]
 
 MIDDLEWARE = [
@@ -70,17 +67,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ronrhone.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
 
 
 # Password validation
@@ -117,15 +103,11 @@ DATE_INPUT_FORMATS = ("%d/%m/%Y", "%Y-%m-%d")
 
 LOGIN_REDIRECT_URL = "accueil"
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = "/static/"
-
 TEMPLATES_DIR = os.path.join(BASE_DIR, "/templates/")
 
 LANGUAGE_CODE = "fr"
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 CORS_ALLOW_CREDENTIALS = True
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

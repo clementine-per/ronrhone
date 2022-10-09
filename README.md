@@ -21,6 +21,10 @@ Installez les dépendances
 Activez l'environnement avec
 
 	source ./ronrhone/Scripts/activate
+	
+Indiquez qu'il s'agit de l'environnement local
+
+	export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
 
 Mettez à la jour la base de données
 
