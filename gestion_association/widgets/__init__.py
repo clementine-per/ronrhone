@@ -3,7 +3,7 @@ from html import escape
 from string import capwords
 
 from django.forms import SelectMultiple, CheckboxInput
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from rest_framework.utils import json
 
@@ -100,7 +100,7 @@ class TableSelectMultiple(SelectMultiple):
         final_attrs['class'] = "tableselectmultiple selectable-checkbox"
         if self.bootstrap_style:
             final_attrs['class'] += " form-check-input"
-        str_values = set([force_text(v) for v in value])
+        str_values = set([force_str(v) for v in value])
         choice_pks = [pk.value for (pk, item) in self.choices]
         choices = self.choices.queryset.filter(pk__in=choice_pks)
         for i, item in enumerate(choices):
@@ -112,7 +112,7 @@ class TableSelectMultiple(SelectMultiple):
                 )
             cb = CheckboxInput(final_attrs,
                                check_test=lambda value: value in str_values)
-            option_value = force_text(item.pk)
+            option_value = force_str(item.pk)
             rendered_cb = cb.render(name, option_value, **kwargs)
             output.append('<tr><td>{}</td>'.format(rendered_cb))
             for item_attr in self.item_attrs:
