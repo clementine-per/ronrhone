@@ -1,9 +1,5 @@
-import datetime
-import io
 import tempfile
-from datetime import timedelta
 from decimal import Decimal
-from io import StringIO
 
 import PyPDF2
 from django.contrib.auth.decorators import login_required
@@ -20,7 +16,7 @@ from dateutil.relativedelta import relativedelta
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption
 from gestion_association.models.animal import Animal, TrancheAge, SexeChoice
-from ronrhone import settings
+from django.conf import settings
 
 # Couleurs et styles pour la génération PDF
 couleur_ronrhone = "#00bfff"
@@ -366,11 +362,12 @@ def info_rappel_vaccin(p, animal):
             prochain_vaccin = animal.date_dernier_vaccin + relativedelta(months=1)
         prochain_vaccin_str = prochain_vaccin.strftime("%d/%m/%Y")
     else:
+        prochain_vaccin = None
         prochain_vaccin_str = "__/__/__"
     if animal.vaccin_ok == OuiNonChoice.OUI.name:
         p.drawString(5.5 * cm, 27.5 * cm, "peu de temps avant le " +
                      prochain_vaccin_str + ".")
-    else:
+    elif prochain_vaccin:
         vaccin_delai = prochain_vaccin + relativedelta(days=7)
         p.drawString(5.5 * cm, 27.5 * cm, "entre le " + prochain_vaccin_str +
                      " et le " + vaccin_delai.strftime("%d/%m/%Y") + ".")
@@ -521,9 +518,12 @@ def montants(p, animal, vertical):
 
     if animal.get_latest_adoption().montant_restant:
         montant_restant = animal.get_latest_adoption().montant_restant
-    else:
+    elif animal.get_latest_adoption().montant:
         montant_restant = animal.get_latest_adoption().montant/2
-    p.drawString(9.4 * cm, (vertical + 3.8) * cm, str(animal.get_latest_adoption().montant -
+    else:
+        montant_restant = Decimal(0)
+    if animal.get_latest_adoption().montant:
+        p.drawString(9.4 * cm, (vertical + 3.8) * cm, str(animal.get_latest_adoption().montant -
                                                       montant_restant))
     if montant_bon:
         p.drawString(9.4 * cm, (vertical + 3.1) * cm, str(montant_bon))
