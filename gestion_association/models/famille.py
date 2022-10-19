@@ -91,9 +91,10 @@ class Famille(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        for animal in self.animal_set.all():
-            animal.perimetre = self.perimetre
-            animal.save()
+        if not self._state.adding:
+            for animal in self.animal_set.all():
+                animal.perimetre = self.perimetre
+                animal.save()
         return super().save(*args, **kwargs)
 
     def get_nb_places_str(self):
