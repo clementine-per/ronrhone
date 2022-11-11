@@ -1,3 +1,4 @@
+import io
 import tempfile
 from decimal import Decimal
 
@@ -125,15 +126,24 @@ def generate_contract(request, pk):
         contrat_fixe = open(settings.STATIC_ROOT + "/pdf/contrat_chaton.pdf", 'rb')
     else:
         contrat_fixe = open(settings.STATIC_ROOT + "/pdf/contrat_adulte.pdf", 'rb')
+    certificat_engagement = open(settings.STATIC_ROOT + "/pdf/certificat-engagement.pdf", 'rb')
     # Fichier temporaire contenant le contenu généré
     pdf1Reader = PyPDF2.PdfFileReader(temp_file)
     pdf2Reader = PyPDF2.PdfFileReader(contrat_fixe)
+    certificat_engagement_data = get_data_certificat_engagement(animal)
+    pdf3Reader = PyPDF2.PdfFileReader(certificat_engagement)
     pdfWriter = PyPDF2.PdfFileWriter()
     for pageNum in range(pdf1Reader.numPages):
         pageObj = pdf1Reader.getPage(pageNum)
         pdfWriter.addPage(pageObj)
     for pageNum in range(pdf2Reader.numPages):
         pageObj = pdf2Reader.getPage(pageNum)
+        pdfWriter.addPage(pageObj)
+    for pageNum in range(pdf3Reader.numPages):
+        pageObj = pdf3Reader.getPage(pageNum)
+        if pageNum == 0:
+            new_pdf = PyPDF2.PdfFileReader(certificat_engagement_data)
+            pageObj.mergePage(new_pdf.getPage(0))
         pdfWriter.addPage(pageObj)
     pdfOutputFile = tempfile.NamedTemporaryFile()
     pdfWriter.write(pdfOutputFile)
@@ -149,6 +159,18 @@ def generate_contract(request, pk):
 
     return response
 
+def get_data_certificat_engagement(animal):
+    result_bytes = io.BytesIO()
+    certificat_canvas = canvas.Canvas(result_bytes)
+    certificat_canvas.setFont("Helvetica", 0.4 * cm)
+    certificat_canvas.drawString(3.6 * cm, 24 * cm, animal.adoptant.prenom)
+    certificat_canvas.drawString(3.4 * cm, 23.5 * cm, animal.adoptant.nom)
+    certificat_canvas.drawString(3.5 * cm, 23 * cm, animal.adoptant.adresse)
+    certificat_canvas.drawString(2 * cm, 22.45 * cm, animal.adoptant.code_postal + " " + animal.adoptant.ville)
+    certificat_canvas.drawString(3.5 * cm, 21.9 * cm, animal.adoptant.email)
+    certificat_canvas.save()
+    result_bytes.seek(0)
+    return result_bytes
 
 def pieces_contrat(p, vertical):
     para = Paragraph("{} <br/>" \

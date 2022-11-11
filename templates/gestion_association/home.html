@@ -57,9 +57,6 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SOIN"><strong>{{soins}}</strong>  en suivi santé rapproché</a></p>
-                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sterilise=NON&date_naissance_max={{interval_5_months_ago_str}}">
-                            <strong>{{a_steriliser}}</strong>  ados à stériliser</a>
-                        </p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}date_prochain_vaccin_min={{today_str}}&date_prochain_vaccin_max={{interval_10_str}}">
                             <strong>{{vaccins}}</strong>  à vacciner dans les 10 jours
                         </a></p>
@@ -70,6 +67,9 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?bon_utilise=NON&date_expiration_min={{today_str}}&date_expiration_max={{interval_10_str}}">
                             <strong>{{bon_a_utilise}}</strong> bons de stérilisation à utiliser dans les 10 jours
                         </a></p>
+                        <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sterilise=NON&date_naissance_max={{interval_5_months_ago_str}}">
+                            <strong>{{a_steriliser}}</strong>  ados à stériliser</a>
+                        </p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=SEVRAGE&date_naissance_max={{interval_2_and_half_month_ago_str}}">
                             <strong>{{fin_sevrage}}</strong> chatons en fin de sevrage</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=QUARANTAINE&date_arrivee_max={{interval_15_ago_str}}">
