@@ -82,8 +82,9 @@ def generate_contract(request, pk):
 
     # Dans le cas d'un chaton
     if is_enfant:
-        # Infos sterilisation chaton
-        info_sterilisation(p, spaceStyle, animal)
+        if animal.sterilise == OuiNonChoice.NON.name:
+            # Infos sterilisation chaton
+            info_sterilisation(p, spaceStyle, animal)
 
         # La suite est la même sur les deux modèles mais pas au même endroit, donc on définit une méthode
         generation_reglement(p, 0, spaceStyle, animal)
@@ -318,17 +319,21 @@ def info_tarifs_chatons(p, animal):
         vaccination = "- Vaccination à jour"
     else:
         vaccination = "- Primo vaccination"
+    if animal.sterilise == OuiNonChoice.OUI.name:
+        sterilise = "- Stérilisation"
+    else:
+        sterilise = ""
     elements = [["Les frais d'adoption sont de " + str(animal.get_latest_adoption().montant) + " euros.", ''],
                 ["(majoration de ", '20€ pour une primo-vaccination leucose,'],
                 ["", '40€ pour une vaccination leucose à jour).'],
-                ["", ''],
                 ["Cette somme correspond au remboursement des frais vétérinaires", ''],
                 ["qui incluent les prestations suivantes : ", ''],
                 ["", '- Identification par puce électronique'],
                 ["", '- Test FIV / FeLV'],
                 ["", vaccination],
                 ["", '- Anti-parasitaires'],
-                ["", '- Certificat de bonne santé']]
+                ["", '- Certificat de bonne santé'],
+                ["", sterilise]]
     tableau = Table(elements, colWidths=[2.75 * cm, 14.25 * cm])
     # part de en haut à gauche !
     # tableau pour faire le cadre mais également la séparation avant la somme des vaccinations
@@ -338,7 +343,7 @@ def info_tarifs_chatons(p, animal):
     ]))
 
     tableau.wrap(18 * cm, 20 * cm)
-    tableau.drawOn(p, 2 * cm, 1 * cm)
+    tableau.drawOn(p, 2 * cm, 1.5 * cm)
 
 
 def info_tarifs_adulte(p):
