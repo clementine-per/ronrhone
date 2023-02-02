@@ -6,39 +6,63 @@ Bienvenue sur le projet de gestion de l'association de protection animale Ronrh�
 
 Créez un environnement virtuel Python
 
-    virtualenv ronrhone
+```bash
+virtualenv venv
+```
 
 Activez l'environnement avec
 
-    source ./ronrhone/Scripts/activate
+```bash
+#For Windows
+source ./ven/Scripts/activate
+
+#For Linux
+source ./ven/bin/activate
+```
 
 Installez les dépendances
 
-	pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 ## Pour lancer le projet
 
 Activez l'environnement avec
 
-	source ./ronrhone/Scripts/activate
-	
+```bash
+#For Windows
+source ./ven/Scripts/activate
+
+#For Linux
+source ./ven/bin/activate
+```
+
 Indiquez qu'il s'agit de l'environnement local
 
-	export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
+```bash
+export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
+```
 
 Mettez à la jour la base de données
 
-    ./manage.py migrate
+```bash
+./manage.py migrate
+```
 
 Créez un administrateur
 
-	./manage.py createsuperuser
+```bash
+./manage.py createsuperuser
+```
 
 Lancez le serveur
 
-	./manage.py runserver
+```bash
+./manage.py runserver
+```
 
-Enjoy! http://localhost:8000/ronrhone/
+Enjoy! <http://localhost:8000/ronrhone/>
 
 ## pre-commit hooks
 
@@ -46,15 +70,17 @@ pre-commit is a tool that will run a list of checks on the files you are trying 
 
 Make sure to provide the `pre-commit` command on your shell path.
 
-You can install it from here: https://pre-commit.com/
+You can install it from here: <https://pre-commit.com/>
 
 ### Install pre-commit hook for ronrhone
 
-    pre-commit install
+```bash
+pre-commit install
+```
 
 ### Will it slow me down?
 
-The benefit of `pre-commit` is that it only checks the file you changed so it is rather quick and we don't need to exclude files that are not commited.
+The benefit of `pre-commit` is that it only checks the file you changed so it is rather quick and we don't need to exclude files that are not committed.
 
 ### Can I run it to check all existing files?
 
@@ -62,20 +88,24 @@ If you are adding a new check, you might want to run it on the whole code base.
 
 To do so, you can run:
 
-    pre-commit run --all-files
+```bash
+pre-commit run --all-files
+```
 
 If you do so, make sure to commit your local changes before running
 the command because you might want to erase what it did.
 
-    # make local changes
-    git commit -am "My changes"
+```bash
+# make local changes
+git commit -am "My changes"
 
-    # Run pre-commit
-    pre-commit run --all-files
+# Run pre-commit
+pre-commit run --all-files
 
-    # discover that it does do what you wanted
-    git reset HEAD --hard
+# discover that it does do what you wanted
+git reset HEAD --hard
 
-    # change your hooks configuration
-    pre-commit run --all-files
-    ...
+# change your hooks configuration
+pre-commit run --all-files
+...
+```
