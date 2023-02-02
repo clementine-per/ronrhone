@@ -35,7 +35,6 @@ titleStyle = ParagraphStyle(name="Style", textColor=couleur_ronrhone, fontSize=0
 
 @login_required
 def generate_contract(request, pk):
-    nb_page = 0
     animal = Animal.objects.get(pk=pk)
     is_enfant = animal.tranche_age == TrancheAge.ENFANT.name
     temp_file = tempfile.NamedTemporaryFile()
@@ -60,8 +59,7 @@ def generate_contract(request, pk):
     else:
         # Infos tarifs adultes
         info_tarifs_adulte(p)
-    # pieds de page
-    nb_page += 1
+    nb_page = 0 + 1
     pieds_page(p, nb_page)
 
     # Changement de page
@@ -124,10 +122,12 @@ def generate_contract(request, pk):
 
     # Merge entre la partie écrite ci-dessus et les pages pdf fixes à ajouter à la suite
     if is_enfant:
-        contrat_fixe = open(settings.STATIC_ROOT + "/pdf/contrat_chaton.pdf", 'rb')
+        contrat_fixe = open(f"{settings.STATIC_ROOT}/pdf/contrat_chaton.pdf", 'rb')
     else:
-        contrat_fixe = open(settings.STATIC_ROOT + "/pdf/contrat_adulte.pdf", 'rb')
-    certificat_engagement = open(settings.STATIC_ROOT + "/pdf/certificat-engagement.pdf", 'rb')
+        contrat_fixe = open(f"{settings.STATIC_ROOT}/pdf/contrat_adulte.pdf", 'rb')
+    certificat_engagement = open(
+        f"{settings.STATIC_ROOT}/pdf/certificat-engagement.pdf", 'rb'
+    )
     # Fichier temporaire contenant le contenu généré
     pdf1Reader = PyPDF2.PdfFileReader(temp_file)
     pdf2Reader = PyPDF2.PdfFileReader(contrat_fixe)
@@ -156,7 +156,9 @@ def generate_contract(request, pk):
 
     # Create the HttpResponse object
     response = HttpResponse(content, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Contrat_{}_{}.pdf"'.format(animal.nom, animal.id)
+    response[
+        'Content-Disposition'
+    ] = f'attachment; filename="Contrat_{animal.nom}_{animal.id}.pdf"'
 
     return response
 
@@ -167,16 +169,18 @@ def get_data_certificat_engagement(animal):
     certificat_canvas.drawString(3.6 * cm, 24 * cm, animal.adoptant.prenom)
     certificat_canvas.drawString(3.4 * cm, 23.5 * cm, animal.adoptant.nom)
     certificat_canvas.drawString(3.5 * cm, 23 * cm, animal.adoptant.adresse)
-    certificat_canvas.drawString(2 * cm, 22.45 * cm, animal.adoptant.code_postal + " " + animal.adoptant.ville)
+    certificat_canvas.drawString(
+        2 * cm,
+        22.45 * cm,
+        f"{animal.adoptant.code_postal} {animal.adoptant.ville}",
+    )
     certificat_canvas.drawString(3.5 * cm, 21.9 * cm, animal.adoptant.email)
     certificat_canvas.save()
     result_bytes.seek(0)
     return result_bytes
 
 def pieces_contrat(p, vertical):
-    para = Paragraph("{} <br/>" \
-                     .format("Pièces à joindre au contrat")
-                     , style=titleStyle)
+    para = Paragraph(f'{"Pièces à joindre au contrat"} <br/>', style=titleStyle)
     para.wrap(13 * cm, 15 * cm)
     para.drawOn(p, 4.5 * cm, vertical * cm)
     p.setFont("Helvetica", 0.5 * cm)
@@ -190,16 +194,14 @@ def pieds_page(p, nb_page):
     p.drawString(2.7 * cm, 0.2 * cm, "Association Ron’Rhône - 98, chemin de la Combe Moussin 38270 BEAUFORT - n° SIRET : 82140540400012")
     p.setFont("Times-Bold", 0.5 * cm)
     p.setFillColor('#000000')
-    p.drawString(20 * cm, 0.2 * cm, str(nb_page) + "/9")
+    p.drawString(20 * cm, 0.2 * cm, f"{str(nb_page)}/9")
 
 
 def generation_reglement(p, difference, spaceStyle, animal):
     # le paramètre "difference" arrange la position que doit avoir le contenu en fonction de s'il s'agit
     # d'un chaton ou d'un chat adulte
     # On redéfini le style 2 dans la fonction pour ajuster le texte
-    para = Paragraph("{} <br/>" \
-                     .format("Règlement")
-                     , style=titleStyle)
+    para = Paragraph(f'{"Règlement"} <br/>', style=titleStyle)
     para.wrap(7 * cm, 15 * cm)
     para.drawOn(p, 4.5 * cm, 17 * cm + difference * cm)
     p.circle(2.5 * cm, 15.4 * cm + difference * cm, 2.5, fill=True)
@@ -230,17 +232,35 @@ def generation_reglement(p, difference, spaceStyle, animal):
                         ,style=spaceStyle)
     para.wrap(17 * cm, 15 * cm)
     para.drawOn(p, 2.25 * cm, 9.5 * cm + difference * cm)
-    p.drawImage(settings.STATIC_ROOT + "/img/RIB.PNG",
-                0.75 * cm, 1 * cm + difference * cm, width=19.5 * cm, height=8 * cm, mask="auto")
+    p.drawImage(
+        f"{settings.STATIC_ROOT}/img/RIB.PNG",
+        0.75 * cm,
+        1 * cm + difference * cm,
+        width=19.5 * cm,
+        height=8 * cm,
+        mask="auto",
+    )
 
 
 def en_tete(p, is_enfant, animal):
     # logo en-tete
-    p.drawImage(settings.STATIC_ROOT + "/img/logo.PNG",
-                0.75 * cm, 23.25 * cm, width=5.5 * cm, height=5.5 * cm, mask="auto")
+    p.drawImage(
+        f"{settings.STATIC_ROOT}/img/logo.PNG",
+        0.75 * cm,
+        23.25 * cm,
+        width=5.5 * cm,
+        height=5.5 * cm,
+        mask="auto",
+    )
     # Type de contrat, en haut à droite
-    p.drawImage(settings.STATIC_ROOT + "/img/entete.PNG",
-                14 * cm, 27.5 * cm, width=15 * cm, height=2.5 * cm, mask="auto")
+    p.drawImage(
+        f"{settings.STATIC_ROOT}/img/entete.PNG",
+        14 * cm,
+        27.5 * cm,
+        width=15 * cm,
+        height=2.5 * cm,
+        mask="auto",
+    )
     p.setFont("Times-Italic", 0.5 * cm)
     if is_enfant:
         p.drawString(18 * cm, 29 * cm, "CHATON")
@@ -252,9 +272,9 @@ def en_tete(p, is_enfant, animal):
                            borderRadius=0.2 * cm,
                            borderPadding=(0.2 * cm, 0.5 * cm, 1.5 * cm, 0.5 * cm))
 
-    para = Paragraph("{} <br/><br/> {} <br/>" \
-                     .format("Contrat d'adoption de ", animal.nom)
-                     , style=style)
+    para = Paragraph(
+        f"Contrat d'adoption de  <br/><br/> {animal.nom} <br/>", style=style
+    )
     para.wrap(8 * cm, 7 * cm)
     para.drawOn(p, 8.5 * cm, 26 * cm)
 
@@ -262,20 +282,20 @@ def en_tete(p, is_enfant, animal):
 def infos_personnelles(p, animal):
     # Informations personnelles de l'adoptant
 
-    para = Paragraph("{} <br/>" \
-                     .format("Informations personnelles de l'adoptant")
-                     , style=titleStyle)
+    para = Paragraph(
+        "Informations personnelles de l'adoptant <br/>", style=titleStyle
+    )
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4.30 * cm, 22.5 * cm)
     p.setFont("Times-Bold", 0.5 * cm)
-    p.drawString(2 * cm, 21.3 * cm, "Nom : " + animal.adoptant.nom)
-    p.drawString(11 * cm, 21.3 * cm, "Prénom : " + animal.adoptant.prenom)
-    p.drawString(2 * cm, 20.5 * cm, "Téléphone : " + animal.adoptant.telephone)
-    p.drawString(2 * cm, 19.7 * cm, "Adresse postale : " + animal.adoptant.adresse)
-    p.drawString(2 * cm, 18.9 * cm, "Code Postal : " + animal.adoptant.code_postal)
-    p.drawString(6.75 * cm, 18.9 * cm, "Ville : " + animal.adoptant.ville)
-    p.drawString(2 * cm, 18.1 * cm, "Adresse e-mail : " + animal.adoptant.email)
-    p.drawString(2 * cm, 17.3 * cm, "Profession : " + animal.adoptant.profession)
+    p.drawString(2 * cm, 21.3 * cm, f"Nom : {animal.adoptant.nom}")
+    p.drawString(11 * cm, 21.3 * cm, f"Prénom : {animal.adoptant.prenom}")
+    p.drawString(2 * cm, 20.5 * cm, f"Téléphone : {animal.adoptant.telephone}")
+    p.drawString(2 * cm, 19.7 * cm, f"Adresse postale : {animal.adoptant.adresse}")
+    p.drawString(2 * cm, 18.9 * cm, f"Code Postal : {animal.adoptant.code_postal}")
+    p.drawString(6.75 * cm, 18.9 * cm, f"Ville : {animal.adoptant.ville}")
+    p.drawString(2 * cm, 18.1 * cm, f"Adresse e-mail : {animal.adoptant.email}")
+    p.drawString(2 * cm, 17.3 * cm, f"Profession : {animal.adoptant.profession}")
 
     # Checkbox
     styleSquare = ParagraphStyle(name="Style", borderWidth=1, borderColor="#000000",
@@ -293,22 +313,22 @@ def infos_personnelles(p, animal):
 
 
 def infos_pensionnaire(p, animal, is_enfant):
-    para = Paragraph("{} <br/>" \
-                     .format("Informations sur le pensionnaire adopté")
-                     , style=titleStyle)
+    para = Paragraph(
+        f'{"Informations sur le pensionnaire adopté"} <br/>', style=titleStyle
+    )
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4.30 * cm, 12.5 * cm)
 
     p.setFont("Helvetica", 0.5 * cm)
-    p.drawString(2 * cm, 11.35 * cm, "- Identification : " + animal.identification)
-    p.drawString(11 * cm, 11.35 * cm, "- Test FeLV : " + animal.felv)
+    p.drawString(2 * cm, 11.35 * cm, f"- Identification : {animal.identification}")
+    p.drawString(11 * cm, 11.35 * cm, f"- Test FeLV : {animal.felv}")
     if is_enfant:
-        p.drawString(2 * cm, 10.75 * cm, "- Nom du chaton : " + animal.nom)
+        p.drawString(2 * cm, 10.75 * cm, f"- Nom du chaton : {animal.nom}")
     else:
-        p.drawString(2 * cm, 10.75 * cm, "- Nom du chat : " + animal.nom)
-    p.drawString(11 * cm, 10.75 * cm, "- Test FIV : " + animal.fiv)
-    p.drawString(2 * cm, 10.15 * cm, "- Sexe : " + animal.sexe)
-    p.drawString(11 * cm, 10.15 * cm, "- Race : " + animal.type)
+        p.drawString(2 * cm, 10.75 * cm, f"- Nom du chat : {animal.nom}")
+    p.drawString(11 * cm, 10.75 * cm, f"- Test FIV : {animal.fiv}")
+    p.drawString(2 * cm, 10.15 * cm, f"- Sexe : {animal.sexe}")
+    p.drawString(11 * cm, 10.15 * cm, f"- Race : {animal.type}")
     p.drawString(2 * cm, 9.55 * cm, "- Date de naissance : " + animal.date_naissance.strftime("%d/%m/%Y"))
     p.drawString(11 * cm, 9.55 * cm, "- Robe : ")
     p.drawString(2 * cm, 8.95 * cm, "- Signes particuliers : ")
@@ -323,17 +343,22 @@ def info_tarifs_chatons(p, animal):
         sterilise = "- Stérilisation"
     else:
         sterilise = ""
-    elements = [["Les frais d'adoption sont de " + str(animal.get_latest_adoption().montant) + " euros.", ''],
-                ["(majoration de ", '20€ pour une primo-vaccination leucose,'],
-                ["", '40€ pour une vaccination leucose à jour).'],
-                ["Cette somme correspond au remboursement des frais vétérinaires", ''],
-                ["qui incluent les prestations suivantes : ", ''],
-                ["", '- Identification par puce électronique'],
-                ["", '- Test FIV / FeLV'],
-                ["", vaccination],
-                ["", '- Anti-parasitaires'],
-                ["", '- Certificat de bonne santé'],
-                ["", sterilise]]
+    elements = [
+        [
+            f"Les frais d'adoption sont de {str(animal.get_latest_adoption().montant)} euros.",
+            '',
+        ],
+        ["(majoration de ", '20€ pour une primo-vaccination leucose,'],
+        ["", '40€ pour une vaccination leucose à jour).'],
+        ["Cette somme correspond au remboursement des frais vétérinaires", ''],
+        ["qui incluent les prestations suivantes : ", ''],
+        ["", '- Identification par puce électronique'],
+        ["", '- Test FIV / FeLV'],
+        ["", vaccination],
+        ["", '- Anti-parasitaires'],
+        ["", '- Certificat de bonne santé'],
+        ["", sterilise],
+    ]
     tableau = Table(elements, colWidths=[2.75 * cm, 14.25 * cm])
     # part de en haut à gauche !
     # tableau pour faire le cadre mais également la séparation avant la somme des vaccinations
@@ -377,7 +402,11 @@ def info_tarifs_adulte(p):
 def info_rappel_vaccin(p, animal):
     # Bullet de début de paragraphe
     p.circle(3.5 * cm, 28.55 * cm, 2.5, fill=True)
-    p.drawString(4 * cm, 28.4 * cm, "Le prochain rappel de vaccin de " + animal.nom + " est à faire :")
+    p.drawString(
+        4 * cm,
+        28.4 * cm,
+        f"Le prochain rappel de vaccin de {animal.nom} est à faire :",
+    )
     # Determiner la date du prochain vaccin
     if animal.date_prochain_vaccin:
         prochain_vaccin = animal.date_prochain_vaccin
@@ -396,34 +425,36 @@ def info_rappel_vaccin(p, animal):
                      prochain_vaccin_str + ".")
     elif prochain_vaccin:
         vaccin_delai = prochain_vaccin + relativedelta(days=7)
-        p.drawString(5.5 * cm, 27.5 * cm, "entre le " + prochain_vaccin_str +
-                     " et le " + vaccin_delai.strftime("%d/%m/%Y") + ".")
+        p.drawString(
+            5.5 * cm,
+            27.5 * cm,
+            (
+                (
+                    f"entre le {prochain_vaccin_str} et le "
+                    + vaccin_delai.strftime("%d/%m/%Y")
+                )
+                + "."
+            ),
+        )
     # On ne peut pas faire autrement qu'avec les paragraphes pour souligner du texte optimalement
-    para = Paragraph("<font face='times-bold' size=14><u> {} </u></font> <br/>" \
-                     .format("Attention, ce rappel sera à votre charge !"))
+    para = Paragraph(
+        f"""<font face='times-bold' size=14><u> {"Attention, ce rappel sera à votre charge !"} </u></font> <br/>"""
+    )
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 3.75 * cm, 26.3 * cm)
 
 
 def info_sterilisation(p, spaceStyle, animal):
     p.circle(3.5 * cm, 25.45 * cm, 2.5, fill=True)
-    para = Paragraph("<font face='helvetica' size=12> {} </font> \
-                <font face='times-bolditalic' size=14><u> {} </u></font> <br/> \
-                <font face='helvetica' size=12> {} </font>" \
-                     .format("La stérilisation du chaton devra être effectuée ", "OBLIGATOIREMENT",
-                             "avant ses 7 mois, soit :"))
+    para = Paragraph(
+        f"""<font face='helvetica' size=12> {"La stérilisation du chaton devra être effectuée "} </font> \\n                <font face='times-bolditalic' size=14><u> {"OBLIGATOIREMENT"} </u></font> <br/> \\n                <font face='helvetica' size=12> {"avant ses 7 mois, soit :"} </font>"""
+    )
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4 * cm, 25 * cm)
     para = Paragraph(
-        "<font face='helvetica' size=12> - </font><font face='helvetica-oblique' size=12> \
-        <u> {} </u></font><font face='helvetica' size=12> {} </font> <br/> \
-        <font face='helvetica' size=12> {} </font> <br/> <font face='helvetica' size=12> - </font> \
-        <font face='helvetica-oblique' size=12><u> {} </u></font> \
-        <font face='helvetica' size=12> {} </font>" \
-            .format("Chez un de nos vétérinaires partenaires ",
-                    "grâce à un bon de stérilisation",
-                    "(d’une valeur de 45€ pour un mâle et 80€ pour une femelle).",
-                    "Par vos propres moyens", ", chez le vétérinaire de votre choix."), style=spaceStyle)
+        f"""<font face='helvetica' size=12> - </font><font face='helvetica-oblique' size=12> \\n        <u> {"Chez un de nos vétérinaires partenaires "} </u></font><font face='helvetica' size=12> {"grâce à un bon de stérilisation"} </font> <br/> \\n        <font face='helvetica' size=12> {"(d’une valeur de 45€ pour un mâle et 80€ pour une femelle)."} </font> <br/> <font face='helvetica' size=12> - </font> \\n        <font face='helvetica-oblique' size=12><u> {"Par vos propres moyens"} </u></font> \\n        <font face='helvetica' size=12> {", chez le vétérinaire de votre choix."} </font>""",
+        style=spaceStyle,
+    )
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4 * cm, 23 * cm)
     p.circle(3.5 * cm, 22.5 * cm, 2.5, fill=True)
@@ -449,16 +480,20 @@ def info_sterilisation(p, spaceStyle, animal):
 
 
 def exigences_alimentaires(p, animal, vertical):
-    para = Paragraph("{} <br/>" \
-                     .format("Exigences alimentaires")
-                     , style=titleStyle)
+    para = Paragraph('Exigences alimentaires <br/>', style=titleStyle)
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4.30 * cm, vertical * cm)
 
-    para = Paragraph("Le chat susnommé " + animal.nom + " devra être nourri avec une alimentation répondant"
-                                " aux dernières recommandations. Soit, conformément aux taux analytiques "
-                                "inscrits dans les annexes 1 et 2, les aliments de supermarché étant "
-                                                        "proscrits.", style=blackParagraphStyle)
+    para = Paragraph(
+        (
+            f"Le chat susnommé {animal.nom}"
+            + " devra être nourri avec une alimentation répondant"
+            " aux dernières recommandations. Soit, conformément aux taux analytiques "
+            "inscrits dans les annexes 1 et 2, les aliments de supermarché étant "
+            "proscrits."
+        ),
+        style=blackParagraphStyle,
+    )
     para.wrap(17 * cm, 15 * cm)
     para.drawOn(p, 1.5 * cm, (vertical - 2.25) * cm)
 
@@ -471,17 +506,21 @@ def exigences_alimentaires(p, animal, vertical):
 
 
 def engagement(p, animal, vertical):
-    para = Paragraph("{} <br/>".format("Engagement"), style=titleStyle)
+    para = Paragraph('Engagement <br/>', style=titleStyle)
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4.30 * cm, vertical * cm)
 
-    para = Paragraph("Je soussigné(e) " + animal.get_latest_adoption().adoptant.nom +
-                     " " + animal.get_latest_adoption().adoptant.prenom +
-                     " certifie l’exactitude des informations renseignées "
-                     "sur ce contrat et m’engage à respecter la charte jointe à ce dernier. "
-                     "Le non-respect de ce contrat, et/ou de la charte fournie avec celui-ci "
-                     "entraîne sa résiliatioet ainsi la restitution immédiate du chat à "
-                     "l’association Ron’Rhône, sans remboursementdes frais d’adoption.", style=blackParagraphStyle)
+    para = Paragraph(
+        (
+            f"Je soussigné(e) {animal.get_latest_adoption().adoptant.nom} {animal.get_latest_adoption().adoptant.prenom}"
+            + " certifie l’exactitude des informations renseignées "
+            "sur ce contrat et m’engage à respecter la charte jointe à ce dernier. "
+            "Le non-respect de ce contrat, et/ou de la charte fournie avec celui-ci "
+            "entraîne sa résiliatioet ainsi la restitution immédiate du chat à "
+            "l’association Ron’Rhône, sans remboursementdes frais d’adoption."
+        ),
+        style=blackParagraphStyle,
+    )
     para.wrap(17 * cm, 15 * cm)
     para.drawOn(p, 1.5 * cm, (vertical-3.5) * cm)
 
@@ -511,30 +550,36 @@ def engagement(p, animal, vertical):
     para.wrap(17 * cm, 15 * cm)
     para.drawOn(p, 1.5 * cm, (vertical - 9.5) * cm)
 
-    para = Paragraph("Vous pourrez récupérer " + animal.nom +
-                     " dès validation de l’adoption et réception du paiement par l’Association."
-                     "Organisez-vous avec la famille d'accueil pour récupérer votre nouveau compagnon. <br/>"
-                     "<br/> Visite dans 2 mois pour valider l’adoption (nous prévenir si vous voulez changer son nom).",
-                     style=blueParagraphStyle)
+    para = Paragraph(
+        (
+            f"Vous pourrez récupérer {animal.nom}"
+            + " dès validation de l’adoption et réception du paiement par l’Association."
+            "Organisez-vous avec la famille d'accueil pour récupérer votre nouveau compagnon. <br/>"
+            "<br/> Visite dans 2 mois pour valider l’adoption (nous prévenir si vous voulez changer son nom)."
+        ),
+        style=blueParagraphStyle,
+    )
     para.wrap(17 * cm, 15 * cm)
     para.drawOn(p, 1.5 * cm, (vertical - 12.5) * cm)
 
 
 
 def montants(p, animal, vertical):
-    p.drawImage(settings.STATIC_ROOT + "/img/montants.PNG",
-                1.5 * cm, vertical * cm, width=18 * cm, height=6 * cm, mask="auto")
+    p.drawImage(
+        f"{settings.STATIC_ROOT}/img/montants.PNG",
+        1.5 * cm,
+        vertical * cm,
+        width=18 * cm,
+        height=6 * cm,
+        mask="auto",
+    )
     try:
         bon = animal.get_latest_adoption().bon
     except Adoption._meta.model.bon.RelatedObjectDoesNotExist :
         bon = None
     montant_bon = None
     if bon:
-        if animal.sexe == SexeChoice.F.name:
-            montant_bon = Decimal(80)
-        else:
-            montant_bon = Decimal(45)
-
+        montant_bon = Decimal(80) if animal.sexe == SexeChoice.F.name else Decimal(45)
     p.setFont("Helvetica", 0.3 * cm)
     p.setFillColor("black")
     if montant_bon:
@@ -557,5 +602,11 @@ def montants(p, animal, vertical):
 
 
 def signatures(p, vertical):
-    p.drawImage(settings.STATIC_ROOT + "/img/signatures.PNG",
-                1.5 * cm, vertical * cm, width=16 * cm, height=4.5 * cm, mask="auto")
+    p.drawImage(
+        f"{settings.STATIC_ROOT}/img/signatures.PNG",
+        1.5 * cm,
+        vertical * cm,
+        width=16 * cm,
+        height=4.5 * cm,
+        mask="auto",
+    )

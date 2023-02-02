@@ -79,7 +79,7 @@ class Adoption(models.Model):
     )
 
     def __str__(self):
-        return "Adoption de " + self.animal.nom + " par " + str(self.adoptant)
+        return f"Adoption de {self.animal.nom} par {str(self.adoptant)}"
 
     def save(self, *args, **kwargs):
         if not self.annule:
@@ -134,14 +134,14 @@ class BonSterilisation(models.Model):
     def __str__(self):
         result = "Bon de stérilisation "
         if self.veterinaire:
-            result += "pour " + self.veterinaire + " "
+            result += f"pour {self.veterinaire} "
         if self.envoye == "NON":
-            return result + "demandé mais non envoyé."
+            return f"{result}demandé mais non envoyé."
         if self.utilise == "NON":
-            return result + "a utiliser avant le " + self.date_max.strftime("%d/%m/%Y")
+            return f"{result}a utiliser avant le " + self.date_max.strftime("%d/%m/%Y")
         if self.date_utilisation:
-            return result + "utilisé le " + self.date_utilisation.strftime("%d/%m/%Y")
-        return result + "utilisé."
+            return f"{result}utilisé le " + self.date_utilisation.strftime("%d/%m/%Y")
+        return f"{result}utilisé."
 
     def save(self, *args, **kwargs):
         # # Maj statut stérilisation si bon utilisé
@@ -182,7 +182,7 @@ class TarifAdoption(models.Model):
     montant = models.DecimalField(verbose_name="Montant", max_digits=7, decimal_places=2)
 
     def __str__(self):
-        return "Tarif adoption pour " + self.type_animal
+        return f"Tarif adoption pour {self.type_animal}"
 
 
 class TarifBonSterilisation(models.Model):
@@ -200,4 +200,4 @@ class TarifBonSterilisation(models.Model):
     montant = models.DecimalField(verbose_name="Montant", max_digits=7, decimal_places=2)
 
     def __str__(self):
-        return "Tarif bon de stérilisation pour " + self.type_animal
+        return f"Tarif bon de stérilisation pour {self.type_animal}"

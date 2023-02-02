@@ -6,8 +6,7 @@ from gestion_association.models.person import Person
 
 
 def create_person(nom, prenom, mail, is_famille, is_adoptante, is_benevole):
-    # Création d'une personne
-    person = Person.objects.create(
+    return Person.objects.create(
         nom=nom,
         prenom=prenom,
         email=mail,
@@ -18,7 +17,6 @@ def create_person(nom, prenom, mail, is_famille, is_adoptante, is_benevole):
         code_postal="10000",
         ville="Lyon",
     )
-    return person
 
 
 class PersonListTests(TestCase):

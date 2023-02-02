@@ -14,15 +14,14 @@ from gestion_association.models.person import Person
 def create_animal_simple(nom):
     # Création d'un animal
     preference = Preference.objects.create()
-    animal = Animal.objects.create(
+    return Animal.objects.create(
         nom=nom,
         sexe=OuiNonChoice.OUI.name,
         type=TypeChoice.CHAT.name,
         circonstances="Abandon",
         sterilise=OuiNonChoice.OUI.name,
-        preference = preference
+        preference=preference,
     )
-    return animal
 
 def create_animal_complexe(nom, sexe, type, sterilise, statut, identification, date_naissance,
                            date_prochain_vaccin, fa, fiv_felv):
@@ -42,7 +41,7 @@ def create_animal_complexe(nom, sexe, type, sterilise, statut, identification, d
             ville="Lyon",
         )
         famille = Famille.objects.create(personne=person, nb_places=3)
-    animal = Animal.objects.create(
+    return Animal.objects.create(
         nom=nom,
         sexe=sexe,
         type=type,
@@ -55,9 +54,8 @@ def create_animal_complexe(nom, sexe, type, sterilise, statut, identification, d
         date_naissance=date_naissance,
         date_prochain_vaccin=date_prochain_vaccin,
         fiv=fiv_felv,
-        felv=fiv_felv
+        felv=fiv_felv,
     )
-    return animal
 
 
 class AnimalListTests(TestCase):
@@ -111,11 +109,11 @@ class AnimalListTests(TestCase):
         # Test date de naissance
         tomorrow_str = (self.today + timedelta(days=1)).strftime("%Y-%m-%d")
         yesterday_str = (self.today - timedelta(days=1)).strftime("%Y-%m-%d")
-        url = "/ronrhone/animals/?date_naissance_min=" + yesterday_str + "&date_naissance_max=" + tomorrow_str
+        url = f"/ronrhone/animals/?date_naissance_min={yesterday_str}&date_naissance_max={tomorrow_str}"
         response = self.client.get(url)
         self.assertContains(response, "Twix")
         self.assertNotContains(response, "Cerise")
-        url = "/ronrhone/animals/?date_naissance_max=" + tomorrow_str
+        url = f"/ronrhone/animals/?date_naissance_max={tomorrow_str}"
         response = self.client.get(url)
         self.assertContains(response, "Cerise")
         self.assertContains(response, "Twix")
@@ -123,11 +121,11 @@ class AnimalListTests(TestCase):
         # Test prochain vaccin
         tomorrow_str = (self.today + timedelta(days=1)).strftime("%Y-%m-%d")
         yesterday_str = (self.today - timedelta(days=1)).strftime("%Y-%m-%d")
-        url = "/ronrhone/animals/?date_prochain_vaccin_min=" + yesterday_str + "&date_prochain_vaccin_max=" + tomorrow_str
+        url = f"/ronrhone/animals/?date_prochain_vaccin_min={yesterday_str}&date_prochain_vaccin_max={tomorrow_str}"
         response = self.client.get(url)
         self.assertContains(response, "Twix")
         self.assertNotContains(response, "Cerise")
-        url = "/ronrhone/animals/?date_prochain_vaccin_max=" + tomorrow_str
+        url = f"/ronrhone/animals/?date_prochain_vaccin_max={tomorrow_str}"
         response = self.client.get(url)
         self.assertContains(response, "Cerise")
         self.assertContains(response, "Twix")
