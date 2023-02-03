@@ -47,19 +47,19 @@ export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
 Mettez à la jour la base de données
 
 ```bash
-./manage.py migrate
+python manage.py migrate --run-syncdb
 ```
 
 Créez un administrateur
 
 ```bash
-./manage.py createsuperuser
+python manage.py createsuperuser
 ```
 
 Lancez le serveur
 
 ```bash
-./manage.py runserver
+python manage.py runserver
 ```
 
 Enjoy! <http://localhost:8000/ronrhone/>
