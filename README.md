@@ -59,7 +59,7 @@ python manage.py createsuperuser
 Lancez le serveur
 
 ```bash
-python manage.py runserver
+python manage.py runserver localhost:8000
 ```
 
 Enjoy! <http://localhost:8000/ronrhone/>
