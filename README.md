@@ -1,62 +1,62 @@
-# Application de gestion Ronrhone
+# Ronrhone management application
 
-Bienvenue sur le projet de gestion de l'association de protection animale Ronrhône
+Welcome to the management project of the Ronrhône animal protection association.
 
 ## Installation
 
-Créez un environnement virtuel Python
+Create a new virtual environment
 
 ```bash
 virtualenv venv
 ```
 
-Activez l'environnement avec
+Activate the virtual environment
 
 ```bash
 #For Windows
-source ./ven/Scripts/activate
+source ./venv/Scripts/activate
 
 #For Linux
-source ./ven/bin/activate
+source ./venv/bin/activate
 ```
 
-Installez les dépendances
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Pour lancer le projet
+## To run the project locally
 
-Activez l'environnement avec
+Activate the virtual environment
 
 ```bash
 #For Windows
-source ./ven/Scripts/activate
+source ./venv/Scripts/activate
 
 #For Linux
-source ./ven/bin/activate
+source ./venv/bin/activate
 ```
 
-Indiquez qu'il s'agit de l'environnement local
+Use local settings for development
 
 ```bash
 export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
 ```
 
-Mettez à la jour la base de données
+Update the database
 
 ```bash
 python manage.py migrate --run-syncdb
 ```
 
-Créez un administrateur
+Create the superuser
 
 ```bash
 python manage.py createsuperuser
 ```
 
-Lancez le serveur
+Run the server
 
 ```bash
 python manage.py runserver localhost:8000

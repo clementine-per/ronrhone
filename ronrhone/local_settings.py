@@ -4,7 +4,7 @@ from .settings import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.1.15", "localhost"]
+ALLOWED_HOSTS = ["localhost"]
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
