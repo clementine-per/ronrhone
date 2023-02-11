@@ -52,7 +52,7 @@ class Person(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.prenom)+"."+self.nom
+        slug = f"{slugify(self.prenom)}.{self.nom}"
         self.nom_prenom_key = slug.lower()
         super(Person, self).save(*args, **kwargs)
 
@@ -60,10 +60,11 @@ class Person(models.Model):
         return f"{self.adresse} \n {self.code_postal} {self.ville}"
 
     def get_montant_total(self):
-        montant_total = 0
-        for parrainage in self.parrainage_set.all():
-            if parrainage.montant:
-                montant_total += parrainage.montant
+        montant_total = sum(
+            parrainage.montant
+            for parrainage in self.parrainage_set.all()
+            if parrainage.montant
+        )
         return f"{montant_total}"
 
     def __str__(self):

@@ -64,7 +64,7 @@ def famille_list(request):
         if form.is_valid():
             base_url = reverse('familles')
             query_string = form.data.urlencode()
-            url = '{}?{}'.format(base_url, query_string)
+            url = f'{base_url}?{query_string}'
             return redirect(url)
     else:
         form = FamilleSearchForm()
@@ -140,9 +140,7 @@ def famille_list(request):
     paginator = Paginator(famille_list.order_by("-date_mise_a_jour"), 10)
     nb_results = famille_list.count()
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
+        page = request.GET.get("page") or 1
         famille_list = paginator.page(page)
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière
@@ -153,11 +151,11 @@ def famille_list(request):
 @login_required
 def update_accueil(request, pk):
     accueil = Accueil.objects.get(id=pk)
-    famille = accueil.famille
     title = "Mise à jour d'un accueil"
 
     if request.method == "POST":
         form = AccueilForm(request.POST, instance=accueil)
+        famille = accueil.famille
         if form.is_valid():
             # La sauvegarde de l'accueil gère toutes les conséquences éventuelles
             form.save()
@@ -180,7 +178,7 @@ def end_accueil(request, pk):
 def famille_select_for_animal(request, pk):
 
     animal = Animal.objects.get(id=pk)
-    title = "Trouver une famille pour " + animal.nom
+    title = f"Trouver une famille pour {animal.nom}"
 
     data = request.POST.get("famille")
 
@@ -193,20 +191,19 @@ def famille_select_for_animal(request, pk):
     form.fields["famille"].queryset = Famille.objects.exclude(statut="INACTIVE")
     animals = animals_queryset.all()
 
-    if request.method == "POST":
-        if form.is_valid():
-            # On crée un accueil par animal pour faciliter la gestion des accueils
-            famille = form.cleaned_data["famille"]
-            date_debut = form.cleaned_data["date_debut"]
-            for animal_fa in form.cleaned_data["animaux"].all():
-                accueil = Accueil.objects.create(animal=animal_fa, famille=famille, date_debut=date_debut)
-                accueil.save()
-                animal_fa.famille = famille
-                animal_fa.save()
-            # La famille est maintenant occupée
-            famille.statut = StatutFamille.OCCUPE.name
+    if request.method == "POST" and form.is_valid():
+        # On crée un accueil par animal pour faciliter la gestion des accueils
+        famille = form.cleaned_data["famille"]
+        date_debut = form.cleaned_data["date_debut"]
+        for animal_fa in form.cleaned_data["animaux"].all():
+            accueil = Accueil.objects.create(animal=animal_fa, famille=famille, date_debut=date_debut)
+            accueil.save()
+            animal_fa.famille = famille
+            animal_fa.save()
+        # La famille est maintenant occupée
+        famille.statut = StatutFamille.OCCUPE.name
 
-            return redirect("detail_animal", pk=animal.id)
+        return redirect("detail_animal", pk=animal.id)
 
     return render(request, "gestion_association/famille/famille_select_form.html", locals())
 
@@ -242,7 +239,7 @@ class UpdateMainFamille(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdateMainFamille, self).get_context_data(**kwargs)
-        context['title'] = "Modification de la FA de   " + str(self.object.personne)
+        context['title'] = f"Modification de la FA de   {str(self.object.personne)}"
         return context
 
 
@@ -302,13 +299,12 @@ class FamilleCandidateAPIView(LoginRequiredMixin, View):
         animaux_selectionnes = [a for a in animaux_candidats if a.id in data.get("animaux", [])]
         date_debut = data.get("date_debut")
 
-        if date_debut:
-            try:
-                date_debut = parse_date(date_debut)
-            except ValueError:
-                return json_error_400("date_debut", "Vous devez sélectionner une date valide.")
+        if not date_debut:
+            return json_error_400("date_debut", "Vous devez sélectionner une date valide.")
 
-        else:
+        try:
+            date_debut = parse_date(date_debut)
+        except ValueError:
             return json_error_400("date_debut", "Vous devez sélectionner une date valide.")
 
         if not animaux_selectionnes:

@@ -254,17 +254,24 @@ class Animal(models.Model):
             self.ancien_proprio.is_ancien_proprio = True
             self.ancien_proprio.save()
             # # Maj statut si adoption payée et retirer de la FA
-        if self.statut in (StatutAnimal.DECEDE.name, StatutAnimal.RENDU.name,
-                           StatutAnimal.PERDU.name, StatutAnimal.RELACHE.name) :
-            if self.famille:
-                famille = self.famille
-                for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(
-                        animal__pk=self.id).all():
-                    accueil.date_fin = timezone.now().date()
-                    accueil.statut = StatutAccueil.TERMINE.name
-                    accueil.save()
-                self.famille = None
-                self.save()
+        if (
+            self.statut
+            in (
+                StatutAnimal.DECEDE.name,
+                StatutAnimal.RENDU.name,
+                StatutAnimal.PERDU.name,
+                StatutAnimal.RELACHE.name,
+            )
+            and self.famille
+        ):
+            famille = self.famille
+            for accueil in famille.accueil_set.filter(date_fin__isnull=True).filter(
+                    animal__pk=self.id).all():
+                accueil.date_fin = timezone.now().date()
+                accueil.statut = StatutAccueil.TERMINE.name
+                accueil.save()
+            self.famille = None
+            self.save()
         return super(Animal, self).save(*args, **kwargs)
 
     def get_latest_adoption(self):
@@ -286,10 +293,7 @@ class Animal(models.Model):
         if self.date_prochain_vaccin:
             date_str = " rappel avant le " + self.date_prochain_vaccin.strftime("%d/%m/%Y")
         if self.primo_vaccine == OuiNonChoice.OUI.name and self.vaccin_ok == OuiNonChoice.NON.name:
-            return (
-                self.type_vaccin + " "
-                + " Primo " + date_str
-            )
+            return f"{self.type_vaccin}  Primo {date_str}"
         elif (
             self.primo_vaccine == OuiNonChoice.OUI.name and self.vaccin_ok == OuiNonChoice.OUI.name
         ):
@@ -313,8 +317,8 @@ class Animal(models.Model):
         result = ""
         if self.groupe:
             for animal in self.groupe.animal_set.all():
-                if animal != self :
-                    result += animal.nom + " "
+                if animal != self:
+                    result += f"{animal.nom} "
         return result
 
     def get_animaux_lies(self):
@@ -328,13 +332,17 @@ class Animal(models.Model):
         return self.statut == StatutAnimal.SOIN.name and self.commentaire_sante
 
     def is_adoptable(self):
-        return self.statut == StatutAnimal.ADOPTABLE.name or self.statut == StatutAnimal.A_ADOPTER.name
+        return self.statut in [
+            StatutAnimal.ADOPTABLE.name,
+            StatutAnimal.A_ADOPTER.name,
+        ]
 
     def get_montant_veto_total(self):
-        montant_total = 0
-        for vis in self.visites.all():
-            if vis.get_montant_par_animal() != None:
-                montant_total += vis.get_montant_par_animal()
+        montant_total = sum(
+            vis.get_montant_par_animal()
+            for vis in self.visites.all()
+            if vis.get_montant_par_animal() != None
+        )
         return f"{montant_total}"
 
 

@@ -23,7 +23,7 @@ def visite_medicale_list(request):
         if form.is_valid():
             base_url = reverse('visites')
             query_string = form.data.urlencode()
-            url = '{}?{}'.format(base_url, query_string)
+            url = f'{base_url}?{query_string}'
             return redirect(url)
     else:
         form = VisiteMedicaleSearchForm()
@@ -48,9 +48,7 @@ def visite_medicale_list(request):
     nb_results = visite_list.count()
     montant_total = visite_list.aggregate(montant_total=Sum('montant'))
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
+        page = request.GET.get("page") or 1
         visites = paginator.page(page)
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière
@@ -66,13 +64,15 @@ def create_visite_medicale(request):
         if visite_form.is_valid():
 
             visite = visite_form.save()
-            if tests_form.is_valid():
-                if tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name and \
-                        tests_form.cleaned_data['felv'] != TestResultChoice.NT.name:
-                    for animal in visite.animaux.all():
-                        animal.fiv = tests_form.cleaned_data['fiv']
-                        animal.felv = tests_form.cleaned_data['felv']
-                        animal.save()
+            if (
+                tests_form.is_valid()
+                and tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name
+                and tests_form.cleaned_data['felv'] != TestResultChoice.NT.name
+            ):
+                for animal in visite.animaux.all():
+                    animal.fiv = tests_form.cleaned_data['fiv']
+                    animal.felv = tests_form.cleaned_data['felv']
+                    animal.save()
 
             return redirect("visites")
 
@@ -93,25 +93,27 @@ class UpdateVisiteMedicale(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdateVisiteMedicale, self).get_context_data(**kwargs)
-        context['title'] = "Mettre à jour " + str(self.object)
+        context['title'] = f"Mettre à jour {str(self.object)}"
         return context
 
 @login_required
 def create_visite_from_animal(request, pk):
     animal = Animal.objects.get(id=pk)
-    title = "Visite véterinaire pour " + animal.nom
+    title = f"Visite véterinaire pour {animal.nom}"
     if request.method == "POST":
         visite_form = VisiteMedicaleForm(data=request.POST)
         tests_form = TestResultsForm(data=request.POST)
         if visite_form.is_valid():
             visite = visite_form.save()
-            if tests_form.is_valid():
-                if tests_form.cleaned_data['fiv']!=TestResultChoice.NT.name and\
-                        tests_form.cleaned_data['felv']!=TestResultChoice.NT.name:
-                    for animal in visite.animaux.all():
-                        animal.fiv = tests_form.cleaned_data['fiv']
-                        animal.felv = tests_form.cleaned_data['felv']
-                        animal.save()
+            if (
+                tests_form.is_valid()
+                and tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name
+                and tests_form.cleaned_data['felv'] != TestResultChoice.NT.name
+            ):
+                for animal in visite.animaux.all():
+                    animal.fiv = tests_form.cleaned_data['fiv']
+                    animal.felv = tests_form.cleaned_data['felv']
+                    animal.save()
             return redirect("detail_animal", pk=animal.id)
 
     else:

@@ -60,44 +60,45 @@ class VisiteMedicale(models.Model):
 @receiver(m2m_changed, sender=VisiteMedicale.animaux.through)
 def visite_medicale_save_action(sender, instance, **kwargs):
     # Instance est une visite médicale
-    if instance.type_visite in (
-            TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
-            TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
-            TypeVisiteVetoChoice.VAC_RAPPEL_TC.name,
-            TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name,
-            TypeVisiteVetoChoice.STE.name,
-            TypeVisiteVetoChoice.PACK_TC.name,
-            TypeVisiteVetoChoice.PACK_TCL.name,
-            TypeVisiteVetoChoice.PACK_STE_TCL.name,
-            TypeVisiteVetoChoice.PACK_STE_TC.name,
+    if instance.type_visite not in (
+        TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
+        TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
+        TypeVisiteVetoChoice.VAC_RAPPEL_TC.name,
+        TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name,
+        TypeVisiteVetoChoice.STE.name,
+        TypeVisiteVetoChoice.PACK_TC.name,
+        TypeVisiteVetoChoice.PACK_TCL.name,
+        TypeVisiteVetoChoice.PACK_STE_TCL.name,
+        TypeVisiteVetoChoice.PACK_STE_TC.name,
     ):
-        for animal in instance.animaux.all():
-            if instance.type_visite in (TypeVisiteVetoChoice.STE.name,TypeVisiteVetoChoice.PACK_STE_TCL.name,
-                                        TypeVisiteVetoChoice.PACK_STE_TC.name) :
-                animal.sterilise = OuiNonChoice.OUI.name
-                animal.date_sterilisation = instance.date
-            if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
-                                          TypeVisiteVetoChoice.PACK_TC.name, TypeVisiteVetoChoice.PACK_STE_TC.name) :
-                animal.primo_vaccine = OuiNonChoice.OUI.name
-                animal.date_dernier_vaccin = instance.date
-                animal.type_vaccin = TypeVaccinChoice.TC.name
-                animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
-            if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
-                                          TypeVisiteVetoChoice.PACK_TCL.name, TypeVisiteVetoChoice.PACK_STE_TCL.name) :
-                animal.primo_vaccine = OuiNonChoice.OUI.name
-                animal.date_dernier_vaccin = instance.date
-                animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
-                animal.type_vaccin = TypeVaccinChoice.TCL.name
-            if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TC.name :
-                animal.primo_vaccine = OuiNonChoice.OUI.name
-                animal.vaccin_ok = OuiNonChoice.OUI.name
-                animal.date_dernier_vaccin = instance.date
-                animal.type_vaccin = TypeVaccinChoice.TC.name
-                animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
-            if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name:
-                animal.primo_vaccine = OuiNonChoice.OUI.name
-                animal.vaccin_ok = OuiNonChoice.OUI.name
-                animal.date_dernier_vaccin = instance.date
-                animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
-                animal.type_vaccin = TypeVaccinChoice.TCL.name
-            animal.save()
+        return
+    for animal in instance.animaux.all():
+        if instance.type_visite in (TypeVisiteVetoChoice.STE.name,TypeVisiteVetoChoice.PACK_STE_TCL.name,
+                                    TypeVisiteVetoChoice.PACK_STE_TC.name) :
+            animal.sterilise = OuiNonChoice.OUI.name
+            animal.date_sterilisation = instance.date
+        if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
+                                      TypeVisiteVetoChoice.PACK_TC.name, TypeVisiteVetoChoice.PACK_STE_TC.name) :
+            animal.primo_vaccine = OuiNonChoice.OUI.name
+            animal.date_dernier_vaccin = instance.date
+            animal.type_vaccin = TypeVaccinChoice.TC.name
+            animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
+        if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
+                                      TypeVisiteVetoChoice.PACK_TCL.name, TypeVisiteVetoChoice.PACK_STE_TCL.name) :
+            animal.primo_vaccine = OuiNonChoice.OUI.name
+            animal.date_dernier_vaccin = instance.date
+            animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
+            animal.type_vaccin = TypeVaccinChoice.TCL.name
+        if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TC.name :
+            animal.primo_vaccine = OuiNonChoice.OUI.name
+            animal.vaccin_ok = OuiNonChoice.OUI.name
+            animal.date_dernier_vaccin = instance.date
+            animal.type_vaccin = TypeVaccinChoice.TC.name
+            animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
+        if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name:
+            animal.primo_vaccine = OuiNonChoice.OUI.name
+            animal.vaccin_ok = OuiNonChoice.OUI.name
+            animal.date_dernier_vaccin = instance.date
+            animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
+            animal.type_vaccin = TypeVaccinChoice.TCL.name
+        animal.save()
