@@ -101,7 +101,7 @@ class Famille(models.Model):
         count = self.nb_places
         if self.animal_set:
             count -= self.animal_set.count()
-        return str(count) + "/" + str(self.nb_places)
+        return f"{str(count)}/{str(self.nb_places)}"
 
     def get_indisponibilites_str(self):
         result = ""
@@ -114,8 +114,9 @@ class Famille(models.Model):
     def get_disponibilite_str(self):
         today = timezone.now().date()
         result = self.get_statut_display()
-        prochaines_indispos = self.indisponibilite_set.filter(date_fin__gte=today).all()
-        if prochaines_indispos:
+        if prochaines_indispos := self.indisponibilite_set.filter(
+            date_fin__gte=today
+        ).all():
             result += "\n"
             result += "Prochaines indisponibilités : "
             for indispo in prochaines_indispos:
@@ -124,8 +125,7 @@ class Famille(models.Model):
         return mark_safe(result)
 
     def get_preference_str(self):
-        result = ""
-        result += "Famille pour "
+        result = "" + "Famille pour "
         result += self.get_type_animal_display()
         result += " de niveau "
         result += self.get_niveau_display()
@@ -236,15 +236,13 @@ class Accueil(models.Model):
             #On passe le statut FA à occupé
             self.famille.statut = StatutFamille.OCCUPE.name
             self.famille.save()
-        else :
-            # Si date de fin aujourd'hui ou dans le passé, l'accueil est terminé
-            if self.date_fin and self.date_fin <= timezone.now().date():
-                self.statut = StatutAccueil.TERMINE.name
-                self.animal.famille = None
-                self.animal.save()
-                # S'il s'agissait du dernier accueil de la FA, elle redevient disponible
-                if not self.famille.accueil_set.filter(statut__in=[StatutAccueil.A_DEPLACER.name,StatutAccueil.EN_COURS.name]).exclude(id = self.id):
-                    self.famille.statut = StatutFamille.DISPONIBLE.name
-                    self.famille.save()
+        elif self.date_fin and self.date_fin <= timezone.now().date():
+            self.statut = StatutAccueil.TERMINE.name
+            self.animal.famille = None
+            self.animal.save()
+            # S'il s'agissait du dernier accueil de la FA, elle redevient disponible
+            if not self.famille.accueil_set.filter(statut__in=[StatutAccueil.A_DEPLACER.name,StatutAccueil.EN_COURS.name]).exclude(id = self.id):
+                self.famille.statut = StatutFamille.DISPONIBLE.name
+                self.famille.save()
 
         return super().save(*args, **kwargs)

@@ -1,44 +1,68 @@
-# Application de gestion Ronrhone
+# Ronrhone management application
 
-Bienvenue sur le projet de gestion de l'association de protection animale Ronrhône
+Welcome to the management project of the Ronrhône animal protection association.
 
 ## Installation
 
-Créez un environnement virtuel Python
+Create a new virtual environment
 
-    virtualenv ronrhone
+```bash
+virtualenv venv
+```
 
-Activez l'environnement avec
+Activate the virtual environment
 
-    source ./ronrhone/Scripts/activate
+```bash
+#For Windows
+source ./venv/Scripts/activate
 
-Installez les dépendances
+#For Linux
+source ./venv/bin/activate
+```
 
-	pip install -r requirements.txt
+Install dependencies
 
-## Pour lancer le projet
+```bash
+pip install -r requirements.txt
+```
 
-Activez l'environnement avec
+## To run the project locally
 
-	source ./ronrhone/Scripts/activate
-	
-Indiquez qu'il s'agit de l'environnement local
+Activate the virtual environment
 
-	export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
+```bash
+#For Windows
+source ./venv/Scripts/activate
 
-Mettez à la jour la base de données
+#For Linux
+source ./venv/bin/activate
+```
 
-    ./manage.py migrate
+Use local settings for development
 
-Créez un administrateur
+```bash
+export DJANGO_SETTINGS_MODULE=ronrhone.local_settings
+```
 
-	./manage.py createsuperuser
+Update the database
 
-Lancez le serveur
+```bash
+python manage.py migrate --run-syncdb
+```
 
-	./manage.py runserver
+Create the superuser
 
-Enjoy! http://localhost:8000/ronrhone/
+```bash
+python manage.py createsuperuser
+```
+
+Run the server
+
+```bash
+python manage.py runserver localhost:8000
+```
+
+Enjoy! <http://localhost:8000/ronrhone/>
 
 ## pre-commit hooks
 
@@ -46,15 +70,17 @@ pre-commit is a tool that will run a list of checks on the files you are trying 
 
 Make sure to provide the `pre-commit` command on your shell path.
 
-You can install it from here: https://pre-commit.com/
+You can install it from here: <https://pre-commit.com/>
 
 ### Install pre-commit hook for ronrhone
 
-    pre-commit install
+```bash
+pre-commit install
+```
 
 ### Will it slow me down?
 
-The benefit of `pre-commit` is that it only checks the file you changed so it is rather quick and we don't need to exclude files that are not commited.
+The benefit of `pre-commit` is that it only checks the file you changed so it is rather quick and we don't need to exclude files that are not committed.
 
 ### Can I run it to check all existing files?
 
@@ -62,20 +88,24 @@ If you are adding a new check, you might want to run it on the whole code base.
 
 To do so, you can run:
 
-    pre-commit run --all-files
+```bash
+pre-commit run --all-files
+```
 
 If you do so, make sure to commit your local changes before running
 the command because you might want to erase what it did.
 
-    # make local changes
-    git commit -am "My changes"
+```bash
+# make local changes
+git commit -am "My changes"
 
-    # Run pre-commit
-    pre-commit run --all-files
+# Run pre-commit
+pre-commit run --all-files
 
-    # discover that it does do what you wanted
-    git reset HEAD --hard
+# discover that it does do what you wanted
+git reset HEAD --hard
 
-    # change your hooks configuration
-    pre-commit run --all-files
-    ...
+# change your hooks configuration
+pre-commit run --all-files
+...
+```

@@ -35,7 +35,7 @@ from gestion_association.models.person import Person
 @login_required
 def index(request, pk):
     animal = Animal.objects.get(id=pk)
-    title = "Adoption de " + animal.nom
+    title = f"Adoption de {animal.nom}"
     return render(request, "gestion_association/adoption/choix_adoption.html", locals())
 
 
@@ -50,7 +50,7 @@ def search_adoption(request):
         if form.is_valid():
             base_url = reverse('adoptions')
             query_string = form.data.urlencode()
-            url = '{}?{}'.format(base_url, query_string)
+            url = f'{base_url}?{query_string}'
             return redirect(url)
     else:
         form = AdoptionSearchForm()
@@ -70,9 +70,7 @@ def search_adoption(request):
         sterilise = request.GET.get("sterilise", "")
         date_visite_max = request.GET.get("date_visite_max", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
-        statuts_url = request.GET.getlist("statuts", "")
-
-        if statuts_url:
+        if statuts_url := request.GET.getlist("statuts", ""):
             adoptions = adoptions.filter(animal__statut__in=statuts_url)
         if montant_restant_form:
             form.fields["montant_restant"].initial = montant_restant_form
@@ -122,9 +120,7 @@ def search_adoption(request):
     paginator = Paginator(adoptions.order_by("-date"), 20)
     nb_results = adoptions.count()
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
+        page = request.GET.get("page") or 1
         adoption_list = paginator.page(page)
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière
@@ -136,7 +132,7 @@ def search_adoption(request):
 @login_required
 def adoption_complete(request, pk):
     animal = Animal.objects.get(id=pk)
-    title = "Adoption de " + animal.nom
+    title = f"Adoption de {animal.nom}"
     if request.method == "POST":
         person_form = PersonForm(data=request.POST)
         adoption_form = AdoptionCreateFormNoAdoptant(data=request.POST)
@@ -161,8 +157,7 @@ def adoption_complete(request, pk):
         bon_form = BonSterilisationForm()
         # Par défaut date d'expiration du bon = les 7 mois du chat
         bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
-        montant_adoption = get_montant_adoption(animal)
-        if montant_adoption:
+        if montant_adoption := get_montant_adoption(animal):
             adoption_form.fields["montant"].initial = montant_adoption
             adoption_form.fields["montant_restant"].initial = montant_adoption
 
@@ -172,7 +167,7 @@ def adoption_complete(request, pk):
 @login_required
 def adoption_allegee(request, pk):
     animal = Animal.objects.get(id=pk)
-    title = "Adoption de " + animal.nom
+    title = f"Adoption de {animal.nom}"
     if request.method == "POST":
         adoption_form = AdoptionCreateForm(data=request.POST)
         show_bon_form = ShowBonForm(data=request.POST)
@@ -193,8 +188,7 @@ def adoption_allegee(request, pk):
         bon_form = BonSterilisationForm()
         # Par défaut date d'expiration du bon = les 7 mois du chat
         bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
-        montant_adoption = get_montant_adoption(animal)
-        if montant_adoption:
+        if montant_adoption := get_montant_adoption(animal):
             adoption_form.fields["montant"].initial = montant_adoption
             adoption_form.fields["montant_restant"].initial = montant_adoption
 
@@ -204,7 +198,7 @@ def adoption_allegee(request, pk):
 @login_required
 def adoption_from_user(request, pk):
     person = Person.objects.get(id=pk)
-    title = "Adoption par " + person.prenom + " " + person.nom
+    title = f"Adoption par {person.prenom} {person.nom}"
     if request.method == "POST":
         adoption_form = AdoptionFromUserForm(data=request.POST)
         show_bon_form = ShowBonForm(data=request.POST)
@@ -304,9 +298,8 @@ def calcul_montant_restant(request):
     montant_restant = Decimal(0)
     # Récupération des données utiles au calcul
     montant_actuel_str = request.POST["montant"]
-    montant_restant_str = request.POST["montant_restant"]
     acompte_verse_input = request.POST["acompte_verse"]
-    if montant_restant_str:
+    if montant_restant_str := request.POST["montant_restant"]:
         montant_restant = Decimal(montant_restant_str)
     if montant_actuel_str:
         montant_adoption = Decimal(montant_actuel_str)
@@ -329,8 +322,7 @@ def calcul_montant_sterilisation(request, pk):
     montant_restant = Decimal(0)
     # Récupération des données utiles au calcul
     montant_actuel_str = request.POST["montant"]
-    montant_restant_str = request.POST["montant_restant"]
-    if montant_restant_str:
+    if montant_restant_str := request.POST["montant_restant"]:
         montant_restant = Decimal(montant_restant_str)
     if montant_actuel_str:
         montant_adoption = Decimal(montant_actuel_str)
