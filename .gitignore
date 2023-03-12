@@ -3,6 +3,5 @@
 ronrhone/Scripts/*
 ronrhone/Lib/*
 *.cfg
-migrations
 .idea
 static/*
