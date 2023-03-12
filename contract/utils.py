@@ -190,7 +190,8 @@ def infos_animal(p, animal):
     p.drawString(11 * cm, 10.75 * cm, "- Test FIV : " + animal.fiv)
     p.drawString(2 * cm, 10.15 * cm, "- Sexe : " + animal.sexe)
     p.drawString(11 * cm, 10.15 * cm, "- Race : " + animal.type)
-    p.drawString(2 * cm, 9.55 * cm, "- Date de naissance : " + animal.date_naissance.strftime("%d/%m/%Y"))
+    if animal.date_naissance:
+        p.drawString(2 * cm, 9.55 * cm, "- Date de naissance : " + animal.date_naissance.strftime("%d/%m/%Y"))
     p.drawString(11 * cm, 9.55 * cm, "- Robe : ")
     p.drawString(2 * cm, 8.95 * cm, "- Signes particuliers : ")
 

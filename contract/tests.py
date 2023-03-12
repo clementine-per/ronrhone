@@ -6,7 +6,7 @@ from django.test import TestCase
 # Create your tests here.
 from reportlab.pdfgen import canvas
 
-from contract.utils import header, next_page, get_data_certified_engagement, personal_infos
+from contract.utils import header, next_page, get_data_certified_engagement, personal_infos, infos_animal
 from gestion_association.models import TypeChoice, OuiNonChoice
 from gestion_association.models.animal import Preference, Animal, SexeChoice, TrancheAge
 from gestion_association.models.person import Person
@@ -105,3 +105,16 @@ class ContractGenerationTestCase(TestCase):
         self.assertIn("John", text)
         self.assertIn("DOE", text)
         self.assertIn("Lyon", text)
+
+    def test_infos_animal(self):
+        temp_file = tempfile.NamedTemporaryFile()
+        p = canvas.Canvas(temp_file)
+        animal = Animal.objects.get(nom="Twix")
+        infos_animal(p, animal)
+        p.save()
+        reader = PyPDF2.PdfFileReader(temp_file)
+        self.assertEqual(reader.numPages, 1)
+        text = reader.pages[0].extract_text()
+        self.assertIn("Nom du chaton", text)
+        self.assertIn("Twix", text)
+        self.assertIn("Sexe : F", text)
