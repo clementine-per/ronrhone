@@ -10,42 +10,40 @@ def generate_contract(request, pk):
     # Animal data
     animal = Animal.objects.get(pk=pk)
     is_child = animal.tranche_age == TrancheAge.ENFANT.name
-    # Données pour créer le pdf
+    # Data for the canvas (reportlab)
     nb_page = 1
     temp_file = tempfile.NamedTemporaryFile()
     p = canvas.Canvas(temp_file)
     p.setFont("Helvetica", 1 * cm)
 
-    # En-tête du contrat
+    # Contract header
     header(p, animal)
 
-    # Informations personnelles de l'adoptant
+    # Adoptant's personal informations
     personal_infos(p, animal)
 
-    # Informations pensionnaire
+    # Informations of the animal
     infos_animal(p, animal)
 
-    # Info frais d'adoption
+    # Info adoption amount
     info_prices(p,animal)
 
     nb_page = next_page(p, nb_page)
 
     #Page 2
 
-    # Infos rappel vaccin
+    # Infos for the next vaccine
     info_vaccine_shot(p, animal)
 
 
-    # Dans le cas d'un chaton
+    # For a kitten
     if is_child:
         if animal.sterilise == OuiNonChoice.NON.name:
-            # Infos sterilisation chaton
-            info_sterilisation(p, spaceStyle, animal)
-
-        # La suite est la même sur les deux modèles mais pas au même endroit, donc on définit une méthode
+            # Infos sterilisation kitten
+            info_sterilisation(p, animal)
         generation_payment(p, 0, animal)
 
-    # Si c'est un chat adulte
+    # For an adult cat
     else:
         generation_payment(p, 8, animal)
         food_info(p, animal, 8)
@@ -59,7 +57,7 @@ def generate_contract(request, pk):
         engagement(p, animal, 23)
         amounts(p,animal,4)
         next_page(p, nb_page)
-        # Page 4 contrat chatons
+        # Page 4 kitten contract
         contract_pieces(p, 28)
         signatures(p, 20)
     else:
@@ -70,10 +68,10 @@ def generate_contract(request, pk):
 
     next_page(p, nb_page)
 
-    # Finalisation
+    # Finalize the canvas
     p.save()
 
-    # Merge entre la partie écrite ci-dessus et les pages pdf fixes à ajouter à la suite
+    # Merge generated part and fixed part to add at the end
     content = create_complete_pdf(temp_file, animal)
 
     # Create the HttpResponse object

@@ -296,6 +296,9 @@ def info_vaccine_shot(p, animal):
         next_vaccine_delay = next_vaccine + relativedelta(days=7)
         p.drawString(5.5 * cm, 27.5 * cm, "entre le " + next_vaccine_str +
                      " et le " + next_vaccine_delay.strftime("%d/%m/%Y") + ".")
+    else:
+        p.drawString(5.5 * cm, 27.5 * cm, "peu de temps avant le " +
+                     next_vaccine_str + ".")
     # Use Paragraph style to underline text
     para = Paragraph("<font face='times-bold' size=14><u> {} </u></font> <br/>" \
                      .format("Attention, ce rappel sera à votre charge !"))
@@ -303,7 +306,7 @@ def info_vaccine_shot(p, animal):
     para.drawOn(p, 3.75 * cm, 26.3 * cm)
 
 
-def info_sterilisation(p, spaceStyle, animal):
+def info_sterilisation(p, animal):
     p.circle(3.5 * cm, 25.45 * cm, 2.5, fill=True)
     para = Paragraph("<font face='helvetica' size=12> {} </font> \
                 <font face='times-bolditalic' size=14><u> {} </u></font> <br/> \
