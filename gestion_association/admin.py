@@ -15,7 +15,7 @@ from gestion_association.models.adoption import (
 from gestion_association.models.animal import Animal, Preference
 from gestion_association.models.famille import Accueil, Famille, Indisponibilite
 from gestion_association.models.person import Person, Adhesion
-from gestion_association.models.visite_medicale import VisiteMedicale
+from medical_visit.models import VisiteMedicale
 
 
 class PersonResource(ModelResource):

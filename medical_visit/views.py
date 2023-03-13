@@ -1,16 +1,14 @@
-import sys
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import UpdateView
 
 from gestion_association.forms.visite_medicale import VisiteMedicaleSearchForm, VisiteMedicaleForm, TestResultsForm
 from gestion_association.models.animal import Animal, TestResultChoice
-from gestion_association.models.visite_medicale import VisiteMedicale
+from medical_visit.models import VisiteMedicale
 
 
 @login_required
@@ -43,36 +41,25 @@ def visite_medicale_list(request):
         if date_max_form:
             form.fields["date_max"].initial = date_max_form
             visite_list = visite_list.filter(date__lte=date_max_form)
-    # Pagination : 10 éléments par page
+    # Pagination : 10 elements per page
     paginator = Paginator(visite_list.order_by("-date"), 10)
     nb_results = visite_list.count()
-    montant_total = visite_list.aggregate(montant_total=Sum('montant'))
+    total_amount = visite_list.aggregate(montant_total=Sum('montant'))
     try:
         page = request.GET.get("page") or 1
         visites = paginator.page(page)
     except EmptyPage:
-        # Si on dépasse la limite de pages, on prend la dernière
         visites = paginator.page(paginator.num_pages())
-    return render(request, "gestion_association/visite_medicale/visite_medicale_list.html", locals())
+    return render(request, "medical_visit/medical_visit_list.html", locals())
+
 
 @login_required
 def create_visite_medicale(request):
     title = "Renseigner une visite vétérinaire"
     if request.method == "POST":
-        visite_form = VisiteMedicaleForm(data=request.POST)
-        tests_form = TestResultsForm(data=request.POST)
-        if visite_form.is_valid():
+        processed = process_form_data(request.POST)
 
-            visite = visite_form.save()
-            if (
-                tests_form.is_valid()
-                and tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name
-                and tests_form.cleaned_data['felv'] != TestResultChoice.NT.name
-            ):
-                for animal in visite.animaux.all():
-                    animal.fiv = tests_form.cleaned_data['fiv']
-                    animal.felv = tests_form.cleaned_data['felv']
-                    animal.save()
+        if processed:
 
             return redirect("visites")
 
@@ -80,13 +67,13 @@ def create_visite_medicale(request):
         visite_form = VisiteMedicaleForm()
         tests_form = TestResultsForm()
 
-    return render(request, "gestion_association/visite_medicale/visite_medicale_create_form.html", locals())
+    return render(request, "medical_visit/medical_visit_create_form.html", locals())
 
 
 class UpdateVisiteMedicale(LoginRequiredMixin, UpdateView):
     model = VisiteMedicale
     form_class = VisiteMedicaleForm
-    template_name = "gestion_association/visite_medicale/visite_medicale_form.html"
+    template_name = "medical_visit/medical_visit_form.html"
 
     def get_success_url(self):
         return reverse_lazy("visites")
@@ -96,24 +83,14 @@ class UpdateVisiteMedicale(LoginRequiredMixin, UpdateView):
         context['title'] = f"Mettre à jour {str(self.object)}"
         return context
 
+
 @login_required
 def create_visite_from_animal(request, pk):
     animal = Animal.objects.get(id=pk)
     title = f"Visite véterinaire pour {animal.nom}"
     if request.method == "POST":
-        visite_form = VisiteMedicaleForm(data=request.POST)
-        tests_form = TestResultsForm(data=request.POST)
-        if visite_form.is_valid():
-            visite = visite_form.save()
-            if (
-                tests_form.is_valid()
-                and tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name
-                and tests_form.cleaned_data['felv'] != TestResultChoice.NT.name
-            ):
-                for animal in visite.animaux.all():
-                    animal.fiv = tests_form.cleaned_data['fiv']
-                    animal.felv = tests_form.cleaned_data['felv']
-                    animal.save()
+        processed = process_form_data(request.POST)
+        if processed:
             return redirect("detail_animal", pk=animal.id)
 
     else:
@@ -126,7 +103,7 @@ def create_visite_from_animal(request, pk):
         visite_form.fields["animaux"].queryset = animals_queryset
         visite_form.fields["animaux"].initial = animal
 
-    return render(request, "gestion_association/visite_medicale/visite_medicale_create_form.html", locals())
+    return render(request, "medical_visit/medical_visit_create_form.html", locals())
 
 
 @login_required
@@ -134,3 +111,21 @@ def delete_visite(request, pk):
     visite = VisiteMedicale.objects.get(id=pk)
     visite.delete()
     return redirect("visites")
+
+
+def process_form_data(data):
+    visite_form = VisiteMedicaleForm(data=data)
+    tests_form = TestResultsForm(data=data)
+    if visite_form.is_valid():
+        visite = visite_form.save()
+        if (
+                tests_form.is_valid()
+                and tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name
+                and tests_form.cleaned_data['felv'] != TestResultChoice.NT.name
+        ):
+            for animal in visite.animaux.all():
+                animal.fiv = tests_form.cleaned_data['fiv']
+                animal.felv = tests_form.cleaned_data['felv']
+                animal.save()
+        return True
+    return False

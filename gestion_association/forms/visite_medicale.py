@@ -3,7 +3,7 @@ from django.forms import Form, CharField, ChoiceField, Select, ModelForm, DateFi
 
 from gestion_association.forms import DateInput
 from gestion_association.models.animal import Animal, StatutAnimal, TestResultChoice
-from gestion_association.models.visite_medicale import TypeVisiteVetoChoice, VisiteMedicale
+from medical_visit.models import TypeVisiteVetoChoice, VisiteMedicale
 
 
 class VisiteMedicaleSearchForm(Form):
