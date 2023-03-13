@@ -3,6 +3,7 @@ import tempfile
 from decimal import Decimal
 
 import PyPDF2
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.lib import colors
