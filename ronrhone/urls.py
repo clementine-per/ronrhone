@@ -31,4 +31,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
     path("ronrhone/", include("gestion_association.urls")),
+    path("ronrhone/contract/", include("contract.urls")),
 ]

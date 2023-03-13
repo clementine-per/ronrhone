@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "import_export",
     "corsheaders",
     "gestion_association",
+    "contract",
     "dal",
     "dal_select2",
 ]

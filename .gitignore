@@ -234,4 +234,5 @@ fabric.properties
 # Additional ignores
 *.sqlite3
 *.cfg
-migrations
+.idea
+static/*
