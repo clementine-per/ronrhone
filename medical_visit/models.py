@@ -28,41 +28,73 @@ class TypeVisiteVetoChoice(Enum):
 
 
 class VisiteMedicale(models.Model):
-    date_mise_a_jour = models.DateField(
+    update_date = models.DateField(
         verbose_name="Date de mise à jour", auto_now=True
     )
     date = models.DateField(verbose_name="Date de la visite")
-    type_visite = models.CharField(
+    visit_type = models.CharField(
         max_length=30,
         verbose_name="Objet de la visite",
         choices=[(tag.name, tag.value) for tag in TypeVisiteVetoChoice],
     )
-    veterinaire = models.CharField(max_length=150, blank=True)
-    commentaire = models.CharField(max_length=2000, blank=True)
-    montant = models.DecimalField(
+    veterinary = models.CharField(max_length=150, blank=True, verbose_name="Vétérinaire")
+    comment = models.CharField(max_length=2000, blank=True, verbose_name="Commentaire")
+    amount = models.DecimalField(
         verbose_name="Montant", max_digits=7, decimal_places=2, blank=True, null=True
     )
-    animaux = models.ManyToManyField(Animal, related_name="visites",
-                                     db_table="gestion_association_visitemedicale_animaux")
+    animals = models.ManyToManyField(Animal, related_name="visites",
+                                     db_table="gestion_association_visitemedicale_animaux", verbose_name="Animaux")
 
     class Meta:
         ordering = ["-date"]
         db_table = 'gestion_association_visitemedicale'
 
     def __str__(self):
-        return f"Visite {self.type_visite} le {self.date} chez {self.veterinaire}"
+        return f"Visite {self.visit_type} le {self.date} chez {self.veterinary}"
 
-    def get_montant_par_animal(self):
-        if self.montant:
-            nb_animaux = self.animaux.count()
-            return self.montant/nb_animaux
+    def get_amount_per_animal(self):
+        if self.amount:
+            nb_animals = self.animals.count()
+            return self.amount/nb_animals
         return None
 
 
-@receiver(m2m_changed, sender=VisiteMedicale.animaux.through)
+visit_with_sterilisation = [
+    TypeVisiteVetoChoice.STE.name,
+    TypeVisiteVetoChoice.PACK_STE_TCL.name,
+    TypeVisiteVetoChoice.PACK_STE_TC.name
+]
+
+visit_with_initial_vaccine = [
+    TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
+    TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
+    TypeVisiteVetoChoice.PACK_TC.name,
+    TypeVisiteVetoChoice.PACK_TCL.name,
+    TypeVisiteVetoChoice.PACK_STE_TCL.name,
+    TypeVisiteVetoChoice.PACK_STE_TC.name,
+]
+
+visit_with_full_vaccine = [
+    TypeVisiteVetoChoice.VAC_RAPPEL_TC.name,
+    TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name,
+]
+
+visit_with_TC_vaccine = [
+    TypeVisiteVetoChoice.VAC_RAPPEL_TC.name,
+    TypeVisiteVetoChoice.PACK_STE_TC.name,
+    TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
+]
+
+visit_with_TCL_vaccine = [
+    TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name,
+    TypeVisiteVetoChoice.PACK_STE_TCL.name,
+    TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
+]
+
+@receiver(m2m_changed, sender=VisiteMedicale.animals.through)
 def visite_medicale_save_action(sender, instance, **kwargs):
-    # Instance est une visite médicale
-    if instance.type_visite in (
+    # Instance is a medical visit
+    if instance.visit_type in (
             TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
             TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
             TypeVisiteVetoChoice.VAC_RAPPEL_TC.name,
@@ -73,33 +105,22 @@ def visite_medicale_save_action(sender, instance, **kwargs):
             TypeVisiteVetoChoice.PACK_STE_TCL.name,
             TypeVisiteVetoChoice.PACK_STE_TC.name,
     ):
-        for animal in instance.animaux.all():
-            if instance.type_visite in (TypeVisiteVetoChoice.STE.name, TypeVisiteVetoChoice.PACK_STE_TCL.name,
-                                        TypeVisiteVetoChoice.PACK_STE_TC.name):
+        for animal in instance.animals.all():
+            if instance.visit_type in visit_with_sterilisation:
                 animal.sterilise = OuiNonChoice.OUI.name
                 animal.date_sterilisation = instance.date
-            if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TC.name,
-                                        TypeVisiteVetoChoice.PACK_TC.name, TypeVisiteVetoChoice.PACK_STE_TC.name):
-                animal.primo_vaccine = OuiNonChoice.OUI.name
-                animal.date_dernier_vaccin = instance.date
-                animal.type_vaccin = TypeVaccinChoice.TC.name
-                animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
-            if instance.type_visite in (TypeVisiteVetoChoice.VAC_PRIMO_TCL.name,
-                                        TypeVisiteVetoChoice.PACK_TCL.name, TypeVisiteVetoChoice.PACK_STE_TCL.name):
+            if instance.visit_type in visit_with_initial_vaccine:
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
-                animal.type_vaccin = TypeVaccinChoice.TCL.name
-            if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TC.name:
-                animal.primo_vaccine = OuiNonChoice.OUI.name
-                animal.vaccin_ok = OuiNonChoice.OUI.name
-                animal.date_dernier_vaccin = instance.date
-                animal.type_vaccin = TypeVaccinChoice.TC.name
-                animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
-            if instance.type_visite == TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name:
+            if instance.visit_type in visit_with_full_vaccine:
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.vaccin_ok = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
                 animal.date_prochain_vaccin = instance.date + relativedelta(months=12)
+            if instance.visit_type in visit_with_TC_vaccine:
+                animal.type_vaccin = TypeVaccinChoice.TC.name
+            if instance.visit_type in visit_with_TCL_vaccine:
                 animal.type_vaccin = TypeVaccinChoice.TCL.name
+
             animal.save()

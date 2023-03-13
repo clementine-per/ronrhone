@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import UpdateView
 
-from gestion_association.forms.visite_medicale import VisiteMedicaleSearchForm, VisiteMedicaleForm, TestResultsForm
+from medical_visit.forms import VisiteMedicaleSearchForm, VisiteMedicaleForm, TestResultsForm
 from gestion_association.models.animal import Animal, TestResultChoice
 from medical_visit.models import VisiteMedicale
 
@@ -25,16 +25,16 @@ def visite_medicale_list(request):
             return redirect(url)
     else:
         form = VisiteMedicaleSearchForm()
-        veterinaire_form = request.GET.get("veterinaire", "")
-        type_visite_form = request.GET.get("type_visite", "")
+        veterinary_form = request.GET.get("veterinary", "")
+        visit_type_form = request.GET.get("visit_type", "")
         date_min_form = request.GET.get("date_min", "")
         date_max_form = request.GET.get("date_max", "")
-        if type_visite_form:
-            form.fields["type_visite"].initial = type_visite_form
-            visite_list = visite_list.filter(type_visite = type_visite_form)
-        if veterinaire_form:
-            form.fields["veterinaire"].initial = veterinaire_form
-            visite_list = visite_list.filter(veterinaire__icontains=veterinaire_form)
+        if visit_type_form:
+            form.fields["visit_type"].initial = visit_type_form
+            visite_list = visite_list.filter(visit_type = visit_type_form)
+        if veterinary_form:
+            form.fields["veterinary"].initial = veterinary_form
+            visite_list = visite_list.filter(veterinary__icontains=veterinary_form)
         if date_min_form:
             form.fields["date_min"].initial = date_min_form
             visite_list = visite_list.filter(date__gte=date_min_form)
@@ -44,7 +44,7 @@ def visite_medicale_list(request):
     # Pagination : 10 elements per page
     paginator = Paginator(visite_list.order_by("-date"), 10)
     nb_results = visite_list.count()
-    total_amount = visite_list.aggregate(montant_total=Sum('montant'))
+    total_amount = visite_list.aggregate(montant_total=Sum('amount'))
     try:
         page = request.GET.get("page") or 1
         visites = paginator.page(page)
@@ -100,8 +100,8 @@ def create_visite_from_animal(request, pk):
             animals_queryset = animal.get_animaux_lies() | Animal.objects.filter(id=pk)
         else:
             animals_queryset = Animal.objects.filter(id=pk)
-        visite_form.fields["animaux"].queryset = animals_queryset
-        visite_form.fields["animaux"].initial = animal
+        visite_form.fields["animals"].queryset = animals_queryset
+        visite_form.fields["animals"].initial = animal
 
     return render(request, "medical_visit/medical_visit_create_form.html", locals())
 
@@ -123,7 +123,7 @@ def process_form_data(data):
                 and tests_form.cleaned_data['fiv'] != TestResultChoice.NT.name
                 and tests_form.cleaned_data['felv'] != TestResultChoice.NT.name
         ):
-            for animal in visite.animaux.all():
+            for animal in visite.animals.all():
                 animal.fiv = tests_form.cleaned_data['fiv']
                 animal.felv = tests_form.cleaned_data['felv']
                 animal.save()

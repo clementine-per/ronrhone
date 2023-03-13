@@ -7,8 +7,8 @@ from medical_visit.models import TypeVisiteVetoChoice, VisiteMedicale
 
 
 class VisiteMedicaleSearchForm(Form):
-    veterinaire = CharField(max_length=150, required=False)
-    type_visite = ChoiceField(
+    veterinary = CharField(max_length=150, required=False, label="Vétérinaire")
+    visit_type = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in TypeVisiteVetoChoice],
         widget=Select(),
         required=False,
@@ -18,6 +18,7 @@ class VisiteMedicaleSearchForm(Form):
         label="Date de la visite médicale entre le", required=False, widget=DateInput()
     )
     date_max = DateField(label=" et le ", required=False, widget=DateInput())
+
 
 statuts_association_adopte = [
     StatutAnimal.A_ADOPTER.name,
@@ -31,29 +32,31 @@ statuts_association_adopte = [
     StatutAnimal.SEVRAGE.name,
 ]
 
+
 class VisiteMedicaleForm(ModelForm):
-    # Pour mettre les champs obligatoires en gras
+    # Special css for mandatory fields
     required_css_class = 'required'
+
     class Meta:
         model = VisiteMedicale
         fields = (
             "date",
-            "type_visite",
-            "veterinaire",
-            "commentaire",
-            "montant",
-            "animaux",
+            "visit_type",
+            "veterinary",
+            "comment",
+            "amount",
+            "animals",
         )
 
     def __init__(self, *args, **kwargs):
         super(VisiteMedicaleForm, self).__init__(*args, **kwargs)
         self.fields['date'].widget.attrs['class'] = 'datePicker'
-        self.fields['animaux'].queryset = Animal.objects.filter(inactif=False).\
+        self.fields['animals'].queryset = Animal.objects.filter(inactif=False).\
             filter(statut__in=statuts_association_adopte).order_by('nom')
 
 
 class TestResultsForm(Form):
-    # Formulaire indiquant les résultats FIV/FELV en cas de visite médicale incluant ces tests
+    # Form for FIV/FELV results if the medical visit included those tests
     fiv = ChoiceField(
         choices=[(tag.name, tag.value) for tag in TestResultChoice],
         label="Résultat test FIV",

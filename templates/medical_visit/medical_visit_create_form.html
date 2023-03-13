@@ -20,7 +20,7 @@
 {% block script %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  var value = $("select#id_type_visite").val();
+  var value = $("select#id_visit_type").val();
 
   var fields = $(
     'input[name="fiv"], input[name="felv"],\
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-$("select#id_type_visite").change(function () {
+$("select#id_visit_type").change(function () {
   var value = $(this).val();
   var fields = $(
     'input[name="fiv"], input[name="felv"],\
