@@ -63,7 +63,6 @@ class ContractGenerationTestCase(TestCase):
             animal=twix
         )
 
-
     def test_next_page(self):
         temp_file = tempfile.NamedTemporaryFile()
         p = canvas.Canvas(temp_file)

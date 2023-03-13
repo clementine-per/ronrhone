@@ -260,9 +260,9 @@
                         {% for vis in animal.visites.all %}
                         <tr class="table-info">
                             <td>{{vis.date|date:"d/m/Y"}}</td>
-                            <td>{{vis.get_type_visite_display}}</td>
-                            <td>{{vis.veterinaire}} </td>
-                            <td>{{vis.get_montant_par_animal|default:"-"}} </td>
+                            <td>{{vis.get_visit_type_display}}</td>
+                            <td>{{vis.veterinary}} </td>
+                            <td>{{vis.get_amount_per_animal|default:"-"}} </td>
                             <td>{{vis.commentaire}} </td>
                             <td>
                                 <a href= "{% url 'update_visite' vis.id %}" >
