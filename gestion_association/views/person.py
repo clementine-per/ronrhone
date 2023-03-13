@@ -41,7 +41,7 @@ class UpdatePerson(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdatePerson, self).get_context_data(**kwargs)
-        context['title'] = "Mettre à jour " + str(self.object)
+        context['title'] = f"Mettre à jour {str(self.object)}"
         return context
 
 
@@ -61,7 +61,7 @@ class BenevolePerson(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(BenevolePerson, self).get_context_data(**kwargs)
-        context['title'] = "Bénévole  " + str(self.object)
+        context['title'] = f"Bénévole  {str(self.object)}"
         return context
 
 
@@ -81,7 +81,7 @@ class UpdateAdhesion(LoginRequiredMixin, UpdateView):
 @login_required
 def create_adhesion(request, pk):
     person = Person.objects.get(id=pk)
-    title = "Adhesion de " + person.prenom + " " + person.nom
+    title = f"Adhesion de {person.prenom} {person.nom}"
     if request.method == "POST":
         form = AdhesionForm(data=request.POST)
         if form.is_valid():
@@ -108,7 +108,7 @@ def person_list(request):
         if form.is_valid():
             base_url = reverse('persons')
             query_string = form.data.urlencode()
-            url = '{}?{}'.format(base_url, query_string)
+            url = f'{base_url}?{query_string}'
             return redirect(url)
     else:
         form = PersonSearchForm()
@@ -154,9 +154,7 @@ def person_list(request):
     paginator = Paginator(person_list.order_by("-date_mise_a_jour"), 10)
     nb_results = person_list.count()
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
+        page = request.GET.get("page") or 1
         persons = paginator.page(page)
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière
@@ -196,7 +194,7 @@ def parrainage_list(request):
         if form.is_valid():
             base_url = reverse('parrainages')
             query_string = form.data.urlencode()
-            url = '{}?{}'.format(base_url, query_string)
+            url = f'{base_url}?{query_string}'
             return redirect(url)
     else:
         form = ParrainageSearchForm()
@@ -236,9 +234,7 @@ def parrainage_list(request):
     paginator = Paginator(parrainage_list, 10)
     nb_results = parrainage_list.count()
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
+        page = request.GET.get("page") or 1
         parrainages = paginator.page(page)
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière

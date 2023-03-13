@@ -55,7 +55,7 @@ class TableSelectMultiple(SelectMultiple):
                 },
             ],
         }
-        datatable_options.update(self.datatable_options)
+        datatable_options |= self.datatable_options
         js = "$(document).ready(function(){{$('#{}').DataTable({}); }});"
         return js.format(escape(name), json.dumps(datatable_options))
 
@@ -63,19 +63,14 @@ class TableSelectMultiple(SelectMultiple):
                attrs=None, choices=(), renderer=None, **kwargs):
         if value is None:
             value = []
-        output = []
         table_classes = "display"
         if self.bootstrap_style:
             table_classes += " table table-sm table-bordered"
-        output.append(
-            '<table id={} class="{}">'.format(escape(name), table_classes),
-        )
+        output = [f'<table id={escape(name)} class="{table_classes}">']
         head = self.render_head()
         output.append(head)
         body = self.render_body(name, value, attrs, **kwargs)
-        output.append(body)
-        output.append('</table>')
-        output.append('<script>')
+        output.extend((body, '</table>', '<script>'))
         if self.enable_datatables:
             output.append(self._datatable_javascript(name))
 
@@ -83,13 +78,10 @@ class TableSelectMultiple(SelectMultiple):
         return mark_safe('\n'.join(output))
 
     def render_head(self):
-        output = []
-        output.append('<thead><tr><th class="no-sort"></th>')
+        output = ['<thead><tr><th class="no-sort"></th>']
         for item in self.item_attrs:
             name = item if isinstance(item, str) else item[1]
-            output.append(
-                '<th>{}</th>'.format(clean_underscores(escape(name))),
-            )
+            output.append(f'<th>{clean_underscores(escape(name))}</th>')
         output.append('</tr></thead>')
         return ''.join(output)
 
@@ -100,27 +92,25 @@ class TableSelectMultiple(SelectMultiple):
         final_attrs['class'] = "tableselectmultiple selectable-checkbox"
         if self.bootstrap_style:
             final_attrs['class'] += " form-check-input"
-        str_values = set([force_str(v) for v in value])
+        str_values = {force_str(v) for v in value}
         choice_pks = [pk.value for (pk, item) in self.choices]
         choices = self.choices.queryset.filter(pk__in=choice_pks)
         for i, item in enumerate(choices):
             # If an ID attribute was given, add a numeric index as a suffix,
             # so that the checkboxes don't all have the same ID attribute.
             if has_id:
-                final_attrs = dict(
-                    final_attrs, id='{}_{}'.format(attrs['id'], i),
-                )
+                final_attrs = dict(final_attrs, id=f"{attrs['id']}_{i}")
             cb = CheckboxInput(final_attrs,
                                check_test=lambda value: value in str_values)
             option_value = force_str(item.pk)
             rendered_cb = cb.render(name, option_value, **kwargs)
-            output.append('<tr><td>{}</td>'.format(rendered_cb))
+            output.append(f'<tr><td>{rendered_cb}</td>')
             for item_attr in self.item_attrs:
                 attr = item_attr \
-                    if isinstance(item_attr, str) \
-                    else item_attr[0]
+                        if isinstance(item_attr, str) \
+                        else item_attr[0]
                 content = get_underscore_attrs(attr, item)
-                output.append('<td>{}</td>'.format(escape(str(content))))
+                output.append(f'<td>{escape(str(content))}</td>')
             output.append('</tr>')
         output.append('</tbody>')
         return ''.join(output)
@@ -134,9 +124,7 @@ def get_underscore_attrs(attrs, item):
             item = getattr(item, attr)()
         else:
             item = getattr(item, attr)
-    if item is None:
-        return ""
-    return item
+    return "" if item is None else item
 
 
 def clean_underscores(string):
@@ -144,5 +132,4 @@ def clean_underscores(string):
     Helper function to clean up table headers.  Replaces underscores
     with spaces and capitalizes words.
     """
-    s = capwords(string.replace("_", " "))
-    return s
+    return capwords(string.replace("_", " "))

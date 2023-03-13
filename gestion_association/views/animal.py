@@ -37,7 +37,7 @@ def search_animal(request):
         if form.is_valid():
             base_url = reverse('animals')
             query_string = form.data.urlencode()
-            url = '{}?{}'.format(base_url, query_string)
+            url = f'{base_url}?{query_string}'
             return redirect(url)
 
     else:
@@ -122,9 +122,7 @@ def search_animal(request):
     paginator = Paginator(animals.order_by("-date_mise_a_jour"), 20)
     nb_results = animals.count()
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
+        page = request.GET.get("page") or 1
         animal_list = paginator.page(page)
     except EmptyPage:
         # Si on dépasse la limite de pages, on prend la dernière
@@ -148,8 +146,7 @@ def create_animal(request):
     else:
         animal_form = AnimalCreateForm()
         preference_form = PreferenceForm()
-        id_animal = request.GET.get("animal", "")
-        if id_animal:
+        if id_animal := request.GET.get("animal", ""):
             animal_to_copy = Animal.objects.get(id=id_animal)
             animal_form.fields["date_naissance"].initial = animal_to_copy.date_naissance
             animal_form.fields["circonstances"].initial = animal_to_copy.circonstances
@@ -167,7 +164,7 @@ def create_animal(request):
             preference_form.fields["exterieur"].initial = animal_to_copy.preference.exterieur
             preference_form.fields["quarantaine"].initial = animal_to_copy.preference.quarantaine
             preference_form.fields["biberonnage"].initial = animal_to_copy.preference.biberonnage
-        else :
+        else:
             preference_form.fields['quarantaine'].initial = OuiNonChoice.OUI.value
     return render(request, "gestion_association/animal/animal_create_form.html", locals())
 
@@ -175,7 +172,7 @@ def create_animal(request):
 @login_required()
 def update_preference(request, pk):
     animal = Animal.objects.get(id=pk)
-    title = "Modification des préférences de " + animal.nom
+    title = f"Modification des préférences de {animal.nom}"
     if request.method == "POST":
         preference_form = PreferenceForm(data=request.POST, instance=animal.preference)
         animal_other_form = AnimalOtherInfosForm(data=request.POST, instance=animal)
@@ -195,13 +192,12 @@ def update_preference(request, pk):
                 animal.groupe = new_group
                 animal.save()
                 new_group.save()
-            else :
-                if animal.groupe:
-                    for animal_select in animal.groupe.animal_set.all():
-                        if animal_select.groupe:
-                            set_groups.add(animal_select.groupe)
-                        animal_select.groupe = None
-                        animal_select.save()
+            elif animal.groupe:
+                for animal_select in animal.groupe.animal_set.all():
+                    if animal_select.groupe:
+                        set_groups.add(animal_select.groupe)
+                    animal_select.groupe = None
+                    animal_select.save()
             for group in set_groups:
                 group.delete()
 
@@ -256,7 +252,7 @@ class UpdateParrainage(LoginRequiredMixin, UpdateView):
 @login_required
 def create_parrainage(request, pk):
     person = Person.objects.get(id=pk)
-    title = "Nouveau parrainage pour " + person.prenom + " " + person.nom
+    title = f"Nouveau parrainage pour {person.prenom} {person.nom}"
     if request.method == "POST":
         form = ParrainageForm(data=request.POST)
         if form.is_valid():
