@@ -41,6 +41,7 @@ class StatutAnimal(Enum):
     RENDU = "Rendu à ses propriétaires"
     RELACHE = "Relâché"
     PEC = "Prendre en charge"
+    ALLAITANTE = "Allaitante"
 
 
 statuts_association = [
@@ -52,6 +53,7 @@ statuts_association = [
     StatutAnimal.QUARANTAINE.name,
     StatutAnimal.SOIN.name,
     StatutAnimal.SEVRAGE.name,
+    StatutAnimal.ALLAITANTE.name,
 ]
 
 

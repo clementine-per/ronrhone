@@ -30,6 +30,7 @@ statuts_association_adopte = [
     StatutAnimal.QUARANTAINE.name,
     StatutAnimal.SOIN.name,
     StatutAnimal.SEVRAGE.name,
+    StatutAnimal.ALLAITANTE.name,
 ]
 
 

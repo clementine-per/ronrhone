@@ -4,7 +4,6 @@ from decimal import Decimal
 
 import PyPDF2
 from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
@@ -12,9 +11,6 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice
