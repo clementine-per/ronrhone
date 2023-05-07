@@ -25,6 +25,7 @@ class TypeVisiteVetoChoice(Enum):
     AUTRE = "Autre"
     CHIRURGIE = "Chirurgie"
     URGENCE = "Urgence"
+    TRAITEMENT = "Traitement"
 
 
 class VisiteMedicale(models.Model):
