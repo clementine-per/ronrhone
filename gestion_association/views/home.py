@@ -20,6 +20,12 @@ from gestion_association.models.animal import Animal, Parrainage, StatutAnimal, 
 from gestion_association.models.famille import Accueil, Famille, StatutAccueil
 from gestion_association.models.person import Adhesion, Person
 
+statuts_adoption = [
+    StatutAnimal.A_ADOPTER.name,
+    StatutAnimal.ADOPTION.name,
+    StatutAnimal.ADOPTABLE.name,
+    StatutAnimal.ADOPTE.name,
+]
 
 @login_required
 def index(request):
@@ -77,6 +83,7 @@ def index(request):
     # Adoptions attendant leur visite de contrôle
     adoption_post = (
         Adoption.objects.filter(visite_controle=OuiNonChoice.NON.name)
+        .filter(animal__statut__in=statuts_adoption)
         .filter(annule=False)
         .filter(date_visite__lte=today)
         .filter(animal__sterilise=OuiNonChoice.OUI.name)
@@ -85,7 +92,8 @@ def index(request):
     # Post visite à contrôler
     adoption_controle = (
         Adoption.objects.filter(annule=False)
-        .filter(
+            .filter(animal__statut__in=statuts_adoption)
+            .filter(
             visite_controle__in=[
                 OuiNonVisiteChoice.ALIMENTAIRE.name,
                 OuiNonVisiteChoice.VACCIN.name,

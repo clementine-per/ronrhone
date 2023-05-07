@@ -347,6 +347,11 @@ def calcul_montant_sterilisation(request, pk):
 
 
 def save_adoption(adoption, animal, person, show_form, bon_form):
+    # Si il y avait une adoption précédente, on l'annule
+    former_adoption = animal.get_latest_adoption()
+    if former_adoption:
+        former_adoption.annule = True
+        former_adoption.save()
     # La personne devient adoptante
     person.is_adoptante = True
     person.save()

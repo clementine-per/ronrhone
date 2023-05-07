@@ -25,14 +25,14 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI&acompte_verse=OUI&montant_restant=0">
                             <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet pour montant total de <strong>{{adoption_paiement_montant.montant_restant__sum}} €</strong>
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI">
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTABLE&statuts=A_ADOPTER">
                             <strong>{{adoption_post}}</strong>  attendant leur viste post adoption
                         </a></p>
                         <p><a class="text-secondary"
                               href= "{% url 'adoptions' %}?sterilise=NON&date_naissance_max={{interval_7_months_ago_str}}&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTE_DEFINITIF">
                             <strong>{{adoption_ste}}</strong>  adoptés de plus de 7 mois non stérilisés
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE">
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTABLE&statuts=A_ADOPTER">
                             <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> changements d'ICAD à effectuer</a></p>
