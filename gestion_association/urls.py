@@ -19,6 +19,16 @@ urlpatterns = [
         name="update_preference",
     ),
     path(
+        "animals/deactivate/<int:pk>/",
+        animal.deactivate_animal,
+        name="deactivate_animal",
+    ),
+    path(
+        "animals/activate/<int:pk>/",
+        animal.activate_animal,
+        name="activate_animal",
+    ),
+    path(
         "animals/information/update/<int:pk>/",
         animal.UpdateInformation.as_view(),
         name="update_information",

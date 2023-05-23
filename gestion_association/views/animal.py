@@ -28,7 +28,7 @@ from gestion_association.serializers import AnimalSerializer
 
 @login_required()
 def search_animal(request):
-    animals = Animal.objects.filter(inactif=False).all()
+    animals = Animal.objects.all()
     selected = "animals"
     title = "Liste des animaux"
 
@@ -58,10 +58,14 @@ def search_animal(request):
         date_vermifuge_min = request.GET.get("date_vermifuge_min", "")
         date_vermifuge_max = request.GET.get("date_vermifuge_max", "")
         fiv_felv_form = request.GET.get("fiv_felv", "")
+        inactif = request.GET.get("inactif", "")
         # Pas dans le formulaire uniquement critère d'url provenant du tableau de bord
         vaccin_ok_url = request.GET.get("vaccin_ok", "")
         identifie_url = request.GET.get("identifie", "")
-
+        if not inactif:
+            animals = animals.filter(inactif=False)
+        else:
+            form.fields["inactif"].initial = True
         if vaccin_ok_url:
             animals = animals.filter(vaccin_ok=vaccin_ok_url)
         if identifie_url and identifie_url == OuiNonChoice.OUI.name:
@@ -267,3 +271,19 @@ def create_parrainage(request, pk):
         form = ParrainageForm()
 
     return render(request, "gestion_association/person/parrainage_form.html", locals())
+
+
+@login_required
+def deactivate_animal(request, pk):
+    animal = Animal.objects.get(id=pk)
+    animal.inactif = True
+    animal.save()
+    return redirect("detail_animal", pk=animal.id)
+
+
+@login_required
+def activate_animal(request, pk):
+    animal = Animal.objects.get(id=pk)
+    animal.inactif = False
+    animal.save()
+    return redirect("detail_animal", pk=animal.id)

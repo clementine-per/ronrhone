@@ -82,7 +82,15 @@
                         <strong> Contact prise en charge </strong> : {{animal.contact}}
                     </div>
                 </div>
-
+                {% if animal.inactif %}
+                <a href= "{% url 'activate_animal' animal.id %}"
+                   onclick="return confirm('Etes vous sûr(e) de vouloir réactiver cet animal?');"
+                   class="m-3 float-right btn btn-outline-danger">Activer</a>
+                {% else %}
+                <a href= "{% url 'deactivate_animal' animal.id %}"
+                   onclick="return confirm('Etes vous sûr(e) de vouloir désactiver cet animal?');"
+                   class="m-3 float-right btn btn-outline-danger">Désactiver</a>
+                {% endif %}
                 {% if animal.is_adoptable %}
                 {% if not animal.get_latest_adoption %}
                 <a href= "{% url 'adoption' animal.id %}" class="mt-3 float-left btn btn-info">Déclarer l'adoption</a>

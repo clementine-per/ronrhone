@@ -10,7 +10,7 @@ from django.forms import (
     ModelMultipleChoiceField,
     MultipleChoiceField,
     Select,
-    SelectMultiple)
+    SelectMultiple, BooleanField)
 
 from gestion_association.forms import DateInput
 from gestion_association.models import OuiNonChoice, PerimetreChoice
@@ -67,6 +67,7 @@ class AnimalSearchForm(Form):
         widget=Select(),
         required=False,
     )
+    inactif = BooleanField(label="Afficher les animaux inactifs", required=False)
 
 class AnimalCreateForm(ModelForm):
     # Pour mettre les champs obligatoires en gras
@@ -150,7 +151,6 @@ class AnimalInfoUpdateForm(ModelForm):
             "nekosable",
             "ancien_proprio",
             "contact",
-            "inactif",
         )
         widgets = {
             'ancien_proprio': autocomplete.ModelSelect2(url='person_autocomplete')

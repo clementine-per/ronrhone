@@ -104,6 +104,14 @@
                         {{ form.fiv_felv }}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-4">
+		    		    {{ form.inactif.label_tag }}
+                    </div>
+                    <div class="col-md-8">
+                        {{ form.inactif }}
+                    </div>
+                </div>
                 <div >
                     <a href="{% url 'animals' %}" class="float-left btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
                     <button class="float-right btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
