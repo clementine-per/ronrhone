@@ -104,7 +104,7 @@ class AnimalListTests(TestCase):
             TestResultChoice.NT.name,
         )
         self.client = Client()
-        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
 
     def test_animal_list_view(self):
@@ -158,7 +158,7 @@ class AnimalListTests(TestCase):
 class AnimalCreateUpdateTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
 
     def test_create_animal(self):

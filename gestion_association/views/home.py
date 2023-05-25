@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Max, Q, Sum
 from django.shortcuts import render
 from django.utils import timezone
@@ -19,6 +19,7 @@ from gestion_association.models.adoption import (
 from gestion_association.models.animal import Animal, Parrainage, StatutAnimal, statuts_association
 from gestion_association.models.famille import Accueil, Famille, StatutAccueil
 from gestion_association.models.person import Adhesion, Person
+from gestion_association.views.utils import admin_test
 
 statuts_adoption = [
     StatutAnimal.A_ADOPTER.name,
@@ -288,7 +289,7 @@ def index(request):
     return render(request, "gestion_association/home.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def parametrage(request):
     context = {
         "selected": "parametrage",

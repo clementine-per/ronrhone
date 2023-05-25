@@ -1,6 +1,7 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
 <!-- Content Row -->
+{% if user.is_superuser  %}
 <div class="row">
     <!-- Card adoptions -->
     <div class="col-xl-3 col-md-4 mb-4 mt-4">
@@ -164,4 +165,7 @@
 
 
 </div>
+{% else %}
+Coucou toi!
+{% endif %}
 {% endblock %}

@@ -1,9 +1,6 @@
-import sys
-
 from dal import autocomplete
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Max
 from django.shortcuts import redirect, render
@@ -15,9 +12,10 @@ from gestion_association.forms.person import BenevoleForm, PersonForm, PersonSea
     ParrainageSearchForm
 from gestion_association.models.animal import Parrainage
 from gestion_association.models.person import Person, Adhesion
+from gestion_association.views.utils import admin_test, AdminTestMixin
 
 
-class CreatePerson(LoginRequiredMixin, CreateView):
+class CreatePerson(AdminTestMixin, CreateView):
     model = Person
     form_class = PersonForm
     template_name = "gestion_association/person/person_form.html"
@@ -31,7 +29,7 @@ class CreatePerson(LoginRequiredMixin, CreateView):
         return context
 
 
-class UpdatePerson(LoginRequiredMixin, UpdateView):
+class UpdatePerson(AdminTestMixin, UpdateView):
     model = Person
     form_class = PersonForm
     template_name = "gestion_association/person/person_form.html"
@@ -45,7 +43,7 @@ class UpdatePerson(LoginRequiredMixin, UpdateView):
         return context
 
 
-class BenevolePerson(LoginRequiredMixin, UpdateView):
+class BenevolePerson(AdminTestMixin, UpdateView):
     model = Person
     form_class = BenevoleForm
     template_name = "gestion_association/person/person_benevole_form.html"
@@ -65,7 +63,7 @@ class BenevolePerson(LoginRequiredMixin, UpdateView):
         return context
 
 
-class UpdateAdhesion(LoginRequiredMixin, UpdateView):
+class UpdateAdhesion(AdminTestMixin, UpdateView):
     model = Adhesion
     form_class = AdhesionForm
     template_name = "gestion_association/person/adhesion_form.html"
@@ -78,7 +76,7 @@ class UpdateAdhesion(LoginRequiredMixin, UpdateView):
         context['title'] = "Mise à jour de l'adhésion"
         return context
 
-@login_required
+@user_passes_test(admin_test)
 def create_adhesion(request, pk):
     person = Person.objects.get(id=pk)
     title = f"Adhesion de {person.prenom} {person.nom}"
@@ -98,7 +96,7 @@ def create_adhesion(request, pk):
     return render(request, "gestion_association/person/adhesion_form.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def person_list(request):
     title = "Liste des personnes"
     selected = "persons"
@@ -162,7 +160,7 @@ def person_list(request):
     return render(request, "gestion_association/person/person_list.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def person_benevole_cancel(request, pk):
     personne = Person.objects.get(id=pk)
     personne.is_benevole = False
@@ -184,7 +182,7 @@ class PersonAutocomplete (autocomplete.Select2QuerySetView):
 
         return qs
 
-@login_required
+@user_passes_test(admin_test)
 def parrainage_list(request):
     title = "Liste des parrainages"
     selected = "parrainages"

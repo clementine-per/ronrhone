@@ -88,7 +88,7 @@ class MedicalVisitModelTestCase(TestCase):
 class MedicalVisitViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
         preference_one = Preference.objects.create()
         animal_one = Animal.objects.create(

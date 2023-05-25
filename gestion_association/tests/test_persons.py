@@ -24,7 +24,7 @@ class PersonListTests(TestCase):
         create_person("MINCH", "Clémentine", "test.test@gmail.com", True, True, False)
         create_person("JANNE", "Vincent", "test.ertt@gmail.com", False, True, True)
         self.client = Client()
-        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
 
     def test_person_list_view(self):
@@ -47,7 +47,7 @@ class PersonListTests(TestCase):
 class PersonCreateUpdateTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
 
     def test_create_person(self):
@@ -67,7 +67,7 @@ class PersonCreateUpdateTests(TestCase):
 class PersonOtherViewsTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
 
     def test_declarer_benevole_person(self):

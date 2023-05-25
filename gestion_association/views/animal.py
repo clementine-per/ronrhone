@@ -1,15 +1,13 @@
 
-from dateutil.relativedelta import relativedelta
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.dateparse import parse_date
 from django.db.models import Q
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import UpdateView
 from rest_framework import viewsets
-from django.utils import timezone
 
 
 from gestion_association.forms import PreferenceForm
@@ -24,6 +22,7 @@ from gestion_association.models import OuiNonChoice
 from gestion_association.models.animal import Animal, AnimalGroup, statuts_association, Parrainage
 from gestion_association.models.person import Person
 from gestion_association.serializers import AnimalSerializer
+from gestion_association.views.utils import admin_test, AdminTestMixin
 
 
 @login_required()
@@ -134,7 +133,8 @@ def search_animal(request):
 
     return render(request, "gestion_association/animal/animal_list.html", locals())
 
-@login_required()
+
+@user_passes_test(admin_test)
 def create_animal(request):
     title = "Créer un animal"
     if request.method == "POST":
@@ -173,7 +173,7 @@ def create_animal(request):
     return render(request, "gestion_association/animal/animal_create_form.html", locals())
 
 
-@login_required()
+@user_passes_test(admin_test)
 def update_preference(request, pk):
     animal = Animal.objects.get(id=pk)
     title = f"Modification des préférences de {animal.nom}"
@@ -216,7 +216,7 @@ def update_preference(request, pk):
     return render(request, "gestion_association/animal/preference_form.html", locals())
 
 
-class UpdateInformation(LoginRequiredMixin, UpdateView):
+class UpdateInformation(AdminTestMixin, UpdateView):
     model = Animal
     template_name = "gestion_association/animal/information_form.html"
     form_class = AnimalInfoUpdateForm
@@ -225,7 +225,7 @@ class UpdateInformation(LoginRequiredMixin, UpdateView):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
 
-class UpdateSante(LoginRequiredMixin, UpdateView):
+class UpdateSante(AdminTestMixin, UpdateView):
     model = Animal
     template_name = "gestion_association/animal/sante_form.html"
     form_class = AnimalSanteUpdateForm
@@ -234,12 +234,12 @@ class UpdateSante(LoginRequiredMixin, UpdateView):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.id})
 
 
-class AnimalViewSet(viewsets.ModelViewSet):
+class AnimalViewSet(AdminTestMixin, viewsets.ModelViewSet):
     queryset = Animal.objects.filter(inactif=False).all()
     serializer_class = AnimalSerializer
 
 
-class UpdateParrainage(LoginRequiredMixin, UpdateView):
+class UpdateParrainage(AdminTestMixin, UpdateView):
     model = Parrainage
     form_class = ParrainageForm
     template_name = "gestion_association/person/parrainage_form.html"
@@ -253,7 +253,7 @@ class UpdateParrainage(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
+@user_passes_test(admin_test)
 def create_parrainage(request, pk):
     person = Person.objects.get(id=pk)
     title = f"Nouveau parrainage pour {person.prenom} {person.nom}"
@@ -273,7 +273,7 @@ def create_parrainage(request, pk):
     return render(request, "gestion_association/person/parrainage_form.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def deactivate_animal(request, pk):
     animal = Animal.objects.get(id=pk)
     animal.inactif = True
@@ -281,7 +281,7 @@ def deactivate_animal(request, pk):
     return redirect("detail_animal", pk=animal.id)
 
 
-@login_required
+@user_passes_test(admin_test)
 def activate_animal(request, pk):
     animal = Animal.objects.get(id=pk)
     animal.inactif = False

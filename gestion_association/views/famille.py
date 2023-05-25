@@ -1,8 +1,6 @@
 import json
-import sys
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Count, F
 from django.http import HttpResponse
@@ -24,12 +22,13 @@ from gestion_association.forms.famille import (
     IndisponibiliteForm,
     SelectFamilleForm,
     AccueilForm)
-from gestion_association.models.animal import Animal, statuts_association
+from gestion_association.models.animal import Animal
 from gestion_association.models.famille import Famille, Indisponibilite, Accueil, StatutFamille, StatutAccueil
 from gestion_association.models.person import Person
+from gestion_association.views.utils import admin_test, AdminTestMixin
 
 
-@login_required()
+@user_passes_test(admin_test)
 def create_famille(request, pk):
     title = "Créer une famille"
     personne = Person.objects.get(id=pk)
@@ -53,7 +52,7 @@ def create_famille(request, pk):
     return render(request, "gestion_association/famille/famille_create_form.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def famille_list(request):
     title = "Liste des familles"
     selected = "familles"
@@ -148,7 +147,7 @@ def famille_list(request):
     return render(request, "gestion_association/famille/famille_list.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def update_accueil(request, pk):
     accueil = Accueil.objects.get(id=pk)
     title = "Mise à jour d'un accueil"
@@ -166,7 +165,8 @@ def update_accueil(request, pk):
 
     return render(request, "gestion_association/famille/accueil_update_form.html", locals())
 
-@login_required
+
+@user_passes_test(admin_test)
 def end_accueil(request, pk):
     accueil = Accueil.objects.get(id=pk)
     accueil.date_fin = timezone.now().date()
@@ -174,7 +174,8 @@ def end_accueil(request, pk):
     accueil.save()
     return redirect("detail_famille", pk=accueil.famille.id)
 
-@login_required
+
+@user_passes_test(admin_test)
 def famille_select_for_animal(request, pk):
 
     animal = Animal.objects.get(id=pk)
@@ -212,7 +213,7 @@ class FamilleUpdateMainForm(object):
     pass
 
 
-@login_required()
+@user_passes_test(admin_test)
 def update_accueil_famille(request, pk):
     title = "Modifier une famille"
     famille = Famille.objects.get(id=pk)
@@ -229,7 +230,7 @@ def update_accueil_famille(request, pk):
     return render(request, "gestion_association/famille/famille_accueil_form.html", locals())
 
 
-class UpdateMainFamille(LoginRequiredMixin, UpdateView):
+class UpdateMainFamille(AdminTestMixin, UpdateView):
     model = Famille
     form_class = FamilleMainUpdateForm
     template_name = "gestion_association/famille/famille_main_form.html"
@@ -243,7 +244,7 @@ class UpdateMainFamille(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required()
+@user_passes_test(admin_test)
 def create_indisponibilite(request, pk):
     title = "Ajout d'une indisponibilité"
     famille = Famille.objects.get(id=pk)
@@ -260,7 +261,7 @@ def create_indisponibilite(request, pk):
     return render(request, "gestion_association/famille/indisponibilite_form.html", locals())
 
 
-@login_required()
+@user_passes_test(admin_test)
 def delete_indisponibilite(request, pk):
     indispo = Indisponibilite.objects.get(id=pk)
     famille = indispo.famille
@@ -268,7 +269,7 @@ def delete_indisponibilite(request, pk):
     return redirect("detail_famille", pk=famille.id)
 
 
-class UpdateIndisponibilite(LoginRequiredMixin, UpdateView):
+class UpdateIndisponibilite(AdminTestMixin, UpdateView):
     model = Indisponibilite
     form_class = IndisponibiliteForm
     template_name = "gestion_association/famille/indisponibilite_form.html"
@@ -285,7 +286,7 @@ def json_error_400(field, message):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class FamilleCandidateAPIView(LoginRequiredMixin, View):
+class FamilleCandidateAPIView(AdminTestMixin, View):
     def post(self, request, pk, *args, **kwargs):
         animal = Animal.objects.get(id=pk)
         animaux_candidats = [animal]
@@ -327,7 +328,7 @@ class FamilleCandidateAPIView(LoginRequiredMixin, View):
         return response
 
 
-@login_required()
+@user_passes_test(admin_test)
 def select_animal_form(request, pk):
     itle = "Création d'un accueil"
     famille = Famille.objects.get(id=pk)

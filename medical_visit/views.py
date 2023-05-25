@@ -1,17 +1,17 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import UpdateView
 
+from gestion_association.views.utils import admin_test, AdminTestMixin
 from medical_visit.forms import VisiteMedicaleSearchForm, VisiteMedicaleForm, TestResultsForm
 from gestion_association.models.animal import Animal, TestResultChoice
 from medical_visit.models import VisiteMedicale
 
 
-@login_required
+@user_passes_test(admin_test)
 def visite_medicale_list(request):
     title = "Liste des visites véterinaires"
     selected = "visites"
@@ -53,7 +53,7 @@ def visite_medicale_list(request):
     return render(request, "medical_visit/medical_visit_list.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def create_visite_medicale(request):
     title = "Renseigner une visite vétérinaire"
     if request.method == "POST":
@@ -70,7 +70,7 @@ def create_visite_medicale(request):
     return render(request, "medical_visit/medical_visit_create_form.html", locals())
 
 
-class UpdateVisiteMedicale(LoginRequiredMixin, UpdateView):
+class UpdateVisiteMedicale(AdminTestMixin, UpdateView):
     model = VisiteMedicale
     form_class = VisiteMedicaleForm
     template_name = "medical_visit/medical_visit_form.html"
@@ -84,7 +84,7 @@ class UpdateVisiteMedicale(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
+@user_passes_test(admin_test)
 def create_visite_from_animal(request, pk):
     animal = Animal.objects.get(id=pk)
     title = f"Visite véterinaire pour {animal.nom}"
@@ -106,7 +106,7 @@ def create_visite_from_animal(request, pk):
     return render(request, "medical_visit/medical_visit_create_form.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def delete_visite(request, pk):
     visite = VisiteMedicale.objects.get(id=pk)
     visite.delete()

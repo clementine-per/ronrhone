@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.urls import path
 from django.views.generic import DetailView
 
@@ -7,6 +7,7 @@ from .models.famille import Famille
 from .models.person import Person
 from .views import adoption, animal, famille, home, person
 from .views.person import PersonAutocomplete
+from .views.utils import admin_test
 
 urlpatterns = [
     path("", home.index, name="accueil"),
@@ -40,7 +41,7 @@ urlpatterns = [
     ),
     path(
         "animals/<int:pk>/",
-        login_required(
+        user_passes_test(admin_test)(
             DetailView.as_view(
                 model=Animal,
                 template_name="gestion_association/animal/animal_detail.html",
@@ -64,7 +65,7 @@ urlpatterns = [
     path("persons/", person.person_list, name="persons"),
     path(
         "persons/<int:pk>/",
-        login_required(
+        user_passes_test(admin_test)(
             DetailView.as_view(
                 model=Person,
                 template_name="gestion_association/person/person_detail.html",
@@ -74,7 +75,7 @@ urlpatterns = [
     ),
     path(
         "persons/autocomplete/",
-        login_required(PersonAutocomplete.as_view()),
+        user_passes_test(admin_test)(PersonAutocomplete.as_view()),
         name="person_autocomplete",
     ),
     # Adhésions
@@ -158,7 +159,7 @@ urlpatterns = [
     path("familles/", famille.famille_list, name="familles"),
     path(
         "familles/<int:pk>/",
-        login_required(
+        user_passes_test(admin_test)(
             DetailView.as_view(
                 model=Famille,
                 template_name="gestion_association/famille/famille_detail.html",

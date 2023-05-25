@@ -1,11 +1,13 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 
 
 from contract.utils import *
 from gestion_association.models.animal import Animal, TrancheAge
+from gestion_association.views.utils import admin_test
 
-@login_required
+
+@user_passes_test(admin_test)
 def generate_contract(request, pk):
     # Animal data
     animal = Animal.objects.get(pk=pk)

@@ -2,8 +2,7 @@ import sys
 from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from django.http import JsonResponse
@@ -30,16 +29,17 @@ from gestion_association.models.adoption import (
 )
 from gestion_association.models.animal import Animal, StatutAnimal, TypeVaccinChoice
 from gestion_association.models.person import Person
+from gestion_association.views.utils import AdminTestMixin, admin_test
 
 
-@login_required
+@user_passes_test(admin_test)
 def index(request, pk):
     animal = Animal.objects.get(id=pk)
     title = f"Adoption de {animal.nom}"
     return render(request, "gestion_association/adoption/choix_adoption.html", locals())
 
 
-@login_required()
+@user_passes_test(admin_test)
 def search_adoption(request):
     adoptions = Adoption.objects.all().filter(annule=False)
     selected = "adoptions"
@@ -129,7 +129,7 @@ def search_adoption(request):
     return render(request, "gestion_association/adoption/adoption_list.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def adoption_complete(request, pk):
     animal = Animal.objects.get(id=pk)
     title = f"Adoption de {animal.nom}"
@@ -164,7 +164,7 @@ def adoption_complete(request, pk):
     return render(request, "gestion_association/adoption/adoption_complete.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def adoption_allegee(request, pk):
     animal = Animal.objects.get(id=pk)
     title = f"Adoption de {animal.nom}"
@@ -195,7 +195,7 @@ def adoption_allegee(request, pk):
     return render(request, "gestion_association/adoption/adoption_allegee.html", locals())
 
 
-@login_required
+@user_passes_test(admin_test)
 def adoption_from_user(request, pk):
     person = Person.objects.get(id=pk)
     title = f"Adoption par {person.prenom} {person.nom}"
@@ -219,7 +219,7 @@ def adoption_from_user(request, pk):
     return render(request, "gestion_association/adoption/adoption_from_user.html", locals())
 
 
-class UpdateAdoption(LoginRequiredMixin, UpdateView):
+class UpdateAdoption(AdminTestMixin, UpdateView):
     model = Adoption
     form_class = AdoptionUpdateForm
     template_name = "gestion_association/adoption/adoption_form.html"
@@ -228,7 +228,7 @@ class UpdateAdoption(LoginRequiredMixin, UpdateView):
         return reverse_lazy("detail_animal", kwargs={"pk": self.object.animal.id})
 
 
-class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
+class UpdateBonSterilisation(AdminTestMixin, UpdateView):
     model = BonSterilisation
     form_class = BonSterilisationForm
     template_name = "gestion_association/adoption/bon_form.html"
@@ -239,7 +239,7 @@ class UpdateBonSterilisation(LoginRequiredMixin, UpdateView):
         else:
             return reverse_lazy("detail_animal", kwargs={"pk": self.object.adoption.animal.id})
 
-@login_required
+@user_passes_test(admin_test)
 def create_bon_sterilisation(request, pk):
     adoption = Adoption.objects.get(id=pk)
     animal = adoption.animal
@@ -375,7 +375,7 @@ def save_adoption(adoption, animal, person, show_form, bon_form):
             return bon
 
 
-@login_required
+@user_passes_test(admin_test)
 def adoption_cancel(request, pk):
     adoption = Adoption.objects.get(id=pk)
     adoption.annule = True
@@ -385,7 +385,7 @@ def adoption_cancel(request, pk):
     return redirect("detail_animal", pk=adoption.animal.id)
 
 
-@login_required
+@user_passes_test(admin_test)
 def delete_bon(request, pk):
     bon = BonSterilisation.objects.get(id=pk)
     animal = bon.adoption.animal
