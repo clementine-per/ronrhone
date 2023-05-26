@@ -1,0 +1,130 @@
+{% extends "gestion_association/base.html" %}
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+{% endblock %}
+{% load tag %}
+{% block content %}
+
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Recherche
+            </div>
+		<form action = "{% url 'icads' %}" method="post">
+            <div class="card-body">
+                {%csrf_token %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.nom.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.nom }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form.identification.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.identification }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.statuts.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.statuts }}
+                        <a href="#" onclick="selectAllStatuts('id_statuts');return false;">Tout</a> |
+                        <a href="#" onclick="unSelectAllStatuts('id_statuts');return false;">Rien</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.pre_visite.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.pre_visite }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+		    		    {{ form.visite_controle.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ form.visite_controle }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form.date_min.label_tag }} {{ form.date_min }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.date_max.label_tag }} {{ form.date_max }}
+                    </div>
+                </div>
+                <div >
+                    <a href="{% url 'icads' %}" class="float-left btn btn-info"> <i class="fa fa-sync" aria-hidden="true"></i> Réinitialiser</a>
+                    <button class="float-right btn btn-info" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> Rechercher</button>
+                    <br>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{{nb_results}} résultat(s)
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Date de naissance</th>
+            <th scope="col" >Identification</th>
+            <th scope="col">ICAD</th>
+            <th scope="col">Stérilisé</th>
+            <th scope="col">Pré visite</th>
+            <th scope="col">Visite de contrôle</th>
+            <th scope="col">Adoptant</th>
+            <th scope="col">Prise en charge</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for animal in animal_list %}
+        <tr class="table-info">
+            <td><a href= "{% url 'detail_animal_icad' animal.id %}">{{animal.nom}}</a></td>
+            <td>{{animal.date_naissance|date:"d/m/Y"|default:" - "}}</td>
+            <td>{{animal.identification}}</td>
+            <td>{% if animal.lien_icad %}<a target="_blank" href= "{{animal.lien_icad}}"><i class="fas fa-link"></i></a>{% endif %}</td>
+            <td>{{animal.get_sterilise_display}}</td>
+            <td>{{animal.get_latest_adoption.get_pre_visite_display}}</td>
+            <td>{{animal.get_latest_adoption.get_visite_controle_display}}</td>
+            <td>{{animal.get_latest_adoption.adoptant}}</td>
+            <td>{{animal.date_arrivee|date:"d/m/Y"|default:" - "}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        {% if animal_list.has_previous %}
+        <a href="?{% param_replace page=animal_list.previous_page_number%}">Précédente</a> -
+        {% endif %}
+
+        <span class="current">
+            Page {{ animal_list.number }} sur {{ animal_list.paginator.num_pages }}
+        </span>
+
+        {% if animal_list.has_next %}
+        - <a href="?{% param_replace page=animal_list.next_page_number%}">Suivante</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+{% endblock %}

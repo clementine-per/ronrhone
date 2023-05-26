@@ -1,6 +1,5 @@
 
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
@@ -16,9 +15,10 @@ from gestion_association.forms.animal import (
     AnimalInfoUpdateForm,
     AnimalOtherInfosForm,
     AnimalSanteUpdateForm,
-    AnimalSearchForm, AnimalSelectForm, ParrainageForm,
+    AnimalSearchForm, AnimalSelectForm, ParrainageForm, IcadAnimalSearchForm,
 )
 from gestion_association.models import OuiNonChoice
+from gestion_association.models.adoption import Adoption
 from gestion_association.models.animal import Animal, AnimalGroup, statuts_association, Parrainage
 from gestion_association.models.person import Person
 from gestion_association.serializers import AnimalSerializer
@@ -26,6 +26,65 @@ from gestion_association.views.utils import admin_test, AdminTestMixin
 
 
 @login_required()
+def icad_list_view(request):
+    animals = Animal.objects.filter(inactif=False).filter(statut__in=['ADOPTE','ADOPTE_DEFINITIF'])
+    selected = "animals"
+    title = "Liste des animaux"
+    if request.method == "POST":
+        form = IcadAnimalSearchForm(request.POST)
+        if form.is_valid():
+            base_url = reverse('icads')
+            query_string = form.data.urlencode()
+            url = f'{base_url}?{query_string}'
+            return redirect(url)
+
+    else:
+        form = IcadAnimalSearchForm()
+        nom_form = request.GET.get("nom", "")
+        identification_form = request.GET.get("identification", "")
+        statuts_form = request.GET.getlist("statuts", "")
+        pre_visite_form = request.GET.get("pre_visite", "")
+        visite_controle_form = request.GET.getlist("visite_controle", "")
+        date_min_form = request.GET.get("date_min", "")
+        date_max_form = request.GET.get("date_max", "")
+        if nom_form:
+            animals = animals.filter(nom__icontains=nom_form)
+            form.fields["nom"].initial = nom_form
+        if identification_form:
+            animals = animals.filter(identification__icontains=identification_form)
+            form.fields["identification"].initial = identification_form
+        if statuts_form:
+            form.fields["statuts"].initial = statuts_form
+            animals = animals.filter(statut__in=statuts_form)
+        if pre_visite_form or visite_controle_form or date_min_form or date_max_form:
+            adoptions = Adoption.objects.all().filter(annule=False)
+            if pre_visite_form:
+                form.fields["pre_visite"].initial = pre_visite_form
+                adoptions = adoptions.filter(pre_visite=pre_visite_form)
+            if visite_controle_form:
+                form.fields["visite_controle"].initial = visite_controle_form
+                adoptions = adoptions.filter(visite_controle__in=visite_controle_form)
+            if date_min_form:
+                form.fields["date_min"].initial = date_min_form
+                adoptions = adoptions.filter(date__gte=parse_date(date_min_form))
+            if date_max_form:
+                form.fields["date_max"].initial = date_max_form
+                adoptions = adoptions.filter(date__lte=parse_date(date_max_form))
+            animals = animals.filter(adoption__in=adoptions)
+
+    # Pagination : 20 éléments par page
+    paginator = Paginator(animals.order_by("-date_mise_a_jour"), 20)
+    nb_results = animals.count()
+    try:
+        page = request.GET.get("page") or 1
+        animal_list = paginator.page(page)
+    except EmptyPage:
+        # Si on dépasse la limite de pages, on prend la dernière
+        animal_list = paginator.page(paginator.num_pages())
+
+    return render(request, "gestion_association/animal/animal_icad_list.html", locals())
+
+@user_passes_test(admin_test)
 def search_animal(request):
     animals = Animal.objects.all()
     selected = "animals"

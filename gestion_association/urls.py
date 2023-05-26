@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.urls import path
 from django.views.generic import DetailView
 
@@ -39,6 +39,17 @@ urlpatterns = [
         animal.UpdateSante.as_view(),
         name="update_sante",
     ),
+    path(
+        "animals_icad/<int:pk>/",
+        login_required(
+            DetailView.as_view(
+                model=Animal,
+                template_name="gestion_association/animal/animal_detail_icad.html",
+            )
+        ),
+        name="detail_animal_icad",
+    ),
+    path("animals-icad/", animal.icad_list_view, name="icads"),
     path(
         "animals/<int:pk>/",
         user_passes_test(admin_test)(

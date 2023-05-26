@@ -14,9 +14,16 @@ from django.forms import (
 
 from gestion_association.forms import DateInput
 from gestion_association.models import OuiNonChoice, PerimetreChoice
+from gestion_association.models.adoption import OuiNonVisiteChoice
 from gestion_association.models.animal import Animal, StatutAnimal, statuts_association, Parrainage
 from gestion_association.models.person import Person
 from gestion_association.widgets import TableSelectMultiple
+
+statuts_adopte = [
+    StatutAnimal.ADOPTE,
+    StatutAnimal.ADOPTE_DEFINITIF,
+]
+
 
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
@@ -69,6 +76,7 @@ class AnimalSearchForm(Form):
     )
     inactif = BooleanField(label="Afficher les animaux inactifs", required=False)
 
+
 class AnimalCreateForm(ModelForm):
     # Pour mettre les champs obligatoires en gras
     required_css_class = 'required'
@@ -114,6 +122,33 @@ class AnimalCreateForm(ModelForm):
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
         self.fields['ancien_proprio'].queryset = Person.objects.filter(inactif=False).order_by('nom')
+
+
+class IcadAnimalSearchForm(Form):
+    nom = CharField(max_length=100, required=False)
+    identification = CharField(max_length=100, required=False, label="Numéro d'identification")
+    statuts = MultipleChoiceField(
+        choices=[(tag.name, tag.value) for tag in statuts_adopte],
+        required=False,
+        widget=SelectMultiple(attrs={'class': "selectpicker"})
+    )
+    pre_visite = ChoiceField(
+        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
+        widget=Select(),
+        required=False,
+    )
+    visite_controle = MultipleChoiceField(
+        choices=[(tag.name, tag.value) for tag in OuiNonVisiteChoice],
+        required=False,
+        initial=[tag.name for tag in OuiNonVisiteChoice],
+        widget=SelectMultiple(attrs={'class': "selectpicker"})
+    )
+    date_min = DateField(
+        label="Date d'adoption entre le", required=False, widget=DateInput()
+    )
+    date_max = DateField(
+        label="et le", required=False, widget=DateInput()
+    )
 
 
 class AnimalOtherInfosForm(ModelForm):
@@ -188,6 +223,7 @@ class AnimalSanteUpdateForm(ModelForm):
         self.fields['date_prochain_vaccin'].widget.attrs['class'] = 'datePicker'
         self.fields['date_parasite'].widget.attrs['class'] = 'datePicker'
         self.fields['date_vermifuge'].widget.attrs['class'] = 'datePicker'
+
 
 class AnimalSelectForFaForm(Form):
     animaux = ModelMultipleChoiceField(

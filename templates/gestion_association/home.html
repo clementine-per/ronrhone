@@ -166,6 +166,6 @@
 
 </div>
 {% else %}
-Coucou toi!
+<p><a class="text-secondary" href= "{% url 'icads' %}?statuts=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> changements d'ICAD à effectuer</a></p>
 {% endif %}
 {% endblock %}

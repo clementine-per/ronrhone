@@ -1,0 +1,251 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations générales
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Nom </strong> : {{animal.nom}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Sexe </strong> : {{animal.get_sexe_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Statut </strong> : {{animal.get_statut_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date de naissance </strong> : {{animal.date_naissance|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Identification </strong> : {{animal.identification}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Circonstances d'arrivée </strong> : {{animal.circonstances}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Date de prise en charge </strong> : {{animal.date_arrivee|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Commentaire </strong> : {{animal.commentaire}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Périmètre de gestion </strong> :  {{ animal.get_perimetre_display }}<br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Famille d'accueil </strong> :  {% if animal.famille %}
+                        {{ animal.famille.personne }}
+                         {% endif %} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Nekosable </strong> :
+                        {% if animal.nekosable %} Oui
+                        {% else %} Non {% endif %}
+                        <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Lien ICAD </strong> : {% if animal.lien_icad %}<a target="_blank" href= "{{animal.lien_icad}}">
+                        {{animal.lien_icad}}
+                    </a>{% endif %} <br>
+                    </div>
+
+                </div>
+                {% if animal.ancien_proprio %}
+                <div class="row">
+                    <div class="col">
+                        <strong> Ancien propriétaire </strong> : {{ animal.ancien_proprio }}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col">
+                        <strong> Contact prise en charge </strong> : {{animal.contact}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if animal.get_latest_adoption %}
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations d'adoption
+            </div>
+            <div class="card-body">
+                {% if animal.get_other_adoptions %}
+                <div class="alert alert-info m-2" role="alert">
+                    {% for adoption in animal.get_other_adoptions %}
+                    Adoption précédente par {{adoption.adoptant}} le {{adoption.date|date:"d/m/Y"}} <br>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if animal.get_latest_adoption.annule %}
+                <div class="alert alert-danger m-2" role="alert">
+                    Adoption annulée <br>
+                </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Adoptant </strong> :
+                            {{animal.get_latest_adoption.adoptant.prenom}} {{animal.get_latest_adoption.adoptant.nom}}
+                        <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Date d'adoption </strong> : {{animal.get_latest_adoption.date|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Adresse mail </strong> : {{animal.get_latest_adoption.adoptant.email}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Téléphone </strong> : {{animal.get_latest_adoption.adoptant.telephone}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Adresse </strong> : {{animal.get_latest_adoption.adoptant.get_adresse_complete}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Montant </strong> : {{animal.get_latest_adoption.montant|default:" - "}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Montant restant </strong> : {{animal.get_latest_adoption.montant_restant|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong> Acompte versé </strong> : {{animal.get_latest_adoption.get_acompte_verse_display}} <br>
+                    </div>
+                    <div class="col">
+                        <strong> Personne effectuant les visites </strong> : {{animal.get_latest_adoption.personne_visite|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Prévisite effectuée </strong> : {{animal.get_latest_adoption.get_pre_visite_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Visite de contrôle </strong> : {{animal.get_latest_adoption.get_visite_controle_display}} <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations de santé
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <strong> Type de vaccin </strong> : {{animal.get_type_vaccin_display}} <br>
+                    </div>
+                    <div class="col">
+                        <strong> Date prochain vaccin </strong> : {{animal.date_prochain_vaccin|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong> Primo vacciné </strong> : {{animal.get_primo_vaccine_display}} <br>
+                    </div>
+                    <div class="col">
+                        <strong> Vaccins à jour </strong> : {{animal.get_vaccin_ok_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Test FELV </strong> : {{animal.get_felv_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Test FIV </strong> : {{animal.get_fiv_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong> Stérilisé </strong> : {{animal.get_sterilise_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong> Commentaire santé </strong> : {{animal.commentaire_sante}} <br>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Date d'administration anti-parasite </strong> : {{animal.date_parasite|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                    <div class="col">
+                        <strong> Date du dernier vermifuge </strong> : {{animal.date_vermifuge|date:"d/m/Y"|default:" - "}} <br>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row p-4">
+    <div class="col-sm-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                Informations de préférence
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Extérieur nécessaire </strong> : {{animal.preference.get_exterieur_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> A biberonner </strong> : {{animal.preference.get_biberonnage_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> A sociabiliser </strong> : {{animal.preference.get_sociabilisation_display}} <br>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong> Quarantaine </strong> : {{animal.preference.get_quarantaine_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong> Tranche d'âge </strong> : {{animal.get_tranche_age_display}} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Animaux liés </strong> : {% for liaison in animal.get_animaux_lies %} <a href= "{% url 'detail_animal' liaison.id %}">{{liaison.nom}}</a>, {% endfor %} <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <strong> Commentaire animaux liés </strong> : {{animal.commentaire_animaux_lies}} <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
