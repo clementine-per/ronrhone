@@ -10,7 +10,11 @@
     <br/>
     <div class="row">
         <div class="col">
+            {% if user.is_superuser  %}
             <a href = "{% url 'detail_animal' object.id %}"  class="btn btn-secondary">Annuler</a>
+            {% else  %}
+            <a href = "{% url 'detail_animal_icad' object.id %}"  class="btn btn-secondary">Annuler</a>
+            {% endif  %}
         </div>
         <div class="col">
             <input class="btn btn-info" type="submit" />

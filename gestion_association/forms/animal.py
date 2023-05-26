@@ -167,6 +167,14 @@ class AnimalSelectForm(Form):
     )
 
 
+class AnimalInfoIcadUpdateForm(ModelForm):
+    class Meta:
+        model = Animal
+        fields = (
+            "lien_icad",
+        )
+
+
 class AnimalInfoUpdateForm(ModelForm):
     # Pour mettre les champs obligatoires en gras
     required_css_class = 'required'

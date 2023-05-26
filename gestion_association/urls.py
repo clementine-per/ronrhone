@@ -30,9 +30,19 @@ urlpatterns = [
         name="activate_animal",
     ),
     path(
+        "animals/defnitive_adoption/<int:pk>/",
+        animal.definitive_adoption_animal,
+        name="definitive_adoption_animal",
+    ),
+    path(
         "animals/information/update/<int:pk>/",
         animal.UpdateInformation.as_view(),
         name="update_information",
+    ),
+    path(
+        "animals/information/icad/update/<int:pk>/",
+        animal.UpdateIcadInformation.as_view(),
+        name="update_icad_information",
     ),
     path(
         "animals/sante/update/<int:pk>/",
@@ -134,6 +144,11 @@ urlpatterns = [
         "adoption/update/<int:pk>/",
         adoption.UpdateAdoption.as_view(),
         name="update_adoption",
+    ),
+    path(
+        "adoption/update/icad/<int:pk>/",
+        adoption.UpdateIcadAdoption.as_view(),
+        name="update_icad_adoption",
     ),
     path(
         "adoption/bon/update/<int:pk>/",

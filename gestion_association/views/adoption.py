@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from django.http import JsonResponse
@@ -18,7 +19,7 @@ from gestion_association.forms.adoption import (
     AdoptionUpdateForm,
     BonSterilisationForm,
     ShowBonForm,
-    AdoptionSearchForm)
+    AdoptionSearchForm, AdoptionIcadUpdateForm)
 from gestion_association.forms.person import PersonForm
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import (
@@ -391,3 +392,12 @@ def delete_bon(request, pk):
     animal = bon.adoption.animal
     bon.delete()
     return redirect("detail_animal", pk=animal.id)
+
+
+class UpdateIcadAdoption(LoginRequiredMixin, UpdateView):
+    model = Adoption
+    form_class = AdoptionIcadUpdateForm
+    template_name = "gestion_association/adoption/adoption_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("detail_animal_icad", kwargs={"pk": self.object.animal.id})

@@ -79,6 +79,14 @@ class AdoptionSearchForm(Form):
     )
 
 
+class AdoptionIcadUpdateForm(ModelForm):
+    class Meta:
+        model = Adoption
+        fields = (
+            "visite_controle",
+        )
+
+
 class AdoptionCreateForm(ModelForm):
     required_css_class = 'required'
     class Meta:

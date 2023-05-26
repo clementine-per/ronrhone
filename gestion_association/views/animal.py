@@ -1,5 +1,6 @@
 
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
@@ -15,11 +16,11 @@ from gestion_association.forms.animal import (
     AnimalInfoUpdateForm,
     AnimalOtherInfosForm,
     AnimalSanteUpdateForm,
-    AnimalSearchForm, AnimalSelectForm, ParrainageForm, IcadAnimalSearchForm,
+    AnimalSearchForm, AnimalSelectForm, ParrainageForm, IcadAnimalSearchForm, AnimalInfoIcadUpdateForm,
 )
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption
-from gestion_association.models.animal import Animal, AnimalGroup, statuts_association, Parrainage
+from gestion_association.models.animal import Animal, AnimalGroup, statuts_association, Parrainage, StatutAnimal
 from gestion_association.models.person import Person
 from gestion_association.serializers import AnimalSerializer
 from gestion_association.views.utils import admin_test, AdminTestMixin
@@ -275,6 +276,15 @@ def update_preference(request, pk):
     return render(request, "gestion_association/animal/preference_form.html", locals())
 
 
+class UpdateIcadInformation(LoginRequiredMixin, UpdateView):
+    model = Animal
+    template_name = "gestion_association/animal/information_form.html"
+    form_class = AnimalInfoIcadUpdateForm
+
+    def get_success_url(self):
+        return reverse_lazy("detail_animal_icad", kwargs={"pk": self.object.id})
+
+
 class UpdateInformation(AdminTestMixin, UpdateView):
     model = Animal
     template_name = "gestion_association/animal/information_form.html"
@@ -346,3 +356,12 @@ def activate_animal(request, pk):
     animal.inactif = False
     animal.save()
     return redirect("detail_animal", pk=animal.id)
+
+
+@login_required()
+def definitive_adoption_animal(request, pk):
+    animal = Animal.objects.get(id=pk)
+    if animal.lien_icad and animal.statut == StatutAnimal.ADOPTE.name:
+        animal.statut = StatutAnimal.ADOPTE_DEFINITIF.name
+        animal.save()
+    return redirect("detail_animal_icad", pk=animal.id)
