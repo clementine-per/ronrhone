@@ -171,6 +171,7 @@ class AnimalInfoIcadUpdateForm(ModelForm):
     class Meta:
         model = Animal
         fields = (
+            "nom",
             "lien_icad",
         )
 

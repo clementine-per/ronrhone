@@ -113,10 +113,10 @@ class AnimalListTests(TestCase):
 
     def test_person_list_filter(self):
         url_root = "/ronrhone/animals/"
-        response = self._check_filter_contained(f"{url_root}?nom=wi", "Twix", "Cerise")
-        response = self._check_filter_contained(f"{url_root}?sterilise=OUI", "Cerise", "Twix")
-        response = self._check_filter_contained(f"{url_root}?identification=55", "Cerise", "Twix")
-        response = self._check_filter_contained(f"{url_root}?statuts=SOCIA", "Cerise", "Twix")
+        self._check_filter_contained(f"{url_root}?nom=wi", "Twix", "Cerise")
+        self._check_filter_contained(f"{url_root}?sterilise=OUI", "Cerise", "Twix")
+        self._check_filter_contained(f"{url_root}?identification=55", "Cerise", "Twix")
+        self._check_filter_contained(f"{url_root}?statuts=SOCIA", "Cerise", "Twix")
         response = self.client.get(f"{url_root}?statuts=SOCIA&statuts=ADOPTABLE")
         self.assertContains(response, "Cerise")
         self.assertContains(response, "Twix")

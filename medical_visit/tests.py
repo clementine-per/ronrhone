@@ -3,8 +3,6 @@ from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
-
-# Create your tests here.
 from django.urls import reverse_lazy
 from django.utils import timezone
 
@@ -87,6 +85,7 @@ class MedicalVisitModelTestCase(TestCase):
 
 class MedicalVisitViewTestCase(TestCase):
     def setUp(self):
+        self.today = timezone.now().date()
         self.client = Client()
         self.user = User.objects.create_superuser("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
@@ -106,9 +105,9 @@ class MedicalVisitViewTestCase(TestCase):
             sterilise=OuiNonChoice.NON.name,
             preference=preference_two,
         )
-        visite = VisiteMedicale.objects.create(date=timezone.now().date() + timedelta(days=2),
+        visite = VisiteMedicale.objects.create(date=self.today,
                                                visit_type=TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name,
-                                               amount=Decimal(200))
+                                               amount=Decimal(200), veterinary="clinique bellecour")
         visite.animals.add(animal_one)
         visite.animals.add(animal_two)
         visite.save()
@@ -119,6 +118,26 @@ class MedicalVisitViewTestCase(TestCase):
         self.assertContains(response, "Twix")
         self.assertContains(response, "Rappel")
         self.assertContains(response, "200")
+
+    def test_visit_list_view_filters(self):
+        url_root = "/ronrhone/medical_visits/list/"
+        # Veterinary filter
+        response = self.client.get(f"{url_root}?veterinary=bellecour")
+        self.assertContains(response, "clinique bellecour")
+        response = self.client.get(f"{url_root}?veterinary=test")
+        self.assertNotContains(response, "clinique bellecour")
+        # Visit type filter
+        response = self.client.get(f"{url_root}?visit_type={TypeVisiteVetoChoice.VAC_RAPPEL_TCL.name}")
+        self.assertContains(response, "clinique bellecour")
+        response = self.client.get(f"{url_root}?visit_type={TypeVisiteVetoChoice.STE.name}")
+        self.assertNotContains(response, "clinique bellecour")
+        # Date filters
+        tomorrow_str = (self.today + timedelta(days=1)).strftime("%Y-%m-%d")
+        yesterday_str = (self.today - timedelta(days=1)).strftime("%Y-%m-%d")
+        response = self.client.get(f"{url_root}?date_min={yesterday_str}&date_max={tomorrow_str}")
+        self.assertContains(response, "clinique bellecour")
+        response = self.client.get(f"{url_root}?date_min={tomorrow_str}")
+        self.assertNotContains(response, "clinique bellecour")
 
     def test_visit_delete_view(self):
         self.assertEquals(VisiteMedicale.objects.all().count(), 1)

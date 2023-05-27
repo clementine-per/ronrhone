@@ -82,6 +82,6 @@ class PersonOtherViewsTests(TestCase):
 
     def test_annule_benevole(self):
         person = create_person("MINCH", "Clémentine", "test.test@gmail.com", False, False, True)
-        response = self.client.get(reverse_lazy("cancel_benevole", kwargs={"pk": person.id}))
+        self.client.get(reverse_lazy("cancel_benevole", kwargs={"pk": person.id}))
         query_person = Person.objects.get(id=person.id)
         self.assertEqual(query_person.is_benevole, False)
