@@ -204,7 +204,7 @@ def personal_infos(p, animal):
     para.drawOn(p, 3 * cm, 14.3 * cm)
     # QR code
     p.drawImage(
-        f"{settings.STATIC_ROOT}/img/QR.JPG",
+        f"{settings.STATIC_ROOT}/img/QR.jpg",
         15 * cm,
         13.5 * cm,
         width=3.7 * cm,
