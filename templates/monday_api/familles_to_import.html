@@ -1,0 +1,47 @@
+{% extends "gestion_association/base.html" %}
+{% load tag %}
+{% block content %}
+<h1 class="p-4"> Import de familles d'accueil depuis Monday : {{nb_results}} résultat(s)</h1>
+
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width:15%;">Personne</th>
+            <th scope="col">Coordonnées</th>
+            <th scope="col">Détail des accueils acceptés</th>
+            <th scope="col">Commentaire</th>
+            <th scope="col">Animaux de la FA</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for famille in familles %}
+        <tr class="table-info">
+            <td>{{famille.personne}}</td>
+            <td>
+                {{famille.personne.adresse}} </br>
+                {{famille.personne.code_postal}} {{famille.personne.ville}} </br>
+                {{famille.personne.telephone}} </br>
+                {{famille.personne.email}}
+            </td>
+            <td>
+                {{famille.detail_places}} </br>
+                Nombre de places : {{famille.nb_places}} </br>
+                Sociabilisation : {{famille.preference.get_sociabilisation_display}} </br>
+                Quarantaine : {{famille.preference.get_quarantaine_display}} </br>
+                Biberonnage : {{famille.preference.get_biberonnage_display}} </br>
+            </td>
+            <td>{{famille.commentaire}}</td>
+            <td>{{famille.autres_animaux}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="{% url 'integrate_fa' %}" class="float-right btn btn-success m-4"
+        type="submit" onclick="return confirm('Etes vous sûr(e) de vouloir importer ces familles d'accueil?');">
+    Confirmer l'import
+</a>
+<a href="{% url 'accueil' %}" class="float-right btn btn-outline-danger m-4"> Annuler </a>
+
+{% endblock %}

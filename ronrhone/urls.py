@@ -32,5 +32,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path("ronrhone/", include("gestion_association.urls")),
     path("ronrhone/contract/", include("contract.urls")),
+    path("ronrhone/monday/", include("monday_api.urls")),
     path("ronrhone/medical_visits/", include("medical_visit.urls")),
 ]
