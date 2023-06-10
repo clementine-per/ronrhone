@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "gestion_association",
     "medical_visit",
     "contract",
+    "monday_api",
     "dal",
     "dal_select2",
 ]
@@ -113,3 +114,6 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 CORS_ALLOW_CREDENTIALS = True
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+MONDAY_KEY = os.getenv("MONDAY_KEY")
+MONDAY_URL = "https://api.monday.com/v2"
