@@ -87,7 +87,7 @@ def get_query():
       items {\
         id\
         name\
-        column_values(ids: ["statut96", "texte9","s_lection_multiple", "statut_11",\
+        column_values(ids: ["statut96", "texte9","s_lection_multiple","chiffre3", "statut_11",\
         "s_lection_unique1", "s_lection_unique11", "s_lection_unique", "case___cocher2",\
          "s_lection_unique88", "statut_1", "court_texte7", "texte", \
          "texte3", "texte1", "texte5", "texte8", "t_l_phone", "e_mail",\
@@ -145,38 +145,25 @@ def get_fa_from_values(fa_values):
         # FA - Commentaire
         elif value["id"] == "statut":
             famille.commentaire = value["text"]
+            if value["text"].find("jardin") > 0:
+                preference.exterieur = OuiNonChoice.OUI.name
         # FA - Animaux de la FA
         elif value["id"] == "case___cocher2":
             famille.autres_animaux = value["text"]
         # FA - Nombre de places
-        elif value["id"] == "statut_11":
-            nombre = value["text"]
-            if nombre:
-                if '2' in nombre:
-                    famille.nb_places = 2
-                elif '4' in nombre:
-                    famille.nb_places = 4
-                elif '6' in nombre:
-                    famille.nb_places = 6
-                elif '8' in nombre:
-                    famille.nb_places = 8
-                elif 'seul' in nombre:
-                    famille.nb_places = 1
-                else:
-                    famille.nb_places = 3
-            else:
-                famille.nb_places = 3
+        elif value["id"] == "chiffre3":
+            famille.nb_places = int(value["text"])
         # FA - Détail des accueils acceptés
         elif value["id"] == "s_lection_multiple":
             famille.detail_places = value["text"]
         # FA - Accepte les accueils de longue durée
         # FA - Sociabilisation
-        elif value["id"] == "'s_lection_unique":
+        elif value["id"] == "s_lection_unique":
             if value["text"]:
                 preference.sociabilisation = OuiNonChoice.OUI.name
         # FA - Extérieur
         # FA - Quarantaine
-        elif value["id"] == "'statut_1":
+        elif value["id"] == "statut_1":
             if value["text"] == 'OUI':
                 preference.quarantaine = OuiNonChoice.OUI.name
         # FA - Biberonnage
