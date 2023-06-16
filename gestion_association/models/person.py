@@ -27,10 +27,7 @@ class Person(models.Model):
     )
     code_postal = models.CharField(validators=[code_postal_regex], max_length=5)
     ville = models.CharField(max_length=100)
-    telephone_regex = RegexValidator(
-        regex="[0-9]{10}", message="Veuillez entrer un numéro de téléphone valide."
-    )
-    telephone = models.CharField(validators=[telephone_regex], max_length=10)
+    telephone = models.CharField(max_length=14)
     date_inscription = models.DateField(auto_now_add=True)
     profession = models.CharField(max_length=250, blank=True)
     commentaire = models.CharField(max_length=1000, blank=True)
