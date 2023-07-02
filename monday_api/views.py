@@ -90,7 +90,7 @@ def get_query():
         column_values(ids: ["statut96", "texte9","s_lection_multiple","chiffre3", "statut_11",\
         "s_lection_unique1", "s_lection_unique11", "s_lection_unique", "case___cocher2",\
          "s_lection_unique88", "statut_1", "court_texte7", "texte", \
-         "texte3", "texte1", "texte5", "texte8", "t_l_phone", "e_mail",\
+         "texte3", "texte2", "texte1", "texte5", "texte8", "t_l_phone", "e_mail",\
           "texte2","statut"]) {\
           title\
           id\
@@ -114,6 +114,7 @@ def get_fa_from_values(fa_values):
     fa_columns = fa_values["column_values"]
     personne = Person()
     famille = Famille()
+    famille.commentaire = ""
     preference = Preference()
     for value in fa_columns:
         # Statut
@@ -123,7 +124,7 @@ def get_fa_from_values(fa_values):
                 return None
         # Nom
         elif value["id"] == "texte":
-            personne.nom = value["text"]
+            personne.nom = value["text"].upper()
         # Prénom
         elif value["id"] == "texte3":
             personne.prenom = value["text"]
@@ -138,15 +139,20 @@ def get_fa_from_values(fa_values):
             personne.ville = value["text"]
         # Téléphone
         elif value["id"] == "t_l_phone":
-            personne.telephone = value["text"]
+            telephone = value["text"]
+            if not telephone.startswith('0'):
+                telephone = "+" + telephone
+            personne.telephone = telephone
         # Email
         elif value["id"] == "e_mail":
             personne.email = value["text"]
         # FA - Commentaire
         elif value["id"] == "statut":
-            famille.commentaire = value["text"]
+            famille.commentaire = famille.commentaire + " " + value["text"]
             if value["text"].find("jardin") > 0:
                 preference.exterieur = OuiNonChoice.OUI.name
+        elif value["id"] == "texte2":
+            famille.commentaire = famille.commentaire + " " + value["text"]
         # FA - Animaux de la FA
         elif value["id"] == "case___cocher2":
             famille.autres_animaux = value["text"]
