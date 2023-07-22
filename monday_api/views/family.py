@@ -18,13 +18,6 @@ headers = {"Authorization": api_key, "API-version": "2023-04"}
 
 
 @user_passes_test(admin_test)
-def index(request):
-    selected = "monday"
-    title = "Intégration avec Monday"
-    return render(request, "monday_api/index.html", locals())
-
-
-@user_passes_test(admin_test)
 def check_api_fa(request):
     selected = "monday"
     title = "Intégration avec Monday : Familles d'accueil"
@@ -136,7 +129,7 @@ def get_fa_from_values(fa_values):
             personne.code_postal = value["text"]
         # Ville
         elif value["id"] == "texte8":
-            personne.ville = value["text"]
+            personne.ville = value["text"].upper()
         # Téléphone
         elif value["id"] == "t_l_phone":
             telephone = value["text"]

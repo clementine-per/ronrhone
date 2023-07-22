@@ -1,0 +1,53 @@
+{% extends "gestion_association/base.html" %}
+{% load tag %}
+{% block content %}
+<h1 class="p-4"> Import des adoptions depuis Monday : {{nb_results}} résultat(s)</h1>
+{% for error in errors %}
+{{error}} <br>
+{% endfor %}
+<div class="table-responsive-sm p-4">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width:15%;">Personne</th>
+            <th scope="col">Coordonnées</th>
+            <th scope="col">Animal</th>
+            <th scope="col">Montant</th>
+            <th scope="col">Montant restant</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for adoption in adoptions %}
+        <tr class="table-info">
+            <td>{{adoption.adoptant}}</td>
+            {% if adoption.adoptant.pk %}
+                <td>Adoptant déjà en base</td>
+            {% else %}
+            <td>
+                {{adoption.adoptant.adresse}} </br>
+                {{adoption.adoptant.code_postal}} {{adoption.personne.ville}} </br>
+                {{adoption.adoptant.telephone}} </br>
+                {{adoption.adoptant.email}}
+            </td>
+            {% endif %}
+            <td>
+                {{adoption.animal}} </br>
+            </td>
+            <td>
+                {{adoption.montant|default:" - "}} </br>
+            </td>
+            <td>
+                {{adoption.montant_restant|default:" - "}} </br>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="{% url 'integrate_adoptions' %}" class="float-right btn btn-success m-4"
+        type="submit" onclick="return confirm('Etes vous sûr(e) de vouloir importer ces adoptions?');">
+    Confirmer l'import
+</a>
+<a href="{% url 'accueil' %}" class="float-right btn btn-outline-danger m-4"> Annuler </a>
+
+{% endblock %}

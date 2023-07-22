@@ -1,0 +1,10 @@
+{% extends "gestion_association/base.html" %}
+{% load tag %}
+{% block content %}
+<h1 class="p-4"> Rapport d'import d'adoptions depuis Monday</h1>
+{% for import in imports %}
+{{import}} </br>
+{% endfor %}
+<a href="{% url 'accueil' %}" class="float-right btn btn-info m-4"> Retour accueil </a>
+{% endblock %}
+
