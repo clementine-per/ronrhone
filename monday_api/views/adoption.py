@@ -86,7 +86,7 @@ def integrate_adoptions(request):
                     # Mise à jour du statut dans monday
                     mutation_request = get_modify_status_query(elt["id"])
                     data = {'query': mutation_request}
-                    # r = requests.post(url=api_url, json=data, headers=headers)
+                    r = requests.post(url=api_url, json=data, headers=headers)
                     logger.warning("Import de l'adoption de " + str(adoption.animal) + " par " + str(adoption.adoptant))
 
         except Exception as e:
@@ -119,7 +119,7 @@ def get_query():
 def get_modify_status_query(item_id):
     # statut correspond à la colonne statut et l'index 0 au statut "Acompte ok"
     return 'mutation { change_column_value(item_id:' +item_id +', board_id: 3034309911,\
-     column_id: "statut", value: "{\\\"index\\\":0}") {id\
+     column_id: "statut", value: "{\\\"index\\\":19}") {id\
   }\
 }'
 
