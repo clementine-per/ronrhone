@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 from enum import Enum
 from dateutil.relativedelta import relativedelta
@@ -85,9 +84,8 @@ class Adoption(models.Model):
         if not self.annule:
             # Maj statut lors de la création de l'adoption
             if self._state.adding:
-
                 # Annulation des adoptions précédentes
-                if self.animal.adoption_set and self.animal.adoption_set.all().count() > 1 :
+                if self.animal.adoption_set and self.animal.adoption_set.all().count() > 0 :
                     for adoption in self.animal.adoption_set.all():
                         adoption.annule = True
                         adoption.save()

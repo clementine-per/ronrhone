@@ -76,7 +76,7 @@ def integrate_adoptions(request):
                     imports.append("L'animal " + elt["name"] + " n'a pas été trouvé.")
                     logger.warning("L'animal " + elt["name"] + " n'a pas été trouvé.")
                 elif adoption:
-                    adoption.acompte_verse = True
+                    adoption.acompte_verse = OuiNonChoice.NON.name
                     adoption.pre_visite = OuiNonChoice.NON.name
                     adoption.visite_controle = OuiNonChoice.NON.name
                     adoption.adoptant.save()
@@ -136,9 +136,12 @@ def get_adoption_from_values(adoption_values):
                 return None
 
             animal_name = adoption_values["name"]
-            corresponding_matches = get_close_matches(animal_name, get_animal_names(), 1)
+            # close_match is case sensitive
+            corresponding_matches = get_close_matches(animal_name.lower(), get_animal_names(), 1)
             if not len(corresponding_matches) > 0:
-                return "Not Found"
+                corresponding_matches = get_close_matches(animal_name.upper(), get_animal_names(), 1)
+                if not len(corresponding_matches) > 0:
+                    return "Not Found"
             corresponding_match = corresponding_matches[0]
             animal = Animal.objects.get(nom=corresponding_match)
         # Nom
