@@ -167,6 +167,7 @@ def index(request):
     bon_a_envoyer = (
         BonSterilisation.objects.filter(envoye=OuiNonChoice.NON.name)
         .filter(adoption__annule=False)
+        .filter(adoption__animal__statut=StatutAnimal.ADOPTE.name)
         .count()
     )
     # Bon de stérilisation arrivant à expiation (10 jours)

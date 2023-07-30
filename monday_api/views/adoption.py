@@ -67,7 +67,7 @@ def integrate_adoptions(request):
     # On récupère les lignes du tableau
     content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items"]
     logger.info("DEBUT Import d'adoptions")
-    # Chaque ligne est une famille d'accueil
+    # Chaque ligne est une adoption
     for elt in content:
         try:
             with transaction.atomic():
@@ -76,7 +76,7 @@ def integrate_adoptions(request):
                     imports.append("L'animal " + elt["name"] + " n'a pas été trouvé.")
                     logger.warning("L'animal " + elt["name"] + " n'a pas été trouvé.")
                 elif adoption:
-                    adoption.acompte_verse = OuiNonChoice.NON.name
+                    adoption.acompte_verse = OuiNonChoice.OUI.name
                     adoption.pre_visite = OuiNonChoice.NON.name
                     adoption.visite_controle = OuiNonChoice.NON.name
                     adoption.adoptant.save()
