@@ -76,7 +76,6 @@ def integrate_adoptions(request):
                     imports.append("L'animal " + elt["name"] + " n'a pas été trouvé.")
                     logger.warning("L'animal " + elt["name"] + " n'a pas été trouvé.")
                 elif adoption:
-                    adoption.acompte_verse = OuiNonChoice.OUI.name
                     adoption.pre_visite = OuiNonChoice.NON.name
                     adoption.visite_controle = OuiNonChoice.NON.name
                     adoption.adoptant.save()
@@ -132,7 +131,11 @@ def get_adoption_from_values(adoption_values):
         # Statut
         if value["id"] == "statut":
             # On ne veux que les adoptions dans un certain statut
-            if value["text"] != "Acompte ok":
+            if value["text"] == "Acompte ok":
+                adoption.acompte_verse = OuiNonChoice.OUI.name
+            elif value["text"] == "Procédure inversée":
+                adoption.acompte_verse = OuiNonChoice.NON.name
+            else:
                 return None
 
             animal_name = adoption_values["name"]
@@ -168,9 +171,6 @@ def get_adoption_from_values(adoption_values):
         # Email
         elif value["id"] == "adresse_e_mail":
             personne.email = value["text"]
-        # Profesion
-        elif value["id"] == "quels_sont_les_membres_qui_composent_votre_foyer__vous_y_compris____age__profession_etc___":
-            personne.profession = value["text"]
     # Check si l'adoptant est déjà en base
     nom_prenom_key = f"{slugify(personne.prenom)}.{personne.nom}"
     existing_person = Person.objects.filter(nom_prenom_key=nom_prenom_key.lower())
@@ -182,7 +182,8 @@ def get_adoption_from_values(adoption_values):
         adoption.adoptant = personne
     adoption.animal = animal
     adoption.montant = get_montant_adoption(animal)
-    if adoption.montant:
+    adoption.montant_restant = adoption.montant
+    if adoption.montant and adoption.acompte_verse == OuiNonChoice.OUI.name:
         adoption.montant_restant = adoption.montant - Decimal(100)
     return adoption
 
