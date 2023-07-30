@@ -38,6 +38,8 @@ class AdoptionCreateFormNoAdoptant(ModelForm):
 class AdoptionSearchForm(Form):
     montant_restant = IntegerField(required=False, label="Montant restant minimum")
     animal = CharField(required=False, max_length=150)
+    nom_benevole = CharField(required=False, max_length=150, label="Nom bénévole")
+    prenom_benevole = CharField(required=False, max_length=150, label="Prénom bénévole")
     pre_visite = ChoiceField(
         choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
         widget=Select(),

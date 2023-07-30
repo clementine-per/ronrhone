@@ -57,6 +57,8 @@ def search_adoption(request):
         form = AdoptionSearchForm()
         montant_restant_form =request.GET.get("montant_restant", "")
         animal_form = request.GET.get("animal", "")
+        nom_benevole_form = request.GET.get("nom_benevole", "")
+        prenom_benevole_form = request.GET.get("prenom_benevole", "")
         pre_visite_form = request.GET.get("pre_visite", "")
         visite_controle_form = request.GET.getlist("visite_controle", "")
         date_min_form = request.GET.get("date_min", "")
@@ -79,6 +81,12 @@ def search_adoption(request):
         if animal_form:
             form.fields["animal"].initial = animal_form
             adoptions = adoptions.filter(animal__nom__icontains=animal_form)
+        if nom_benevole_form:
+            form.fields["nom_benevole"].initial = nom_benevole_form
+            adoptions = adoptions.filter(personne_visite__nom__icontains=nom_benevole_form)
+        if prenom_benevole_form:
+            form.fields["prenom_benevole"].initial = prenom_benevole_form
+            adoptions = adoptions.filter(personne_visite__prenom__icontains=prenom_benevole_form)
         if pre_visite_form:
             form.fields["pre_visite"].initial = pre_visite_form
             adoptions = adoptions.filter(pre_visite=pre_visite_form)
