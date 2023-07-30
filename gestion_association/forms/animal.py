@@ -19,11 +19,6 @@ from gestion_association.models.animal import Animal, StatutAnimal, statuts_asso
 from gestion_association.models.person import Person
 from gestion_association.widgets import TableSelectMultiple
 
-statuts_adopte = [
-    StatutAnimal.ADOPTE,
-    StatutAnimal.ADOPTE_DEFINITIF,
-]
-
 
 class AnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
@@ -128,7 +123,7 @@ class IcadAnimalSearchForm(Form):
     nom = CharField(max_length=100, required=False)
     identification = CharField(max_length=100, required=False, label="Numéro d'identification")
     statuts = MultipleChoiceField(
-        choices=[(tag.name, tag.value) for tag in statuts_adopte],
+        choices=[(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
         widget=SelectMultiple(attrs={'class': "selectpicker"})
     )
@@ -173,6 +168,7 @@ class AnimalInfoIcadUpdateForm(ModelForm):
         fields = (
             "nom",
             "lien_icad",
+            "identification"
         )
 
 

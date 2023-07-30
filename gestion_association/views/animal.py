@@ -28,7 +28,7 @@ from gestion_association.views.utils import admin_test, AdminTestMixin
 
 @login_required()
 def icad_list_view(request):
-    animals = Animal.objects.filter(inactif=False).filter(statut__in=['ADOPTE','ADOPTE_DEFINITIF'])
+    animals = Animal.objects.filter(inactif=False)
     selected = "animals"
     title = "Liste des animaux"
     if request.method == "POST":
