@@ -12,7 +12,7 @@ from django.template.defaultfilters import slugify
 
 from gestion_association.models import OuiNonChoice
 from gestion_association.models.adoption import Adoption
-from gestion_association.models.animal import Animal, StatutAnimal
+from gestion_association.models.animal import Animal, StatutAnimal, statuts_association
 from gestion_association.models.person import Person
 from gestion_association.views.adoption import get_montant_adoption
 from gestion_association.views.utils import admin_test
@@ -140,9 +140,9 @@ def get_adoption_from_values(adoption_values):
 
             animal_name = adoption_values["name"]
             # close_match is case sensitive
-            corresponding_matches = get_close_matches(animal_name.lower(), get_animal_names(), 1)
+            corresponding_matches = get_close_matches(animal_name.lower(), get_animal_names(), 2, 0.7)
             if not len(corresponding_matches) > 0:
-                corresponding_matches = get_close_matches(animal_name.upper(), get_animal_names(), 1)
+                corresponding_matches = get_close_matches(animal_name.upper(), get_animal_names(), 2, 0.7)
                 if not len(corresponding_matches) > 0:
                     return "Not Found"
             corresponding_match = corresponding_matches[0]
@@ -189,9 +189,4 @@ def get_adoption_from_values(adoption_values):
 
 
 def get_animal_names():
-    statuts_adoption = [
-        StatutAnimal.A_ADOPTER.name,
-        StatutAnimal.ADOPTION.name,
-        StatutAnimal.ADOPTABLE.name,
-    ]
-    return list(Animal.objects.filter(statut__in=statuts_adoption).values_list('nom', flat=True))
+    return list(Animal.objects.filter(statut__in=statuts_association).values_list('nom', flat=True))
