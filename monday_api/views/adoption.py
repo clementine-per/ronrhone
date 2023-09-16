@@ -7,6 +7,7 @@ import json
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
+from django.db.models.functions import Lower
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
 
@@ -142,11 +143,9 @@ def get_adoption_from_values(adoption_values):
             # close_match is case sensitive
             corresponding_matches = get_close_matches(animal_name.lower(), get_animal_names(), 2, 0.7)
             if not len(corresponding_matches) > 0:
-                corresponding_matches = get_close_matches(animal_name.upper(), get_animal_names(), 2, 0.7)
-                if not len(corresponding_matches) > 0:
-                    return "Not Found"
+                return "Not Found"
             corresponding_match = corresponding_matches[0]
-            animal = Animal.objects.get(nom=corresponding_match)
+            animal = Animal.objects.get(nom__iexact=corresponding_match)
         # Nom
         elif value["id"] == "nom___pr_nom":
             personne.nom = value["text"].upper()
@@ -189,4 +188,4 @@ def get_adoption_from_values(adoption_values):
 
 
 def get_animal_names():
-    return list(Animal.objects.filter(statut__in=statuts_association).values_list('nom', flat=True))
+    return list(Animal.objects.filter(statut__in=statuts_association).values_list(Lower('nom'), flat=True))
