@@ -20,10 +20,10 @@
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=ADOPTABLE"><strong>{{a_proposer}}</strong>  à mettre à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?statuts=A_ADOPTER"><strong>{{a_l_adoption}}</strong>  à l'adoption</a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?acompte_verse=NON"><strong>{{acomptes}}</strong> adoptions en attente d'acompte</a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=NON&acompte_verse=OUI">
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statuts=ADOPTION&pre_visite=NON&acompte_verse=OUI">
                             <strong>{{adoption_previsite}}</strong> pré-visites à faire
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTION&pre_visite=OUI&acompte_verse=OUI&montant_restant=0">
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statuts=ADOPTION&pre_visite=OUI&acompte_verse=OUI&montant_restant=0">
                             <strong>{{adoption_paiement}}</strong> adoptions en attente de paiement complet pour montant total de <strong>{{adoption_paiement_montant.montant_restant__sum}} €</strong>
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=NON&date_visite_max={{today_str}}&sterilise=OUI&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTABLE&statuts=A_ADOPTER">
@@ -36,7 +36,7 @@
                         <p><a class="text-secondary" href= "{% url 'adoptions' %}?visite_controle=VACCIN&visite_controle=ALIMENTAIRE&statuts=ADOPTION&statuts=ADOPTE&statuts=ADOPTABLE&statuts=A_ADOPTER">
                             <strong>{{adoption_controle}}</strong> post visites à contrôler (Vaccin ou Transition alimentaire)
                         </a></p>
-                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statut=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> changements d'ICAD à effectuer</a></p>
+                        <p><a class="text-secondary" href= "{% url 'adoptions' %}?statuts=ADOPTE&visite_controle=OUI"><strong>{{adoption_over}}</strong> changements d'ICAD à effectuer</a></p>
                     </div>
                 </div>
             </div>

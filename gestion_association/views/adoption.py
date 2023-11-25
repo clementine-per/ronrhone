@@ -68,13 +68,15 @@ def search_adoption(request):
         date_expiration_max_form = request.GET.get("date_expiration_max", "")
         bon_envoye_form = request.GET.get("bon_envoye", "")
         bon_utilise_form = request.GET.get("bon_utilise", "")
+        statuts_form = request.GET.getlist("statuts", "")
         # champ hors formulaire, uniquement parametre url depuis TDB
         acompte_verse = request.GET.get("acompte_verse", "")
         sterilise = request.GET.get("sterilise", "")
         date_visite_max = request.GET.get("date_visite_max", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
-        if statuts_url := request.GET.getlist("statuts", ""):
-            adoptions = adoptions.filter(animal__statut__in=statuts_url)
+        if statuts_form:
+            form.fields["statuts"].initial = statuts_form
+            adoptions = adoptions.filter(animal__statut__in=statuts_form)
         if montant_restant_form:
             form.fields["montant_restant"].initial = montant_restant_form
             adoptions = adoptions.filter(montant_restant__gt=int(montant_restant_form))
@@ -99,9 +101,6 @@ def search_adoption(request):
         if date_max_form:
             form.fields["date_max"].initial = date_max_form
             adoptions = adoptions.filter(date__lte=parse_date(date_max_form))
-        if statut_form:
-            form.fields["statut"].initial = statut_form
-            adoptions = adoptions.filter(animal__statut=statut_form)
         if date_expiration_min_form:
             form.fields["date_expiration_min"].initial = date_expiration_min_form
             adoptions = adoptions.filter(bon__date_max__gte=parse_date(date_expiration_min_form))

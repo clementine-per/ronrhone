@@ -58,10 +58,10 @@ class AdoptionSearchForm(Form):
     date_max = DateField(
         label="et le", required=False, widget=DateInput()
     )
-    statut = ChoiceField(
-        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in StatutAnimal],
+    statuts = MultipleChoiceField(
+        choices=[(tag.name, tag.value) for tag in StatutAnimal],
         required=False,
-        widget=Select()
+        widget=SelectMultiple(attrs={'class': "selectpicker"})
     )
     date_expiration_min = DateField(
         label="Date d'expiration entre le", required=False, widget=DateInput()
