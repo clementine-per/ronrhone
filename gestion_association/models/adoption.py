@@ -107,7 +107,7 @@ class Adoption(models.Model):
                         accueil.statut = StatutAccueil.TERMINE.name
                         accueil.save()
                     self.animal.famille = None
-                    self.animal.save()
+                self.animal.save()
         return super(Adoption, self).save(*args, **kwargs)
 
 
