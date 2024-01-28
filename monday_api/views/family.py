@@ -14,7 +14,7 @@ from gestion_association.views.utils import admin_test
 
 api_key = settings.MONDAY_KEY
 api_url = settings.MONDAY_URL
-headers = {"Authorization": api_key, "API-version": "2023-04"}
+headers = {"Authorization": api_key, "API-version": "2023-10"}
 
 
 @user_passes_test(admin_test)
@@ -28,7 +28,7 @@ def check_api_fa(request):
     r = requests.post(url=api_url, json=data, headers=headers)
     familles = []
     # On récupère les lignes du tableau
-    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items"]
+    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items_page"]["items"]
     # Chaque ligne est une famille d'accueil
     for fa in content:
         famille = get_fa_from_values(fa)
@@ -51,7 +51,7 @@ def integrate_fa(request):
         raise Exception(r.content)
     imports = []
     # On récupère les lignes du tableau
-    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items"]
+    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items_page"]["items"]
     # Chaque ligne est une famille d'accueil
     for fa in content:
         try:
@@ -77,7 +77,7 @@ def integrate_fa(request):
 def get_query():
     return 'query { boards(ids: [3040453225]) {\
     groups(ids: ["1659706411_reponses_fa"]) {\
-      items {\
+      items_page { items {\
         id\
         name\
         column_values(ids: ["statut96", "texte9","s_lection_multiple","chiffre3", "statut_11",\
@@ -85,12 +85,11 @@ def get_query():
          "s_lection_unique88", "statut_1", "court_texte7", "texte", \
          "texte3", "texte2", "texte1", "texte5", "texte8", "t_l_phone", "e_mail",\
           "texte2","statut"]) {\
-          title\
           id\
           value\
           text\
         }\
-      }\
+      } }\
     }\
   } }'
 

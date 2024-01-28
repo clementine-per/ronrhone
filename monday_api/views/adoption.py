@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 api_key = settings.MONDAY_KEY
 api_url = settings.MONDAY_URL
-headers = {"Authorization": api_key, "API-version": "2023-04"}
+headers = {"Authorization": api_key, "API-version": "2023-10"}
 
 
 @user_passes_test(admin_test)
@@ -40,7 +40,7 @@ def check_api_adoptions(request):
     adoptions = []
     errors = []
     # On récupère les lignes du tableau
-    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items"]
+    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items_page"]["items"]
     # Chaque ligne est une adoption
     for elt in content:
         adoption = get_adoption_from_values(elt)
@@ -66,7 +66,7 @@ def integrate_adoptions(request):
         raise Exception(r.content)
     imports = []
     # On récupère les lignes du tableau
-    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items"]
+    content = json.loads(r.content)["data"]["boards"][0]["groups"][0]["items_page"]["items"]
     logger.info("DEBUT Import d'adoptions")
     # Chaque ligne est une adoption
     for elt in content:
@@ -99,19 +99,18 @@ def integrate_adoptions(request):
 def get_query():
     return 'query { boards(ids: [3034309911]) {\
     groups(ids: ["topics"]) {\
-      items {\
+      items_page { items {\
         id\
         name\
         column_values(ids: ["statut", "nom___pr_nom","texte8","t_l_phone", "adresse_postale__n___rue_",\
         "code_postal", "ville", "adresse_e_mail",\
          "quels_sont_les_membres_qui_composent_votre_foyer__vous_y_compris____age__profession_etc___" \
          ]) {\
-          title\
           id\
           value\
           text\
         }\
-      }\
+      }}\
     }\
   } }'
 
