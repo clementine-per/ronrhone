@@ -143,7 +143,7 @@
         <tbody>
         {% for animal in animal_list %}
         <tr class="table-info">
-            <td><i class="fa fa-circle {{animal.perimetre}}"></i><a href= "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a></td>
+            <td><i class="fa fa-circle {{animal.perimetre}}"></i> <a href= "{% url 'detail_animal' animal.id %}">{{animal.nom}}</a></td>
             <td>{{animal.get_statut_display}}
                 {% if animal.is_en_soin_justif %}
                 ( {{animal.commentaire_sante}} )

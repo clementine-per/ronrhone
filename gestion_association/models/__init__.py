@@ -14,3 +14,4 @@ class TypeChoice(Enum):
 class PerimetreChoice(Enum):
     UN = "Périmètre 1 (Marjo)"
     DEUX = "Périmètre 2 (Lucile)"
+    TROIS = "Périmètre 3 (Mélanie)"
