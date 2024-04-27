@@ -99,7 +99,7 @@ def integrate_adoptions(request):
 def get_query():
     return 'query { boards(ids: [3034309911]) {\
     groups(ids: ["topics"]) {\
-      items_page(limit: 15, query_params: {rules: [{column_id: "statut", compare_value: [0]}], operator: and})\
+      items_page(limit: 15, query_params: {rules: [{column_id: "statut", compare_value: [0,3]}], operator: and})\
        { items {\
         id\
         name\
