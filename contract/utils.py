@@ -183,17 +183,6 @@ def personal_infos(p, animal):
     p.drawString(2 * cm, 18.1 * cm, f"Adresse e-mail : {animal.adoptant.email}")
     p.drawString(2 * cm, 17.3 * cm, f"Profession : {animal.adoptant.profession}")
 
-    # Checkbox
-    styleSquare = ParagraphStyle(
-        name="Style",
-        borderWidth=1,
-        borderColor="#000000",
-        borderPadding=(0.2 * cm, 0.1 * cm, 0.2 * cm, 0.1 * cm),
-    )
-    para = Paragraph(" ", style=styleSquare)
-    para.wrap(0.2 * cm, 1 * cm)
-    para.drawOn(p, 2.2 * cm, 16.5 * cm)
-
 
 def infos_animal(p, animal):
     para = Paragraph("{} <br/>" \
