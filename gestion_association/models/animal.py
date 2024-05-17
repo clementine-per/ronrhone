@@ -216,7 +216,6 @@ class Animal(models.Model):
     preference = models.OneToOneField(Preference, on_delete=models.PROTECT, blank=True, null=True)
     groupe = models.ForeignKey(AnimalGroup, on_delete=models.CASCADE, blank=True, null=True)
     commentaire_animaux_lies = models.CharField(max_length=1000, blank=True)
-    nekosable = models.BooleanField(default=False, verbose_name="Nekosable")
     tranche_age = models.CharField(
         max_length=10,
         blank=True,

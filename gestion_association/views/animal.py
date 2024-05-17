@@ -106,7 +106,6 @@ def search_animal(request):
         sterilise_form = request.GET.get("sterilise", "")
         perimetre_form = request.GET.get("perimetre", "")
         sans_fa_form = request.GET.get("sans_fa", "")
-        nekosable_form = request.GET.get("nekosable", "")
         statuts_form = request.GET.getlist("statuts","")
         date_naissance_min = request.GET.get("date_naissance_min", "")
         date_naissance_max = request.GET.get("date_naissance_max", "")
@@ -147,12 +146,6 @@ def search_animal(request):
                 animals = animals.filter(famille__isnull=True)
             if sans_fa_form == OuiNonChoice.NON.name:
                 animals = animals.filter(famille__isnull=False)
-        if nekosable_form:
-            form.fields["nekosable"].initial = nekosable_form
-            if nekosable_form == OuiNonChoice.OUI.name:
-                animals = animals.filter(nekosable=True).exclude(famille__neko=True)
-            if nekosable_form == OuiNonChoice.NON.name:
-                animals = animals.filter(nekosable=False)
         if statuts_form:
             form.fields["statuts"].initial = statuts_form
             animals = animals.filter(statut__in=statuts_form)

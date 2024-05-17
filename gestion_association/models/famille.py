@@ -79,10 +79,6 @@ class Famille(models.Model):
         blank=True,
         verbose_name=" Nombre maximum d'heures d'absence consécutives",
     )
-    neko = models.BooleanField(
-        default=False,
-        verbose_name="Il s'agit du café des chats (Neko)",
-    )
     perimetre = models.CharField(
         max_length=30,
         default="UN",

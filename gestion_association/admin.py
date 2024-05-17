@@ -42,7 +42,6 @@ class FamilleResource(ModelResource):
     type_animal = Field(column_name="Type", attribute='type_animal')
     autres_animaux = Field(column_name="Autres animaux", attribute='autres_animaux')
     nb_heures_absence = Field(column_name="Heures d'absence consécutives maximum", attribute='nb_heures_absence')
-    neko = Field(column_name="Café des chats (Neko)", attribute='neko')
 
     class Meta:
         model = Famille

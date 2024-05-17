@@ -64,11 +64,6 @@ class AnimalSearchForm(Form):
         required=False,
         widget=SelectMultiple(attrs={'class':"selectpicker"})
     )
-    nekosable = ChoiceField(
-        choices=BLANK_CHOICE_DASH + [(tag.name, tag.value) for tag in OuiNonChoice],
-        widget=Select(),
-        required=False,
-    )
     inactif = BooleanField(label="Afficher les animaux inactifs", required=False)
 
 
@@ -99,7 +94,6 @@ class AnimalCreateForm(ModelForm):
             "date_vermifuge",
             "commentaire_sante",
             "lien_icad",
-            "nekosable",
             "ancien_proprio",
             "contact",
         )
@@ -188,7 +182,6 @@ class AnimalInfoUpdateForm(ModelForm):
             "commentaire",
             "statut",
             "lien_icad",
-            "nekosable",
             "ancien_proprio",
             "contact",
         )
