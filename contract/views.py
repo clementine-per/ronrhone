@@ -1,5 +1,3 @@
-import sys
-
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 
@@ -18,8 +16,6 @@ def generate_contract(request, pk):
     nb_page = 1
     temp_file = tempfile.NamedTemporaryFile()
     p = canvas.Canvas(temp_file)
-    print(p.getAvailableFonts())
-    sys.stdout.flush()
     p.setFont("Times-Roman", 1 * cm)
 
     # Contract header
