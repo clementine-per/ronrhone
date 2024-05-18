@@ -1,4 +1,6 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+import sys
+
+from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 
 
@@ -16,16 +18,18 @@ def generate_contract(request, pk):
     nb_page = 1
     temp_file = tempfile.NamedTemporaryFile()
     p = canvas.Canvas(temp_file)
-    p.setFont("Helvetica", 1 * cm)
+    print(p.getAvailableFonts())
+    sys.stdout.flush()
+    p.setFont("Times-Roman", 1 * cm)
 
     # Contract header
     header(p, animal)
 
     # Adoptant's personal informations
-    personal_infos(p, animal)
+    personal_infos(p, animal, 22.5)
 
     # Informations of the animal
-    infos_animal(p, animal)
+    infos_animal(p, animal, 15)
 
     # Info adoption amount
     info_prices(p,animal)
