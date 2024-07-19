@@ -164,7 +164,8 @@ def adoption_complete(request, pk):
         adoption_form = AdoptionCreateFormNoAdoptant()
         bon_form = BonSterilisationForm()
         # Par défaut date d'expiration du bon = les 7 mois du chat
-        bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
+        if animal.date_naissance:
+            bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
         if montant_adoption := get_montant_adoption(animal):
             adoption_form.fields["montant"].initial = montant_adoption
             adoption_form.fields["montant_restant"].initial = montant_adoption
@@ -195,7 +196,8 @@ def adoption_allegee(request, pk):
         show_bon_form = ShowBonForm(initial={"show": "NON"})
         bon_form = BonSterilisationForm()
         # Par défaut date d'expiration du bon = les 7 mois du chat
-        bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
+        if animal.date_naissance:
+            bon_form.fields["date_max"].initial = animal.date_naissance + relativedelta(months=7)
         if montant_adoption := get_montant_adoption(animal):
             adoption_form.fields["montant"].initial = montant_adoption
             adoption_form.fields["montant_restant"].initial = montant_adoption

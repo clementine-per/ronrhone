@@ -189,7 +189,9 @@ def famille_select_for_animal(request, pk):
     else :
         animals_queryset = Animal.objects.filter(id=pk)
     form.fields["animaux"].queryset = animals_queryset
-    form.fields["famille"].queryset = Famille.objects.exclude(statut="INACTIVE")
+    form.fields["famille"].queryset = Famille.objects.exclude(statut__in=[StatutFamille.INACTIVE.name,
+                                                                          StatutFamille.INDISPONIBLE.name,
+                                                                          StatutFamille.OCCUPE.name])
     animals = animals_queryset.all()
 
     if request.method == "POST" and form.is_valid():
@@ -314,7 +316,9 @@ class FamilleCandidateAPIView(AdminTestMixin, View):
         context = {
             "familles_candidates": [
                 famille.to_json()
-                for famille in Famille.objects.exclude(statut="INACTIVE")
+                for famille in Famille.objects.exclude(statut__in=[StatutFamille.INACTIVE.name,
+                                                                          StatutFamille.INDISPONIBLE.name,
+                                                                          StatutFamille.OCCUPE.name])
                 .exclude(
                     indisponibilite__date_debut__lte=date_debut,
                     indisponibilite__date_fin__gte=date_debut,
