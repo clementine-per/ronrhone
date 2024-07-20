@@ -9,6 +9,9 @@ from .views import adoption, animal, famille, home, person
 from .views.person import PersonAutocomplete
 from .views.utils import admin_test
 
+from background_task.models import Task
+from .tasks.email import send_email_for_vaccines
+
 urlpatterns = [
     path("", home.index, name="accueil"),
     # Animaux
@@ -246,3 +249,8 @@ urlpatterns = [
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
 ]
+
+# Cleaning tasks to not create duplicates
+Task.objects.all().delete()
+# Scheduling Email tasks here as this runs ones at app launch
+send_email_for_vaccines(repeat=Task.DAILY, schedule=600)

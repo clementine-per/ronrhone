@@ -28,3 +28,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'gestion_association/static'),
     os.path.join(BASE_DIR, 'static')
 ]
+
+EMAIL_HOST_USER = 'ronrhone69@gmail.com'

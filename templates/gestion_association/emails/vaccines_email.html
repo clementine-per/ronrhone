@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rappels de vaccins</title>
+</head>
+<body>
+    <h3>Vaccins à faire dans moins de 10 jours</h3>
+    {% for animal in vaccins %}
+    {{animal.nom}} <br/>
+    {% endfor %}
+    <h3>Vaccins dépassés</h3>
+    {% for animal in vaccins_retard %}
+    {{animal.nom}} <br/>
+    {% endfor %}
+<p> Mail envoyé depuis <a href="https://ronrhone.pythonanywhere.com/">l'application Ronrhone</a></p>
+</body>
+</html>

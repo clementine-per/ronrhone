@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "import_export",
     "corsheaders",
+    "background_task",
     "gestion_association",
     "medical_visit",
     "contract",
@@ -117,3 +118,9 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 MONDAY_KEY = os.getenv("MONDAY_KEY")
 MONDAY_URL = "https://api.monday.com/v2"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
