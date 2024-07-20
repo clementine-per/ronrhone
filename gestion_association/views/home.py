@@ -1,11 +1,12 @@
 from datetime import timedelta
 from decimal import Decimal
 
+from background_task.models import Task
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Max, Q, Sum
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from gestion_association.models import OuiNonChoice
@@ -19,6 +20,7 @@ from gestion_association.models.adoption import (
 from gestion_association.models.animal import Animal, Parrainage, StatutAnimal, statuts_association
 from gestion_association.models.famille import Accueil, Famille, StatutAccueil
 from gestion_association.models.person import Adhesion, Person
+from gestion_association.tasks.email import send_email_for_vaccines
 from gestion_association.views.utils import admin_test
 
 statuts_adoption = [
@@ -272,7 +274,18 @@ def index(request):
 def parametrage(request):
     context = {
         "selected": "parametrage",
+        "tasks": Task.objects.all().count() > 0,
         "tarifs_adoption": TarifAdoption.objects.all(),
         "tarifs_sterilisation": TarifBonSterilisation.objects.all(),
     }
     return render(request, "gestion_association/parametrage.html", context)
+
+@user_passes_test(admin_test)
+def switch_mail_activation(request):
+    # If email tasks are presents, emails are activated and we want to deactivate, so we delete the tasks
+    if Task.objects.all().count() > 0 :
+        Task.objects.all().delete()
+    # If not, we activate the email tasks
+    else:
+        send_email_for_vaccines(repeat=Task.DAILY, schedule=60)
+    return redirect("parametrage")

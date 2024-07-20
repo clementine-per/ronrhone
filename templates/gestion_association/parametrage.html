@@ -1,7 +1,18 @@
 {% extends "gestion_association/base.html" %}
 {% block content %}
 
-
+<h3 class="m-3">Alertes mail</h3>
+{% if tasks %}
+Alertes mails actives !
+<a href= "{% url 'switch_mail_activation' %}"
+                   onclick="return confirm('Etes vous sûr(e) de vouloir désactiver les envois mails automatiques ?');"
+                   class="m-3 float-center btn btn-outline-danger">Désactiver</a>
+{% else %}
+Alertes mails inactives !
+<a href= "{% url 'switch_mail_activation' %}"
+                   onclick="return confirm('Etes vous sûr(e) de vouloir réactiver les envois de mails automatiques ?');"
+                   class="m-3 float-center btn btn-outline-info">Activer</a>
+{% endif %}
 <h3 class="m-3">Tarifs des adoptions</h3>
 <br>
 <div class="table-responsive-sm p-4">

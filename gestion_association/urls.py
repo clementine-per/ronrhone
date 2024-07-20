@@ -14,6 +14,11 @@ from .tasks.email import send_email_for_vaccines
 
 urlpatterns = [
     path("", home.index, name="accueil"),
+    path(
+        "params/switch_email_notifications/",
+        home.switch_mail_activation,
+        name="switch_mail_activation",
+    ),
     # Animaux
     path("animals/", animal.search_animal, name="animals"),
     path("animals/create", animal.create_animal, name="create_animal"),
@@ -249,8 +254,3 @@ urlpatterns = [
     # Paramétrages
     path("parametrage", home.parametrage, name="parametrage"),
 ]
-
-# Cleaning tasks to not create duplicates
-Task.objects.all().delete()
-# Scheduling Email tasks here as this runs ones at app launch
-send_email_for_vaccines(repeat=Task.DAILY, schedule=600)

@@ -22,4 +22,4 @@ DATABASES = {
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-EMAIL_HOST_USER = ''
+EMAIL_HOST_USER = 'perreaut.clementine@gmail.com'
