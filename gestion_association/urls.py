@@ -9,9 +9,6 @@ from .views import adoption, animal, famille, home, person
 from .views.person import PersonAutocomplete
 from .views.utils import admin_test
 
-from background_task.models import Task
-from .tasks.email import send_email_for_vaccines
-
 urlpatterns = [
     path("", home.index, name="accueil"),
     path(

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rappels de vaccins</title>
+</head>
+<body>
+    Bonjour, <br/>
+    <br/>
+    Ceci est une alerte automatique pour vous rappeler que {{animal.nom}},
+    qui est actuellement en accueil chez vous, doit faire son rappel de vaccin
+    avant le {{animal.date_prochain_vaccin|date:"d/m/Y"|default:" - "}} soit dans moins de {{jours}} jours. <br/>
+    <br/>
+    Si vous ne l'avez pas déjà fait, <span style="text-decoration: underline;"> veuillez prendre au plus vite rendez-vous
+    auprès d'un des vétérinaires partenaires pour effectuer le rappel de vaccin </span>,
+    puis indiquer la date et le lieu de rendez-vous à votre référente sur messenger. <br/>
+    <br/>
+    <p style="font-style: italic;"> Si vous n'êtes pas famille d'accueil de {{animal.nom}} ou que la date de rappel de vaccin est erronée,
+    vous pouvez répondre à ce mail en indiquant cette erreur afin que les bénévoles de l'association
+    puissent corriger le problème.</p><br/>
+    <br/>
+    Merci pour votre contribution en tant que famille d'accueil !
+</body>
+</html>

@@ -20,7 +20,7 @@ from gestion_association.models.adoption import (
 from gestion_association.models.animal import Animal, Parrainage, StatutAnimal, statuts_association
 from gestion_association.models.famille import Accueil, Famille, StatutAccueil
 from gestion_association.models.person import Adhesion, Person
-from gestion_association.tasks.email import send_email_for_vaccines
+from gestion_association.tasks.email import send_email_for_past_vaccines, send_email_for_upcoming_vaccines
 from gestion_association.views.utils import admin_test
 
 statuts_adoption = [
@@ -287,5 +287,6 @@ def switch_mail_activation(request):
         Task.objects.all().delete()
     # If not, we activate the email tasks
     else:
-        send_email_for_vaccines(repeat=Task.DAILY, schedule=60)
+        send_email_for_upcoming_vaccines(repeat=Task.DAILY, schedule=60)
+        send_email_for_past_vaccines(repeat=Task.DAILY, schedule=60)
     return redirect("parametrage")

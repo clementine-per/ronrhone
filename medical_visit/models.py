@@ -113,7 +113,7 @@ def visite_medicale_save_action(sender, instance, **kwargs):
             if instance.visit_type in visit_with_initial_vaccine:
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.date_dernier_vaccin = instance.date
-                animal.date_prochain_vaccin = instance.date + relativedelta(weeks=3)
+                animal.date_prochain_vaccin = instance.date + relativedelta(weeks=4)
             if instance.visit_type in visit_with_full_vaccine:
                 animal.primo_vaccine = OuiNonChoice.OUI.name
                 animal.vaccin_ok = OuiNonChoice.OUI.name

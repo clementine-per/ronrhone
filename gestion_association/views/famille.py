@@ -151,10 +151,10 @@ def famille_list(request):
 def update_accueil(request, pk):
     accueil = Accueil.objects.get(id=pk)
     title = "Mise à jour d'un accueil"
+    famille = accueil.famille
 
     if request.method == "POST":
         form = AccueilForm(request.POST, instance=accueil)
-        famille = accueil.famille
         if form.is_valid():
             # La sauvegarde de l'accueil gère toutes les conséquences éventuelles
             form.save()
