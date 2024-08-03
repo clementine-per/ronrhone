@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fin période de Sevrage</title>
+</head>
+<body>
+    Bonjour, <br/>
+    <br/>
+    Ceci est une alerte automatique pour vous informer que {{names}} qui
+    {% if count > 1 %}
+    sont actuellement en accueil chez vous, atteignent la fin de leur période de sevrage.
+    {% else %}
+    est actuellement en accueil chez vous, atteint la fin de sa période de sevrage.
+    {% endif %}
+    <br/>
+    Si vous ne l'avez pas déjà fait, <span style="text-decoration: underline;"> veuillez prendre rendez-vous
+    auprès d'un des vétérinaires partenaires </span> pour effectuer les soins suivants :
+    Primo vaccination TC, identification, tests FIV et FELV et obtenir un certificat de session.
+    Une fois le rendez vous pris, merci d'indiquer la date et le lieu de rendez-vous à votre référente sur messenger. <br/>
+    <br/>
+
+    <p style="font-style: italic;"> Si vous n'êtes pas famille d'accueil de {{names}},
+    vous pouvez répondre à ce mail en indiquant cette erreur afin que les bénévoles de l'association
+    puissent corriger le problème.</p><br/>
+    <br/>
+    Merci pour votre contribution en tant que famille d'accueil !
+</body>
+</html>

@@ -1,19 +1,28 @@
+import sys
 from datetime import timedelta
 
 from background_task import background
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from gestion_association.models.animal import Animal, statuts_association
-# import the logging library
-import logging
-
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
+from gestion_association.models.animal import Animal, StatutAnimal
+from gestion_association.models.famille import Famille
 
 asso_email = settings.EMAIL_HOST_USER
+
+statuts_association = [
+    StatutAnimal.A_ADOPTER.name,
+    StatutAnimal.ADOPTABLE.name,
+    StatutAnimal.PEC.name,
+    StatutAnimal.SOCIA.name,
+    StatutAnimal.QUARANTAINE.name,
+    StatutAnimal.SOIN.name,
+    StatutAnimal.SEVRAGE.name,
+    StatutAnimal.ALLAITANTE.name,
+]
 
 
 @background()
@@ -39,7 +48,7 @@ def send_email_for_upcoming_vaccines():
         if animal.famille:
             # don't send to test emails
             if not animal.famille.personne.email == "test@test.fr":
-                logger.info("Envoi mail rappel vaccin 7 jours à " + animal.famille.personne.email)
+                print("Envoi mail rappel vaccin 7 jours à " + animal.famille.personne.email)
                 message = render_to_string("gestion_association/emails/upcoming_vaccines_email.html", locals())
                 send_mail(
                     "[Alerte Ron'Rhône] Rappel de vaccin " + animal.nom,
@@ -63,7 +72,7 @@ def send_email_for_upcoming_vaccines():
         if animal.famille:
             # don't send to test emails
             if not animal.famille.personne.email == "test@test.fr":
-                logger.info("Envoi mail rappel vaccin 3 jours à " + animal.famille.personne.email)
+                print("Envoi mail rappel vaccin 3 jours à " + animal.famille.personne.email)
                 message = render_to_string("gestion_association/emails/upcoming_vaccines_email.html", locals())
                 send_mail(
                     "[Alerte Ron'Rhône] Rappel de vaccin " + animal.nom,
@@ -73,6 +82,7 @@ def send_email_for_upcoming_vaccines():
                     fail_silently=False,
                     html_message=message
                 )
+    sys.stdout.flush()
 
 
 @background()
@@ -90,7 +100,7 @@ def send_email_for_past_vaccines():
         if animal.famille:
             # don't send to test emails
             if not animal.famille.personne.email == "test@test.fr":
-                logger.info("Envoi mail rappel vaccin dépassé à " + animal.famille.personne.email)
+                print("Envoi mail rappel vaccin dépassé à " + animal.famille.personne.email)
                 message = render_to_string("gestion_association/emails/past_vaccines_email.html", locals())
                 send_mail(
                     "[Alerte Ron'Rhône] Date de rappel de vaccin dépassée pour " + animal.nom,
@@ -100,3 +110,38 @@ def send_email_for_past_vaccines():
                     fail_silently=False,
                     html_message=message
                 )
+    sys.stdout.flush()
+
+@background()
+def send_email_for_end_sevrage():
+    today = timezone.now().date()
+    # Chatons en fin de sevrage
+    interval_2_and_half_month_ago = today - relativedelta(months=2) - timedelta(days=15)
+    interval_2_and_half_month_ago_under = today - relativedelta(months=2) - timedelta(days=16)
+    #Get families that need to get the alert
+    fin_sevrage_families = (
+        Famille.objects.filter(animal__inactif=False)
+            .filter(animal__statut="SEVRAGE")
+            .filter(animal__date_naissance__lte=interval_2_and_half_month_ago)
+            .filter(animal__date_naissance__gte=interval_2_and_half_month_ago_under).distinct().all()
+    )
+    for famille in fin_sevrage_families.all():
+        # Send email for all concerned kitties
+        count = 0
+        names = ""
+        for animal in famille.animal_set.filter(statut="SEVRAGE").all():
+            count += 1
+            names = names + " " + animal.nom +","
+        # don't send to test emails
+        if not famille.personne.email == "test@test.fr":
+            print("Envoi mail fin de sevrage à " + famille.personne.email)
+            message = render_to_string("gestion_association/emails/fin_sevrage_email.html", locals())
+            send_mail(
+                "[Alerte Ron'Rhône] Fin de période de sevrage ",
+                message,
+                asso_email,
+                [famille.personne.email],
+                fail_silently=False,
+                html_message=message
+            )
+    sys.stdout.flush()
