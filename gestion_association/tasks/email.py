@@ -119,12 +119,11 @@ def send_email_for_end_sevrage():
     interval_2_and_half_month_ago = today - relativedelta(months=2) - timedelta(days=15)
     interval_2_and_half_month_ago_under = today - relativedelta(months=2) - timedelta(days=16)
     #Get families that need to get the alert
-    fin_sevrage_families = (
-        Famille.objects.filter(animal__inactif=False)
-            .filter(animal__statut="SEVRAGE")
-            .filter(animal__date_naissance__lte=interval_2_and_half_month_ago)
-            .filter(animal__date_naissance__gte=interval_2_and_half_month_ago_under).distinct().all()
-    )
+    animals_pk = (Animal.objects.filter(inactif=False).filter(statut="SEVRAGE")
+               .filter(date_naissance__lte=interval_2_and_half_month_ago)
+               .filter(date_naissance__gte=interval_2_and_half_month_ago_under)
+               .values_list('pk', flat=True))
+    fin_sevrage_families = Famille.objects.filter(animal__pk__in=animals_pk)
     for famille in fin_sevrage_families.all():
         # Send email for all concerned kitties
         count = 0
@@ -138,6 +137,38 @@ def send_email_for_end_sevrage():
             message = render_to_string("gestion_association/emails/fin_sevrage_email.html", locals())
             send_mail(
                 "[Alerte Ron'Rhône] Fin de période de sevrage ",
+                message,
+                asso_email,
+                [famille.personne.email],
+                fail_silently=False,
+                html_message=message
+            )
+    sys.stdout.flush()
+
+@background()
+def send_email_for_end_quarantaine():
+    today = timezone.now().date()
+    interval_15_ago = today - timedelta(days=15)
+    interval_15_ago_under = today - timedelta(days=16)
+    #Get families that need to get the alert
+    animals_pk = (Animal.objects.filter(inactif=False).filter(statut="QUARANTAINE")
+                  .filter(date_arrivee__lte=interval_15_ago)
+                  .filter(date_arrivee__gte=interval_15_ago_under)
+                  .values_list('pk', flat=True))
+    fin_quarantaine_families = Famille.objects.filter(animal__pk__in=animals_pk)
+    for famille in fin_quarantaine_families.all():
+        # Send email for all concerned cats
+        count = 0
+        names = ""
+        for animal in famille.animal_set.filter(statut="QUARANTAINE").all():
+            count += 1
+            names = names + " " + animal.nom +","
+        # don't send to test emails
+        if not famille.personne.email == "test@test.fr":
+            print("Envoi mail fin de quarantaine à " + famille.personne.email)
+            message = render_to_string("gestion_association/emails/fin_quarantaine_email.html", locals())
+            send_mail(
+                "[Alerte Ron'Rhône] Fin de quarantaine ",
                 message,
                 asso_email,
                 [famille.personne.email],
