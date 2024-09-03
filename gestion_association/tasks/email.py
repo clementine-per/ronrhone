@@ -39,9 +39,8 @@ def send_email_for_upcoming_vaccines():
     vaccins = (
         Animal.objects.filter(inactif=False)
             .filter(statut__in=statuts_association)
-            .filter(date_prochain_vaccin__gte=today)
             .filter(date_prochain_vaccin__lte=interval_7)
-            .filter(date_prochain_vaccin__gte=interval_6)
+            .filter(date_prochain_vaccin__gt=interval_6)
     )
     for animal in vaccins:
         # Send email only to family if there is one
@@ -63,9 +62,8 @@ def send_email_for_upcoming_vaccines():
     vaccins = (
         Animal.objects.filter(inactif=False)
             .filter(statut__in=statuts_association)
-            .filter(date_prochain_vaccin__gte=today)
             .filter(date_prochain_vaccin__lte=interval_3)
-            .filter(date_prochain_vaccin__gte=interval_2)
+            .filter(date_prochain_vaccin__gt=interval_2)
     )
     for animal in vaccins:
         # Send email only to family if there is one
@@ -121,7 +119,7 @@ def send_email_for_end_sevrage():
     #Get families that need to get the alert
     animals_pk = (Animal.objects.filter(inactif=False).filter(statut="SEVRAGE")
                .filter(date_naissance__lte=interval_2_and_half_month_ago)
-               .filter(date_naissance__gte=interval_2_and_half_month_ago_under)
+               .filter(date_naissance__gt=interval_2_and_half_month_ago_under)
                .values_list('pk', flat=True))
     fin_sevrage_families = Famille.objects.filter(animal__pk__in=animals_pk)
     for famille in fin_sevrage_families.all():
@@ -153,7 +151,7 @@ def send_email_for_end_quarantaine():
     #Get families that need to get the alert
     animals_pk = (Animal.objects.filter(inactif=False).filter(statut="QUARANTAINE")
                   .filter(date_arrivee__lte=interval_15_ago)
-                  .filter(date_arrivee__gte=interval_15_ago_under)
+                  .filter(date_arrivee__gt=interval_15_ago_under)
                   .values_list('pk', flat=True))
     fin_quarantaine_families = Famille.objects.filter(animal__pk__in=animals_pk)
     for famille in fin_quarantaine_families.all():
