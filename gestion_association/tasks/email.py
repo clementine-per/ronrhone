@@ -121,7 +121,7 @@ def send_email_for_end_sevrage():
                .filter(date_naissance__lte=interval_2_and_half_month_ago)
                .filter(date_naissance__gt=interval_2_and_half_month_ago_under)
                .values_list('pk', flat=True))
-    fin_sevrage_families = Famille.objects.filter(animal__pk__in=animals_pk)
+    fin_sevrage_families = Famille.objects.filter(animal__pk__in=animals_pk).distinct()
     for famille in fin_sevrage_families.all():
         # Send email for all concerned kitties
         count = 0
@@ -153,7 +153,7 @@ def send_email_for_end_quarantaine():
                   .filter(date_arrivee__lte=interval_15_ago)
                   .filter(date_arrivee__gt=interval_15_ago_under)
                   .values_list('pk', flat=True))
-    fin_quarantaine_families = Famille.objects.filter(animal__pk__in=animals_pk)
+    fin_quarantaine_families = Famille.objects.filter(animal__pk__in=animals_pk).distinct()
     for famille in fin_quarantaine_families.all():
         # Send email for all concerned cats
         count = 0
