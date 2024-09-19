@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 
+from gestion_association.models import OuiNonChoice
+from gestion_association.models.adoption import Adoption
 from gestion_association.models.animal import Animal, StatutAnimal
 from gestion_association.models.famille import Famille
 
@@ -170,6 +172,40 @@ def send_email_for_end_quarantaine():
                 message,
                 asso_email,
                 [famille.personne.email],
+                fail_silently=False,
+                html_message=message
+            )
+    sys.stdout.flush()
+
+@background()
+def send_email_for_sterilisation():
+    today = timezone.now().date()
+    interval_ste_months_ago = today - relativedelta(months=6) - timedelta(days=15)
+    interval_ste_months_ago_under = today - relativedelta(months=6) - timedelta(days=16)
+    adoption_ste = (
+        Adoption.objects.filter(
+            animal__statut__in=(
+                StatutAnimal.ADOPTION.name,
+                StatutAnimal.ADOPTE_DEFINITIF.name,
+                StatutAnimal.ADOPTE.name,
+            )
+        )
+            .filter(animal__sterilise=OuiNonChoice.NON.name)
+            .filter(annule=False)
+            .filter(animal__date_naissance__lte=interval_ste_months_ago)
+            .filter(animal__date_naissance__gt=interval_ste_months_ago_under)
+    )
+    for adoption in adoption_ste.all():
+        # Send email to adoptant
+        # don't send to test emails
+        if not adoption.adoptant.email == "test@test.fr":
+            print("Envoi mail rappel stérilisation à " + adoption.adoptant.email)
+            message = render_to_string("gestion_association/emails/rappel_sterilisation_email.html", locals())
+            send_mail(
+                "[Alerte Ron'Rhône] Rappel de stérilisation ",
+                message,
+                asso_email,
+                [adoption.adoptant.email],
                 fail_silently=False,
                 html_message=message
             )
