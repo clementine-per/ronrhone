@@ -77,7 +77,8 @@ def integrate_fa(request):
 def get_query():
     return 'query { boards(ids: [3040453225]) {\
     groups(ids: ["1659706411_reponses_fa"]) {\
-      items_page { items {\
+       items_page(limit: 15, query_params: {rules: [{column_id: "statut96", compare_value: [153]}], operator: and})\
+       { items {\
         id\
         name\
         column_values(ids: ["statut96", "texte9","s_lection_multiple","chiffre3", "statut_11",\
@@ -132,7 +133,7 @@ def get_fa_from_values(fa_values):
         # Téléphone
         elif value["id"] == "t_l_phone":
             telephone = value["text"]
-            if not telephone.startswith('0'):
+            if not telephone.startswith('0') and not telephone.startswith('+'):
                 telephone = "+" + telephone
             personne.telephone = telephone
         # Email
