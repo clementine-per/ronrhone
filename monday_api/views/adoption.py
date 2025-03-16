@@ -164,7 +164,7 @@ def get_adoption_from_values(adoption_values):
         # Téléphone
         elif value["id"] == "t_l_phone":
             telephone = value["text"]
-            if not telephone.startswith('0'):
+            if not telephone.startswith('0') and not telephone.startswith('+'):
                 telephone = "+" + telephone
             personne.telephone = telephone
         # Email
