@@ -249,16 +249,16 @@ def info_prices_child(p, animal):
 def info_prices_adult(p):
     elements = [[Paragraph("Chat femelle Primo"),
                  Paragraph("Identification + Stérilisation + Primo vaccin + Test FIV/FELV + Déparasitant + Vermifuge"),
-                 "170€"],
+                 "190€"],
                 [Paragraph("Chat femelle Primo + Rappel"), Paragraph(
                     "Identification + Stérilisation + Vaccins à jour + Test FIV/FELV + Déparasitant + Vermifuge"),
-                 "200€"],
+                 "220€"],
                 [Paragraph("Chat mâle Primo"),
                  Paragraph("Identification + Castration + Primo vaccin + Test FIV/FELV + Déparasitant + Vermifuge"),
-                 "150€"],
+                 "170€"],
                 [Paragraph("Chat mâle Primo + Rappel"),
                  Paragraph("Identification + Castration + Vaccins à jour + Test FIV/FELV + Déparasitant + Vermifuge"),
-                 "180€"]]
+                 "200€"]]
     table = Table(elements, colWidths=[3 * cm, 12 * cm, 2 * cm])
     table.setStyle(TableStyle([
         ('BOX', (0, 0), (-1, - 1), 0.75, colors.black),
