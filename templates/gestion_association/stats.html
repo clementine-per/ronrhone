@@ -1,0 +1,41 @@
+{% extends "gestion_association/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <canvas id="adoptions-line-chart" ></canvas>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+var adoptionCanvas = document.getElementById('adoptions-line-chart')
+var adoptionChart = new Chart(document.getElementById("adoptions-line-chart"), {
+  type: 'line',
+  data: {
+    labels: {{ labels_mois|safe }},
+    datasets: [{
+        data: {{ data_adoptions_current|safe }},
+        label: "Adoptions {{current}}",
+        borderColor: "#3e95cd",
+        fill: false
+      },
+      {
+        data: {{ data_adoptions_past|safe }},
+        label: "Adoptions {{past}}",
+        borderColor: "#9b3ecd",
+        fill: false
+      },
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Adoptions'
+    }
+  }
+});
+
+
+</script>
+{% endblock %}

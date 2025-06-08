@@ -5,12 +5,13 @@ from django.views.generic import DetailView
 from .models.animal import Animal
 from .models.famille import Famille
 from .models.person import Person
-from .views import adoption, animal, famille, home, person
+from .views import adoption, animal, famille, home, person, stats
 from .views.person import PersonAutocomplete
 from .views.utils import admin_test
 
 urlpatterns = [
     path("", home.index, name="accueil"),
+    path("stats", stats.index, name="stats"),
     path(
         "params/switch_email_notifications/",
         home.switch_mail_activation,

@@ -46,6 +46,9 @@
                     <li class="nav-item {% if selected == 'accueil' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'accueil' %}">Accueil</a>
                     </li>
+                    <li class="nav-item {% if selected == 'stats' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'stats' %}">Statistiques</a>
+                    </li>
                     <div class="dropdown-divider"></div>
                     <li class="nav-item {% if selected == 'animals' %}active{% endif %}">
                         <a class="nav-link"
