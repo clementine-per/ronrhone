@@ -127,10 +127,9 @@ def famille_list(request):
             form.fields["date_presence_max"].initial = date_presence_max
         # Ces trois valeurs ne sont pas des champs du formulaire, uniquement
         # des parametres d'url remplis depuis la page d'accueil
-        if date_indispo_min:
-            famille_list = famille_list.filter(indisponibilite__date_debut__gte=parse_date(date_indispo_min))
-        if date_indispo_max:
-            famille_list = famille_list.filter(indisponibilite__date_debut__lte=parse_date(date_indispo_max))
+        if date_indispo_min and date_indispo_max:
+            indispos = Indisponibilite.objects.filter(date_debut__gte=parse_date(date_indispo_min)).filter(date_debut__lte=parse_date(date_indispo_max))
+            famille_list = famille_list.filter(indisponibilite__in=indispos)
         if a_deplacer:
             famille_list = famille_list.filter(accueil__statut=StatutAccueil.A_DEPLACER.name)
 

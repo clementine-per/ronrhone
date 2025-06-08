@@ -117,8 +117,8 @@
                             <strong>{{disponibles_again}}</strong> FA à nouveau disponibles</a>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?statut=A_VISITER"><strong>{{visites}}</strong> FA à visiter</a></p>
                         <p><a class="text-secondary" href= "{% url 'animals' %}?{{statuts_association_filter}}sans_fa=OUI"><strong>{{a_placer}}</strong>  à placer</a></p>
-                        <p><a class="text-secondary" href= "{% url 'familles' %}?vide=NON&date_indispo_min={{today_str}}&date_indispo_max={{interval_10_str}}">
-                            <strong> {{a_deplacer_10}} </strong>  à déplacer dans moins de 10 jours
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?vide=NON&date_indispo_min={{today_str}}&date_indispo_max={{interval_20_str}}">
+                            <strong> {{a_deplacer_20}} </strong>  à déplacer dans moins de 20 jours
                         </a></p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?a_deplacer=OUI"><strong>{{accueils_a_deplacer}}</strong> accueils arrivants à terme</a></p>
                     </div>

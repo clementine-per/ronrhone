@@ -18,7 +18,7 @@ from gestion_association.models.adoption import (
     TarifBonSterilisation,
 )
 from gestion_association.models.animal import Animal, Parrainage, StatutAnimal, statuts_association
-from gestion_association.models.famille import Accueil, Famille, StatutAccueil
+from gestion_association.models.famille import Accueil, Famille, StatutAccueil, Indisponibilite
 from gestion_association.models.person import Adhesion, Person
 from gestion_association.tasks.email import send_email_for_past_vaccines, send_email_for_upcoming_vaccines, \
     send_email_for_end_sevrage, send_email_for_end_quarantaine, send_email_for_sterilisation
@@ -38,6 +38,7 @@ def index(request):
 
     today = timezone.now().date()
     interval_10 = today + timedelta(days=10)
+    interval_20 = today + timedelta(days=20)
     interval_10_ago = today - timedelta(days=10)
     interval_15_ago = today - timedelta(days=15)
     interval_5_weeks_ago = today - timedelta(days=35)
@@ -46,6 +47,7 @@ def index(request):
     # Valeurs str utilisées dans le template html
     today_str = today.strftime("%Y-%m-%d")
     interval_10_str = interval_10.strftime("%Y-%m-%d")
+    interval_20_str = interval_20.strftime("%Y-%m-%d")
     interval_10_ago_str = interval_10_ago.strftime("%Y-%m-%d")
     interval_15_ago_str = interval_15_ago.strftime("%Y-%m-%d")
     interval_5_weeks_ago_str = interval_5_weeks_ago.strftime("%Y-%m-%d")
@@ -222,12 +224,10 @@ def index(request):
         .count()
     )
     # Familles disponibles
+    current_indispo = Indisponibilite.objects.filter(date_debut__lte=today).filter(date_fin__gte=today)
     disponibles = (
         Famille.objects.filter(statut="DISPONIBLE")
-        .exclude(
-            indisponibilite__date_debut__lte=today,
-            indisponibilite__date_fin__gte=today,
-        )
+        .exclude(indisponibilite__in=current_indispo)
         .count()
     )
     # Familles à nouveau disponibles
@@ -248,11 +248,11 @@ def index(request):
         .filter(statut__in=statuts_association)
         .count()
     )
-    # Animaux à déplacer sous 10 jours
-    a_deplacer_10 = (
+    # Animaux à déplacer sous 20 jours
+    upcoming_indispo = Indisponibilite.objects.filter(date_debut__gte=today).filter(date_debut__lte=interval_20)
+    a_deplacer_20 = (
         Famille.objects.filter(animal__isnull=False)
-        .filter(indisponibilite__date_debut__gte=today)
-        .filter(indisponibilite__date_debut__lte=interval_10)
+        .filter(indisponibilite__in=upcoming_indispo)
         .count()
     )
     # Animaux à déplacer manuellement (accueils arrivant à terme)
