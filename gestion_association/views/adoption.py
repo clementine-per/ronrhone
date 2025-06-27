@@ -63,7 +63,6 @@ def search_adoption(request):
         visite_controle_form = request.GET.getlist("visite_controle", "")
         date_min_form = request.GET.get("date_min", "")
         date_max_form = request.GET.get("date_max", "")
-        statut_form = request.GET.get("statut", "")
         date_expiration_min_form = request.GET.get("date_expiration_min", "")
         date_expiration_max_form = request.GET.get("date_expiration_max", "")
         bon_envoye_form = request.GET.get("bon_envoye", "")
@@ -365,11 +364,19 @@ def save_adoption(adoption, animal, person, show_form, bon_form):
     # La personne devient adoptante
     person.is_adoptante = True
     person.save()
+    # Calcul du nombre de jours avant adoption
+    if adoption.date and animal.date_arrivee:
+        delta = adoption.date - animal.date_arrivee
+        adoption.nb_jours = delta.days
     # On rattache la personne à l'adoption
     adoption.adoptant = person
     adoption.animal = animal
     adoption.save()
     # l'animal passe au statut à en cours d'adoption
+    animal.statut = StatutAnimal.ADOPTION.name
+    animal.adoptant = person
+    animal.save()
+
     animal.statut = StatutAnimal.ADOPTION.name
     animal.adoptant = person
     animal.save()

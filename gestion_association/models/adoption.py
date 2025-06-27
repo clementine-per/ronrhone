@@ -13,7 +13,7 @@ from gestion_association.models.animal import (
     TrancheAge,
     TypeChoice,
 )
-from gestion_association.models.famille import StatutFamille, StatutAccueil
+from gestion_association.models.famille import StatutAccueil
 from gestion_association.models.person import Person
 
 class OuiNonVisiteChoice(Enum):
