@@ -6,10 +6,13 @@ from django.shortcuts import render
 
 from django.utils.timezone import datetime
 
-from gestion_association.forms.stats import DureeAdoptionStatsForm
+from gestion_association.forms.stats import AnneeStatsForm, DureeAdoptionStatsForm
 from gestion_association.models.adoption import Adoption
-from django.db.models import F, IntegerField, ExpressionWrapper, Avg
+from django.db.models import F, IntegerField, ExpressionWrapper, Avg, Sum, Q, Count, DecimalField
 from django.db.models.functions import ExtractYear, ExtractMonth
+
+from gestion_association.models.animal import Animal
+from medical_visit.models import VisiteMedicale
 
 
 @login_required
@@ -36,7 +39,7 @@ def index(request):
         data_adoptions_past.append(adoptions.filter(date__year=past).filter(date__month=i).count())
         i += 1
 
-    # Prise en compte des filtres utilisateurs éventuels
+    # Prise en compte des filtres utilisateurs éventuels pour duree d'adoption
     if request.method == "POST":
         adoption_duree_form = DureeAdoptionStatsForm(request.POST)
         if adoption_duree_form.is_valid():
@@ -77,6 +80,71 @@ def index(request):
 
     moyenne = adoptions.aggregate(moyenne=Avg('nb_jours'))
     total_adoptions = adoptions.count()
+
+    # Partie données financières
+    visites = VisiteMedicale.objects.all()
+
+    adoptions_finance = Adoption.objects.filter(annule=False).exclude(montant=None)
+    # Récupération de l'année saisie par l'utilisateur
+    annee = None
+    if request.method == "POST":
+        annee_form = AnneeStatsForm(request.POST)
+        if annee_form.is_valid():
+            annee = annee_form.cleaned_data.get("annee")
+            if annee:
+                adoptions_finance = adoptions_finance.filter(date__year=annee)
+                visites = visites.filter(date__year=annee)
+    else:
+        annee_form = AnneeStatsForm()
+    # Calcul du montant total des visites médicales
+    montant_total_visites = visites.aggregate(montant_total=Sum('amount'))['montant_total'] or 0
+    # Calcul du montant total des adoptions
+    montant_total_adoptions = adoptions_finance.aggregate(montant_total=Sum('montant'))['montant_total'] or 0
+    # Calcul résultat financier
+    resultat_financier = montant_total_adoptions - montant_total_visites
+    # Moyenne du montant des visites médicales par animal et pour différents ages (age au moment de l'arrivée dans l'asso)
+    chats = Animal.objects.annotate(start_year=ExtractYear('date_naissance'),
+                                   start_month=ExtractMonth('date_naissance'),
+                                   end_year=ExtractYear('date_arrivee'),
+                                   end_month=ExtractMonth('date_arrivee'),
+                ).annotate(
+                    month_diff=ExpressionWrapper(
+                        (F('end_year') - F('start_year')) * 12 + (F('end_month') - F('start_month')),
+                        output_field=IntegerField()
+                    )
+                )
+
+    chatons = chats.filter(month_diff__lt=6)
+    adultes = chats.filter(month_diff__gte=6).filter(month_diff__lt=96)
+    seniors = chats.filter(month_diff__gte=96)
+
+    if annee:
+        moyenne_par_animal = Animal.objects.annotate(
+            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        moyenne_chatons = chatons.annotate(
+            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        moyenne_adultes = adultes.annotate(
+            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        moyenne_seniors = seniors.annotate(
+            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+    else:
+        moyenne_par_animal = Animal.objects.annotate(
+            montant_total=Sum('visites__amount_animal')
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        moyenne_chatons = chatons.annotate(
+            montant_total=Sum('visites__amount_animal')
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        moyenne_adultes = adultes.annotate(
+            montant_total=Sum('visites__amount_animal')
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        moyenne_seniors = seniors.annotate(
+            montant_total=Sum('visites__amount_animal')
+            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+
 
 
     return render(request, "gestion_association/stats.html", locals())

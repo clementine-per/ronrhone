@@ -43,6 +43,9 @@ class VisiteMedicale(models.Model):
     amount = models.DecimalField(
         verbose_name="Montant", max_digits=7, decimal_places=2, blank=True, null=True
     )
+    amount_animal = models.DecimalField(
+        verbose_name="Montant par animal", max_digits=7, decimal_places=2, blank=True, null=True
+    )
     animals = models.ManyToManyField(Animal, related_name="visites",
                                      db_table="gestion_association_visitemedicale_animaux", verbose_name="Animaux")
 
@@ -58,6 +61,13 @@ class VisiteMedicale(models.Model):
             nb_animals = self.animals.count()
             return self.amount/nb_animals
         return None
+    
+@receiver(m2m_changed, sender=VisiteMedicale.animals.through)
+def update_montant_par_animal(sender, instance, action, **kwargs):
+    if action in ['post_add', 'post_remove', 'post_clear']:
+        if instance.amount:
+            instance.amount_animal = instance.amount / instance.animals.count()
+            instance.save()
 
 
 visit_with_sterilisation = [

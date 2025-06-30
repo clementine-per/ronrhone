@@ -2,9 +2,12 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-6">
+        <h2>Statistiques des adoptions</h2>
         <canvas id="adoptions-line-chart" ></canvas>
     </div>
     <div class="col-sm-6">
+      <h2>Durée avant adoption</h2>
+   
         <form method="post" action="">
                     {% csrf_token %}
                     {{ adoption_duree_form.annee_tag }} {{ adoption_duree_form.annee }}
@@ -17,6 +20,24 @@
         Nombre d'adoptions total : {{ total_adoptions }}
         <br>
         Moyenne en nombre de jours : {{ moyenne.moyenne }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h2>Statistiques financières</h2>
+        <form method="post" action="">
+                    {% csrf_token %}
+                    {{ annee_form.annee_tag }} {{ annee_form.annee }}
+                    <br>
+                    
+                    <button type="submit" class="btn btn-info btn-sm">Calculer</button>
+        <p>Total dépenses vétérinaire : {{ montant_total_visites }} €</p>
+        <p>Total montants adoptions : {{ montant_total_adoptions }} €</p>
+        <p>Résultat financier : {{ resultat_financier }} €</p>
+        <p>Coût moyen par adoption : {{ moyenne_par_animal }} € (Chaton : {{ moyenne_chatons }} € / Adulte : {{ moyenne_adultes }} € / Sénior : {{ moyenne_seniors }} € )</p>
+
+        <canvas id="adoptions-line-chart" ></canvas>
     </div>
 </div>
 
