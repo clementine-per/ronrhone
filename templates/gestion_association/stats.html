@@ -31,13 +31,14 @@
                     {{ annee_form.annee_tag }} {{ annee_form.annee }}
                     <br>
                     
-                    <button type="submit" class="btn btn-info btn-sm">Calculer</button>
-        <p>Total dépenses vétérinaire : {{ montant_total_visites }} €</p>
-        <p>Total montants adoptions : {{ montant_total_adoptions }} €</p>
-        <p>Résultat financier : {{ resultat_financier }} €</p>
-        <p>Coût moyen par adoption : {{ moyenne_par_animal }} € (Chaton : {{ moyenne_chatons }} € / Adulte : {{ moyenne_adultes }} € / Sénior : {{ moyenne_seniors }} € )</p>
+                    <button type="submit" class="btn btn-info btn-sm">Calculer</button> {{ value|floatformat:"2g" }}
+        <p>Total dépenses vétérinaire : {{ montant_total_visites|floatformat:"2g" }} €</p>
+        <p>Total montants adoptions : {{ montant_total_adoptions|floatformat:"2g" }} €</p>
+        <p>Résultat financier : {{ resultat_financier|floatformat:"2g" }} €</p>
+        <p>Coût moyen par adoption : {{ moyenne_par_animal|floatformat:"2g" }} € 
+          (Chaton : {{ moyenne_chatons|floatformat:"2g" }} € / Adulte : {{ moyenne_adultes|floatformat:"2g" }} € / Sénior : {{ moyenne_seniors|floatformat:"2g" }} € )</p>
 
-        <canvas id="adoptions-line-chart" ></canvas>
+        <canvas id="type-visites-pie-chart" ></canvas>
     </div>
 </div>
 
@@ -92,6 +93,33 @@ var adoptionPieChart = new Chart(document.getElementById("adoptions-pie"), {
     title: {
       display: true,
       text: 'Durée avant adoption'
+    }
+  }
+});
+
+var typeVisitesCanvas = document.getElementById('type-visites-pie-chart')
+var typeVisitesChart = new Chart(document.getElementById("type-visites-pie-chart"), {
+  type: 'pie',
+  data: {
+    labels: {{ labels_types|safe }},
+    datasets: [{
+        data: {{ data_type_visites|safe }},
+        label: "Types de visites",
+        backgroundColor: [
+      'rgb(99, 182, 17)',
+      'rgb(228, 241, 106)',
+      'rgb(255, 168, 86)',
+      'rgb(206, 52, 52)',
+      'rgb(52, 52, 206)',     
+      'rgb(52, 206, 206)',
+      ],
+      },
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Types de visites médicales'
     }
   }
 });

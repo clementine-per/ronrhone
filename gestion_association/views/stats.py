@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 from django.utils.timezone import datetime
 
-from gestion_association.forms.stats import AnneeStatsForm, DureeAdoptionStatsForm
+from gestion_association.forms.stats import AnneeChoice, AnneeStatsForm, DureeAdoptionStatsForm
 from gestion_association.models.adoption import Adoption
 from django.db.models import F, IntegerField, ExpressionWrapper, Avg, Sum, Q, Count, DecimalField
 from django.db.models.functions import ExtractYear, ExtractMonth
@@ -117,33 +117,36 @@ def index(request):
     chatons = chats.filter(month_diff__lt=6)
     adultes = chats.filter(month_diff__gte=6).filter(month_diff__lt=96)
     seniors = chats.filter(month_diff__gte=96)
+    years = []
 
     if annee:
-        moyenne_par_animal = Animal.objects.annotate(
-            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
-        moyenne_chatons = chatons.annotate(
-            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
-        moyenne_adultes = adultes.annotate(
-            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
-        moyenne_seniors = seniors.annotate(
-            montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year=annee))
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        years = [annee]
     else:
-        moyenne_par_animal = Animal.objects.annotate(
-            montant_total=Sum('visites__amount_animal')
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
-        moyenne_chatons = chatons.annotate(
-            montant_total=Sum('visites__amount_animal')
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
-        moyenne_adultes = adultes.annotate(
-            montant_total=Sum('visites__amount_animal')
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
-        moyenne_seniors = seniors.annotate(
-            montant_total=Sum('visites__amount_animal')
-            ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+        years = [(tag.value) for tag in AnneeChoice]
+        
+    moyenne_par_animal = Animal.objects.annotate(
+        montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year__in=years))
+        ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+    moyenne_chatons = chatons.annotate(
+        montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year__in=years))
+        ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+    moyenne_adultes = adultes.annotate(
+        montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year__in=years))
+        ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+    moyenne_seniors = seniors.annotate(
+        montant_total=Sum('visites__amount_animal', filter=Q(visites__date__year__in=years))
+        ).aggregate(montant_moyen=Avg('montant_total'))['montant_moyen'] or 0
+    
+    # Données pour graphique répartition par types de visites
+    labels_types = ["Soins groupés", "Vaccination seule", "Stérilisation seule", "Urgence et Chirurgie", "Traitement", "Autres"]
+    data_type_visites = []
+    data_type_visites.append(visites.filter(visit_type__in=["PACK_TC", "PACK_TCL", "PACK_STE_TC", "PACK_STE_TCL"]).count())
+    data_type_visites.append(visites.filter(visit_type__in=["TC", "TCL"]).count())
+    data_type_visites.append(visites.filter(visit_type__in=["STE"]).count())
+    data_type_visites.append(visites.filter(visit_type__in=["URGENCE", "CHIRURGIE"]).count())
+    data_type_visites.append(visites.filter(visit_type="TRAITEMENT").count())
+    data_type_visites.append(visites.filter(visit_type__in=["AUTRE",'CONSULT',"IDE","TESTS"]).count())
+    
 
 
 
