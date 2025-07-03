@@ -86,14 +86,14 @@ def index(request):
 
     adoptions_finance = Adoption.objects.filter(annule=False).exclude(montant=None)
     # Récupération de l'année saisie par l'utilisateur
-    annee = None
+    annee_finance = None
     if request.method == "POST":
         annee_form = AnneeStatsForm(request.POST)
         if annee_form.is_valid():
-            annee = annee_form.cleaned_data.get("annee")
-            if annee:
-                adoptions_finance = adoptions_finance.filter(date__year=annee)
-                visites = visites.filter(date__year=annee)
+            annee_finance = annee_form.cleaned_data.get("annee_finance")
+            if annee_finance:
+                adoptions_finance = adoptions_finance.filter(date__year=annee_finance)
+                visites = visites.filter(date__year=annee_finance)
     else:
         annee_form = AnneeStatsForm()
     # Calcul du montant total des visites médicales
@@ -119,7 +119,7 @@ def index(request):
     seniors = chats.filter(month_diff__gte=96)
     years = []
 
-    if annee:
+    if annee_finance:
         years = [annee]
     else:
         years = [(tag.value) for tag in AnneeChoice]
@@ -147,7 +147,5 @@ def index(request):
     data_type_visites.append(visites.filter(visit_type="TRAITEMENT").count())
     data_type_visites.append(visites.filter(visit_type__in=["AUTRE",'CONSULT',"IDE","TESTS"]).count())
     
-
-
 
     return render(request, "gestion_association/stats.html", locals())

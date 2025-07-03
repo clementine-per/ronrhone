@@ -28,7 +28,7 @@
         <h2>Statistiques financières</h2>
         <form method="post" action="">
                     {% csrf_token %}
-                    {{ annee_form.annee_tag }} {{ annee_form.annee }}
+                    {{ annee_form.annee_finance_tag }} {{ annee_form.annee_finance }}
                     <br>
                     
                     <button type="submit" class="btn btn-info btn-sm">Calculer</button> {{ value|floatformat:"2g" }}
