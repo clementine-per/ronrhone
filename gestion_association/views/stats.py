@@ -140,12 +140,12 @@ def index(request):
     # Données pour graphique répartition par types de visites
     labels_types = ["Soins groupés", "Vaccination seule", "Stérilisation seule", "Urgence et Chirurgie", "Traitement", "Autres"]
     data_type_visites = []
-    data_type_visites.append(visites.filter(visit_type__in=["PACK_TC", "PACK_TCL", "PACK_STE_TC", "PACK_STE_TCL"]).count())
-    data_type_visites.append(visites.filter(visit_type__in=["TC", "TCL"]).count())
-    data_type_visites.append(visites.filter(visit_type__in=["STE"]).count())
-    data_type_visites.append(visites.filter(visit_type__in=["URGENCE", "CHIRURGIE"]).count())
-    data_type_visites.append(visites.filter(visit_type="TRAITEMENT").count())
-    data_type_visites.append(visites.filter(visit_type__in=["AUTRE",'CONSULT',"IDE","TESTS"]).count())
+    data_type_visites.append(float(visites.filter(visit_type__in=["PACK_TC", "PACK_TCL", "PACK_STE_TC", "PACK_STE_TCL"]).aggregate(Sum('amount'))['amount__sum'] or 0))
+    data_type_visites.append(float(visites.filter(visit_type__in=["TC", "TCL"]).aggregate(Sum('amount'))['amount__sum'] or 0))
+    data_type_visites.append(float(visites.filter(visit_type__in=["STE"]).aggregate(Sum('amount'))['amount__sum'] or 0))
+    data_type_visites.append(float(visites.filter(visit_type__in=["URGENCE", "CHIRURGIE"]).aggregate(Sum('amount'))['amount__sum'] or 0))
+    data_type_visites.append(float(visites.filter(visit_type="TRAITEMENT").aggregate(Sum('amount'))['amount__sum'] or 0))
+    data_type_visites.append(float(visites.filter(visit_type__in=["AUTRE",'CONSULT',"IDE","TESTS"]).aggregate(Sum('amount'))['amount__sum'] or 0))
     
 
     return render(request, "gestion_association/stats.html", locals())
