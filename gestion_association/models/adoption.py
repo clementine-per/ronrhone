@@ -82,6 +82,10 @@ class Adoption(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.annule:
+            # Calcul du nombre de jours avant adoption
+            if self.date and self.animal.date_arrivee:
+                delta = self.date - self.animal.date_arrivee
+                self.nb_jours = delta.days
             # Maj statut lors de la création de l'adoption
             if self._state.adding:
                 # Annulation des adoptions précédentes

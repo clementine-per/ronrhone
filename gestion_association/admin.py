@@ -73,6 +73,8 @@ class AccueilResource(ModelResource):
 class AdoptionResource(ModelResource):
     adoptant = Field(column_name="Nom de l'Adoptant", attribute='adoptant',
                          widget=ForeignKeyWidget(Person, 'nom_prenom_key'))
+    adoptant_email = Field(column_name="Email de l'Adoptant",  attribute='adoptant',
+                         widget=ForeignKeyWidget(Person, 'email'))
     personne_visite = Field(column_name='Nom du Bénévole', attribute='personne_visite',
                      widget=ForeignKeyWidget(Person, 'nom_prenom_key'))
     animal = Field(column_name='Animaux', attribute='animal',
@@ -83,6 +85,7 @@ class AdoptionResource(ModelResource):
     montant = Field(column_name='Montant Total', attribute='montant')
     nb_jours = Field(column_name='Nombre de jours avant Adoption', attribute='nb_jours')
     pre_visite = Field(column_name='Visite pré-adoption', attribute='pre_visite')
+    visite_controle = Field(column_name='Visite de contrôle', attribute='visite_controle')    
     # TODO : Mettre une condition pour que si la visite de contrôle est NON, date_visite affiche NON
     date_visite = Field(column_name='Date de la visite de contrôle', attribute='date_visite', widget=DateWidget('%d/%m/%Y'))
     acompte_verse = Field(column_name='Acompte versé', attribute='acompte_verse')
