@@ -15,6 +15,7 @@ class StatutFamille(Enum):
     INDISPONIBLE = "Temporairement indisponible"
     INACTIVE = "Inactive"
     ADHESION = "Attente adhésion"
+    A_SORTIR = "A sortir de la BNO"
 
 class StatutAccueil(Enum):
     EN_COURS = "En cours"

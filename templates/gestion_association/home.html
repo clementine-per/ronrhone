@@ -120,6 +120,7 @@
                         <p><a class="text-secondary" href= "{% url 'familles' %}?vide=NON&date_indispo_min={{today_str}}&date_indispo_max={{interval_20_str}}">
                             <strong> {{a_deplacer_20}} </strong>  à déplacer dans moins de 20 jours
                         </a></p>
+                        <p><a class="text-secondary" href= "{% url 'familles' %}?statut=A_SORTIR"><strong>{{a_sortir_bno}}</strong> familles à sortir de la BNO</a></p>
                         <p><a class="text-secondary" href= "{% url 'familles' %}?a_deplacer=OUI"><strong>{{accueils_a_deplacer}}</strong> accueils arrivants à terme</a></p>
                     </div>
                 </div>

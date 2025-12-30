@@ -241,6 +241,8 @@ def index(request):
     )
     # Familles à visiter
     visites = Famille.objects.filter(statut="A_VISITER").count()
+    # Familles à sortir de la BNO
+    a_sortir_bno = Famille.objects.filter(statut="A_SORTIR").count()
     # Animaux à placer
     a_placer = (
         Animal.objects.filter(inactif=False)
