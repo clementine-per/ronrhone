@@ -16,5 +16,5 @@ class PerimetreChoice(Enum):
     DEUX = "Périmètre 2 (Lucile)"
     TROIS = "Périmètre 3 (Mélanie)"
     QUATRE = "Périmètre 4 (Julie)"
-    CINQ = "Périmètre 5 (Clémence)"
+    CINQ = "Périmètre 5 (Maïssam)"
     SIX = "Périmètre 6 (Maude)"
