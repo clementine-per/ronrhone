@@ -96,7 +96,7 @@ def generation_payment(p, difference, animal):
         "<font face='Times-Roman' size=14 >Un lien vous sera transmis pour le règlement des frais d'adoption. </font>"
                      , style=spaceStyle)
     para.wrap(17 * cm, 15 * cm)
-    para.drawOn(p, 2.25 * cm, 15 * cm + difference * cm)
+    para.drawOn(p, 1.5 * cm, 15 * cm + difference * cm)
 
 
 def header(p, animal):
@@ -340,14 +340,14 @@ def food_info(p, animal, vertical):
     para.wrap(14 * cm, 15 * cm)
     para.drawOn(p, 4.30 * cm, vertical * cm)
 
-    para = Paragraph("Le chat susnommé " + animal.nom + " devra être nourri avec une alimentation répondant"
+    para = Paragraph("Le chat susnommé " + animal.nom + " devra être nourri avec une alimentation répondant "
                                                         "aux dernières recommandations. Soit, conformément aux taux "
                                                         "analytiques "
                                                         "inscrits dans les annexes 1 et 2, les aliments de "
                                                         "supermarché étant "
                                                         "proscrits.", style=blackParagraphStyle)
     para.wrap(17 * cm, 15 * cm)
-    para.drawOn(p, 1.5 * cm, (vertical - 2.25) * cm)
+    para.drawOn(p, 1.5 * cm, (vertical - 3) * cm)
 
     para = Paragraph(
         "Si l'association, lors de la visite de \
@@ -357,7 +357,7 @@ def food_info(p, animal, vertical):
         style=redParagraphStyle,
     )
     para.wrap(17 * cm, 15 * cm)
-    para.drawOn(p, 1.5 * cm, (vertical - 3.75) * cm)
+    para.drawOn(p, 1.5 * cm, (vertical - 5) * cm)
 
 
 def engagement(p, animal, vertical):

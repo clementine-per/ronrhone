@@ -43,13 +43,13 @@ def generate_contract(request, pk):
         if animal.sterilise == OuiNonChoice.NON.name:
             # Infos sterilisation kitten
             info_sterilisation(p, animal)
-        generation_payment(p, 0, animal)
-        food_info(p, animal, 8)
+        generation_payment(p, -1, animal)
+        food_info(p, animal, 11)
 
     # For an adult cat
     else:
-        generation_payment(p, 8, animal)
-        food_info(p, animal, 8)
+        generation_payment(p, 4, animal)
+        food_info(p, animal, 11)
 
     next_page(p, nb_page)
 
