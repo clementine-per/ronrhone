@@ -92,45 +92,11 @@ def generation_payment(p, difference, animal):
                      , style=subtitleStyle)
     para.wrap(7 * cm, 15 * cm)
     para.drawOn(p, 4.5 * cm, 17 * cm + difference * cm)
-    p.circle(2.5 * cm, 15.4 * cm + difference * cm, 2.5, fill=True)
-    para = Paragraph("<font face='times-bold' size=14><u>Paylib ou Lydia :</u>  </font><br/> \
-                        <font face='helvetica-oblique' size=14 color='#2d8dfd'>06. 64. 62. 32. 07.</font>",
-                     style=spaceStyle)
-    para.wrap(14 * cm, 15 * cm)
-    para.drawOn(p, 3 * cm, 14.5 * cm + difference * cm)
-    p.circle(2.5 * cm, 12.95 * cm + difference * cm, 2.5, fill=True)
-    para = Paragraph("<font face='times-bold' size=14>Virement : </font>")
-    para.wrap(14 * cm, 15 * cm)
-    para.drawOn(p, 3 * cm, 12.85 * cm + difference * cm)
-    p.setFont("Times-Bold", 0.45 * cm)
-    p.setFillColor("red")
-    p.drawString(11.6 * cm, 15.75 * cm + difference * cm, "Nous refusons le paiement par chèque !")
-    p.setFont("Times-Bold", 0.55 * cm)
-    p.drawString(11.1 * cm, 15 * cm + difference * cm, "Le restant dû devra être réglé sous 3")
-    p.drawString(11.6 * cm, 14.5 * cm + difference * cm, "jours suivants la signature de ce")
-    p.drawString(10.7 * cm, 14 * cm + difference * cm, "contrat, et l'animal devra être récupéré")
-    p.drawString(10.8 * cm, 13.5 * cm + difference * cm, "au maximum 7 jours après la réception")
-    p.drawString(10.9 * cm, 13 * cm + difference * cm, "du virement, sans quoi ce contrat sera")
-    p.drawString(11.5 * cm, 12.5 * cm + difference * cm, "caduc et l'adoption annulée, sans")
-    p.drawString(13.5 * cm, 12 * cm + difference * cm, "remboursement.")
     para = Paragraph(
-        "<font face='Times-Roman' size=14 color='red'>Merci d’indiquer le motif </font> \
-                        <font face='times-bold' size=15 color='red'>« ADOPTION "
-        + animal.nom
-        + " »</font> \
-                        <font face='Times-Roman' size=14 color='red'>, faute de quoi, 48h de \
-                        carence dans le processus d’adoption seront mises en place afin de recouper les infos.</font>"
+        "<font face='Times-Roman' size=14 >Un lien vous sera transmis pour le règlement des frais d'adoption. </font>"
                      , style=spaceStyle)
     para.wrap(17 * cm, 15 * cm)
-    para.drawOn(p, 2.25 * cm, 9.5 * cm + difference * cm)
-    p.drawImage(
-        f"{settings.STATIC_ROOT}/img/RIB.PNG",
-        0.75 * cm,
-        1 * cm + difference * cm,
-        width=19.5 * cm,
-        height=8 * cm,
-        mask="auto",
-    )
+    para.drawOn(p, 2.25 * cm, 15 * cm + difference * cm)
 
 
 def header(p, animal):

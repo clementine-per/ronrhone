@@ -44,6 +44,7 @@ def generate_contract(request, pk):
             # Infos sterilisation kitten
             info_sterilisation(p, animal)
         generation_payment(p, 0, animal)
+        food_info(p, animal, 8)
 
     # For an adult cat
     else:
@@ -55,8 +56,7 @@ def generate_contract(request, pk):
     # Page 3
 
     if is_child:
-        food_info(p, animal, 28)
-        engagement(p, animal, 23)
+        engagement(p, animal, 26)
         amounts(p,animal,4)
         next_page(p, nb_page)
         # Page 4 kitten contract
