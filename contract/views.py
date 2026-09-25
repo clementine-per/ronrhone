@@ -38,35 +38,28 @@ def generate_contract(request, pk):
     info_vaccine_shot(p, animal)
 
 
-    # For a kitten
-    if is_child:
-        if animal.sterilise == OuiNonChoice.NON.name:
-            # Infos sterilisation kitten
-            info_sterilisation(p, animal)
+    # For an unsterilised kitten
+    if is_child and animal.sterilise == OuiNonChoice.NON.name:
+        info_sterilisation(p, animal)
         generation_payment(p, -1, animal)
         food_info(p, animal, 11)
-
-    # For an adult cat
-    else:
-        generation_payment(p, 4, animal)
-        food_info(p, animal, 11)
-
-    next_page(p, nb_page)
-
-    # Page 3
-
-    if is_child:
+        next_page(p, nb_page)
         engagement(p, animal, 26)
         amounts(p,animal,4)
         next_page(p, nb_page)
         # Page 4 kitten contract
         contract_pieces(p, 28)
         signatures(p, 20)
+
+    # For an adult cat
     else:
-        engagement(p, animal, 28)
-        amounts(p, animal, 8.5)
-        contract_pieces(p, 7.8)
-        signatures(p, 1)
+        generation_payment(p, 8, animal)
+        food_info(p, animal, 21)
+        engagement(p, animal, 14)
+        next_page(p, nb_page)
+        amounts(p, animal, 22)
+        contract_pieces(p, 21)
+        signatures(p, 14)
 
     next_page(p, nb_page)
 
